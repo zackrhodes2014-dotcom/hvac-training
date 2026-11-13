@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 18: Electrical Troubleshooting</title>
+<meta name="description" content="HVAC Module 18: Electrical Troubleshooting. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m18">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 18</h1>
+  <p class="sub">Electrical Troubleshooting</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 18 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 45 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Guessing costs money</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Electrical Test Equipment</a></li>
+      <li><a href="#s2">2. Electrical Diagrams</a></li>
+      <li><a href="#s3">3. Electrical Troubleshooting Process</a></li>
+      <li><a href="#s4">4. Electrical Troubleshooting Strategies</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Practice the method, safely</a></li>
+      <li><a href="#next">Module 19 unlocked: Servicing Electric Motors and Controls</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/4</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/6</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ Guessing costs money</h2>
+  <p class="big">On a no-cooling call, a new tech swapped a contactor, a capacitor, and a thermostat. Two hours later, it still didn't run. Zach found the furnace board's low-voltage fuse blown by a rubbed-through thermostat wire. Fifteen minutes, one fuse, one wire repair. The difference was a method. This module teaches the tools and the step-by-step thinking that find the real problem.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Electrical Test Equipment</h2>
+  <p class="lede">Know your tools before you trust them</p>
+  <ul><li><strong>Digital multimeter (DMM):</strong> measures AC and DC <strong>volts</strong>, <strong>ohms</strong> (resistance), and <strong>continuity</strong> (a beep for a complete path). Many also measure <strong>capacitance</strong> (µF) and <strong>temperature</strong>.</li><li><strong>Clamp-on ammeter:</strong> clamps around <em>one</em> wire to read current without breaking the circuit. Clamp both wires of a cord and the readings cancel to near zero.</li><li><strong>Non-contact voltage tester:</strong> beeps near a live wire. It's a quick warning only, never proof that power is off.</li><li><strong>Megohmmeter ("megger"):</strong> applies a high test voltage to check winding insulation to ground. It's used by a qualified tech on de-energized, disconnected motors.</li><li><strong>Meter safety ratings:</strong> meters are labeled <strong>CAT II, III, or IV</strong> with a voltage. Use a meter rated for the job (CAT III or higher for HVAC equipment and panels). Check that the leads have no cracks and the probes have guards.</li></ul>
+  <p><strong>Live-dead-live</strong>, every single time: test a known live source, test the circuit you've de-energized, then test the known source again.</p>
+  <p><strong>Rule:</strong> never measure ohms or continuity on a live circuit. It gives false readings and can destroy the meter.</p>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Electrical Diagrams</h2>
+  <p class="lede">The map of the unit</p>
+  <p>Manufacturers put diagrams inside panel doors. There are three common kinds:</p>
+  <ul><li><strong>Pictorial / connection (wiring) diagram:</strong> shows parts roughly where they sit, with wire colors and terminals. It's good for finding things physically.</li><li><strong>Ladder (schematic) diagram:</strong> shows how the circuit <em>works</em>. Power rails run on the sides, and each rung holds the switches and a load. It's best for troubleshooting.</li><li><strong>Legend:</strong> a key explaining abbreviations (CC = compressor contactor, HPS = high-pressure switch, and so on) and symbols.</li></ul>
+  <p>Common symbols: a zigzag or box for resistance, a circle for a motor, coils as circles or loops with a label, NO contacts as two parallel lines, NC as two lines with a slash, and a dashed line linking a coil to the contacts it moves. Wire colors in diagrams match the unit's factory wiring, but field wiring may not.</p>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Electrical Troubleshooting Process</h2>
+  <p class="lede">A repeatable game plan</p>
+  <ol><li><strong>Gather info:</strong> Ask the customer what happened and when. Check the thermostat settings. Read fault codes.</li><li><strong>Observe:</strong> Look, listen, and smell. Burned wires, a humming motor, a tripped breaker, water damage.</li><li><strong>Check power:</strong> Is the correct voltage arriving at the unit? Most "dead" units have a power problem.</li><li><strong>Isolate the circuit:</strong> Use the diagram to find which rung or part isn't doing its job.</li><li><strong>Test the suspect part:</strong> Measure voltage across it while it should be working (a qualified tech does this), or resistance and continuity with power off and locked out.</li><li><strong>Repair or replace</strong>, with the correct matching part.</li><li><strong>Verify:</strong> Run the system through a full cycle and take readings. Then ask <em>why</em> it failed (a burned contactor may point to low voltage or a dragging motor).</li></ol>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Electrical Troubleshooting Strategies</h2>
+  <p class="lede">Think like a detective</p>
+  <ul><li><strong>Voltage across a switch:</strong> in a working, powered circuit, a <em>closed</em> switch reads close to <strong>0 V</strong> across it. An <em>open</em> switch reads the <strong>full supply voltage</strong> across it, because it's holding back the whole voltage. That makes finding an open safety switch fast.</li><li><strong>Voltage across a load:</strong> if the load has full voltage across it and still doesn't run, the load itself (or its mechanical side) is the problem.</li><li><strong>Half-splitting:</strong> test in the middle of a circuit to see which half the fault is in, then split again. Each test cuts the search in half.</li><li><strong>Hopscotching:</strong> keep one lead on a reference point (like C) and move the other lead along the circuit until the voltage disappears. The fault is between the last good reading and the first bad one.</li><li><strong>Amp readings:</strong> compare running current to the nameplate. Too high suggests a dragging motor, low voltage, or a bad capacitor. Too low suggests an unloaded or slipping drive.</li></ul>
+  <div class="callout"><span class="label">🧮 Worked example</span>A blower motor nameplate says 5.8 FLA. Zach clamps it and reads 6.2 A.<ul><li>6.2 ÷ 5.8 × 100 ≈ <strong>107%</strong> of FLA</li><li>The service factor of 1.15 allows up to 5.8 × 1.15 ≈ <strong>6.7 A</strong>, so it's within limits but worth watching. Check the filter and capacitor.</li></ul></div>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Practice the method, safely</h2>
+  <ol><li>With Zach, check your meter on a known source (a 9 V battery for DC), then practice the live-dead-live order out loud each time Zach takes a reading on a job. Ian watches; Zach measures.</li><li>Take a ladder diagram from a real unit. Pretend the outdoor unit won't start. On paper, list where you'd test, in order, using half-splitting, and what reading would mean "good" or "bad" at each point.</li><li>With power off and locked out, use continuity mode to check a spare fuse from the truck and a spare length of wire.</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 19 unlocked: Servicing Electric Motors and Controls</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You have a method and the tools to back it up. Next, you'll put it to work on the parts that fail most: compressor motors, fan motors, capacitors, contactors, and relays.</p>
+  <a class="start-next" id="startNext" href="m19.html">Start Module 19 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 18 · Electrical Troubleshooting</footer>
+
+<script>
+var CFG={"mid": "m18", "sections": ["s1", "s2", "s3", "s4"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 18"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m18.js"></script>
+</body>
+</html>

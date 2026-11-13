@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 17: Electrical Control Systems</title>
+<meta name="description" content="HVAC Module 17: Electrical Control Systems. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m17">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 17</h1>
+  <p class="sub">Electrical Control Systems</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 17 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 55 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Who told it to turn on?</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Electrical Control Devices</a></li>
+      <li><a href="#s2">2. Control System Fundamentals</a></li>
+      <li><a href="#s3">3. Thermostats</a></li>
+      <li><a href="#s4">4. Motor Controls</a></li>
+      <li><a href="#s5">5. Motor Protection Devices</a></li>
+      <li><a href="#s6">6. Direct Digital Control (DDC)</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Trace it on paper</a></li>
+      <li><a href="#next">Module 18 unlocked: Electrical Troubleshooting Fundamentals</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/6</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/8</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ Who told it to turn on?</h2>
+  <p class="big">The room is 78°F with the thermostat set to 72°F, but the outdoor unit is silent. Thermostat? Wire? Transformer? Contactor? Zach follows the diagram: 24 V leaves on Y, passes the high-pressure switch, and reaches the contactor coil. The pressure switch is open because the condenser coil is packed with cottonwood fluff. Learn to follow controls and you'll find problems fast.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Electrical Control Devices</h2>
+  <p class="lede">Switches that flip other switches</p>
+  <ul><li><strong>Switch:</strong> opens or closes a circuit, manually (a disconnect) or automatically (pressure, temperature).</li><li><strong>Normally open (NO)</strong> contacts rest open; <strong>normally closed (NC)</strong> contacts rest closed. "Normally" means coil unpowered or sensor not tripped.</li><li><strong>Relay:</strong> a coil (often 24 V) that moves light-duty contacts, e.g., for a fan motor.</li><li><strong>Contactor:</strong> a heavy-duty relay. Its 24 V coil pulls in contacts that switch 240 V to a compressor.</li><li><strong>Solenoid:</strong> a coil that moves a plunger to open or close a valve.</li><li><strong>Pressure switches:</strong> open on high or low pressure, or loss of draft.</li><li><strong>Sequencers / time delays:</strong> switch loads after a delay, such as staging heat strips.</li></ul>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Control System Fundamentals</h2>
+  <p class="lede">Reading a ladder diagram</p>
+  <p>Most systems use two voltage levels:</p>
+  <ul><li><strong>Line voltage</strong> (120/240 V) powers motors and heaters.</li><li><strong>Low voltage</strong> (24 V) runs the controls.</li></ul>
+  <p>A <strong>ladder diagram</strong> has two side rails for the power source (L1/L2, or R/C for 24 V). Each rung is one path: <strong>switches on the left</strong>, <strong>one load on the right</strong>. Rules of thumb:</p>
+  <ul><li>Each rung needs a load; a rung with no load is a short.</li><li>Series switches on a rung must <em>all</em> close for the load to run. That's how safeties work.</li><li>A contactor coil on a 24 V rung and its contacts on a line-voltage rung share a label (like "C1").</li></ul>
+  <div class="callout"><span class="label">🧮 Worked example (transformer load)</span>A 40 VA transformer feeds a contactor coil (about 7 VA), a fan relay (about 5 VA), and a gas valve (about 10 VA). These are typical values; check the actual parts.<ul><li>Total = 7 + 5 + 10 = <strong>22 VA</strong>, about <strong>55%</strong> of capacity. The transformer is fine.</li></ul></div>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Thermostats</h2>
+  <p class="lede">The system's boss</p>
+  <p>A <strong>thermostat</strong> senses room temperature and closes circuits to call for heating, cooling, or fan. Common terminal letters (wire colors are conventions, not guarantees):</p>
+  <ul><li><strong>R:</strong> 24 V hot from the transformer (Rh/Rc on some models)</li><li><strong>C:</strong> common, the other side of the 24 V. Smart thermostats need it.</li><li><strong>Y:</strong> cooling (compressor contactor)</li><li><strong>G:</strong> indoor fan</li><li><strong>W:</strong> heat</li><li><strong>O/B:</strong> heat pump reversing valve (O energizes in cooling, B in heating, depending on brand)</li></ul>
+  <p>Old mechanical thermostats used a <strong>bimetal</strong> strip that bends with temperature, sometimes with a mercury bulb that needs special disposal. Modern ones are digital or Wi-Fi "smart" models using thermistors. The <strong>differential</strong> is the swing between on and off that prevents rapid cycling.</p>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Motor Controls</h2>
+  <p class="lede">Starting and stopping the big stuff</p>
+  <ul><li><strong>Contactors</strong> start and stop compressors and condenser fans. Worn contacts get <strong>pitted</strong>, causing heat, voltage drop, and chatter.</li><li><strong>Fan relays</strong> switch blower speeds.</li><li><strong>Starting relays</strong> help single-phase compressors start by putting a <strong>start capacitor</strong> in the circuit briefly:<ul><li><strong>Potential (voltage) relay:</strong> drops out the start circuit when the voltage across the start winding rises as the motor speeds up.</li><li><strong>Current relay:</strong> pulls in on high startup current and drops out as current falls.</li></ul></li><li><strong>PTC start devices:</strong> conduct when cold, then heat up and block the start circuit within a second or two.</li><li><strong>Hard-start kits:</strong> add a start capacitor and relay to a PSC compressor that struggles to start.</li><li><strong>Time delays:</strong> hold the compressor off a few minutes after shutdown (anti-short-cycle).</li></ul>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5" data-gated="1">
+  <h2>5. Motor Protection Devices</h2>
+  <p class="lede">Keeping motors from cooking</p>
+  <ul><li><strong>Fuses and breakers</strong> protect the <em>wiring</em>.</li><li><strong>Overloads</strong> protect the <em>motor</em>, opening on excess current, heat, or both.<ul><li><strong>Internal overloads</strong> sit inside many compressors and fan motors. One can stay open an hour or more until the windings cool.</li><li><strong>External (line-break) overloads</strong> sit outside the motor and break the power directly.</li><li><strong>Pilot-duty overloads</strong> open the control circuit, which drops out the contactor.</li></ul></li><li><strong>High- and low-pressure switches</strong> protect the compressor from unsafe pressures.</li><li><strong>Lockout relays / boards</strong> stop the unit after repeated safety trips.</li><li><strong>Phase monitors</strong> protect three-phase motors from lost or reversed phases and unbalance.</li></ul>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6" data-gated="1">
+  <h2>6. Direct Digital Control (DDC)</h2>
+  <p class="lede">Controls on a network</p>
+  <p>Big buildings use <strong>DDC</strong>: <strong>controllers</strong> that read sensors and run equipment by program. Each point is one of four types:</p>
+  <ul><li><strong>Analog input (AI):</strong> a varying signal, such as a temperature sensor</li><li><strong>Digital (binary) input (DI):</strong> on/off, such as a filter switch</li><li><strong>Analog output (AO):</strong> a varying command, such as 0–10 V to a valve actuator</li><li><strong>Digital output (DO):</strong> on/off, such as starting a fan</li></ul>
+  <p>Controllers talk to a <strong>building automation system (BAS)</strong> using protocols like <strong>BACnet</strong>, where operators set schedules and see alarms.</p>
+  <div class="widget" id="w-s6" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Trace it on paper</h2>
+  <ol><li>Get a wiring diagram from a real unit (or photograph one inside a powered-down unit's door).</li><li>On paper, redraw the cooling call as a ladder: R, thermostat, Y, safety switches, contactor coil, back to C. Label each switch NO or NC.</li><li>On the locked-out unit, point out the transformer, contactor, capacitor (look only), and pressure switch while Zach watches.</li><li>Add up the 24 V load VA if the labels list them.</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 18 unlocked: Electrical Troubleshooting Fundamentals</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You can read a control circuit. Next: the tools and step-by-step thinking pros use to find electrical faults fast and safely.</p>
+  <a class="start-next" id="startNext" href="m18.html">Start Module 18 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 17 · Electrical Control Systems</footer>
+
+<script>
+var CFG={"mid": "m17", "sections": ["s1", "s2", "s3", "s4", "s5", "s6"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 17"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m17.js"></script>
+</body>
+</html>

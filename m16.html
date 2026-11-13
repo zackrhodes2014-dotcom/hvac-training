@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 16: Electric Motors</title>
+<meta name="description" content="HVAC Module 16: Electric Motors. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m16">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 16</h1>
+  <p class="sub">Electric Motors</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 16 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 45 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Two motors, one problem</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. The Elementary Electric Motor</a></li>
+      <li><a href="#s2">2. AC Induction Motors</a></li>
+      <li><a href="#s3">3. Electronically Commutated Motors (ECMs)</a></li>
+      <li><a href="#s4">4. Standard Motor Data</a></li>
+      <li><a href="#s5">5. Motor Applications in HVACR Systems</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Nameplate hunt</a></li>
+      <li><a href="#next">Module 17 unlocked: Electrical Control Systems</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/5</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/7</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ Two motors, one problem</h2>
+  <p class="big">The condenser fan motor is dead. Before installing a replacement, Zach compares nameplates: voltage, rpm, rotation, horsepower, capacitor. A motor that "fits" but spins backward pushes air the wrong way through the coil, and the compressor overheats. This module shows how motors work and how to read what's stamped on them.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. The Elementary Electric Motor</h2>
+  <p class="lede">Magnets chasing magnets</p>
+  <p>Every motor runs on one idea: <strong>magnetic poles push and pull.</strong> A motor has two main parts:</p>
+  <ul><li><strong>Stator:</strong> the stationary outer part, wound with coils that become electromagnets.</li><li><strong>Rotor:</strong> the part that spins, attached to the <strong>shaft</strong>.</li></ul>
+  <p>The stator and rotor fields push and pull the rotor around, and the poles must keep switching to keep it turning. Simple <strong>DC motors</strong> use a <strong>commutator</strong> and <strong>brushes</strong> to flip rotor current every half-turn. Brushes wear out, so most HVAC motors avoid them; in AC motors the alternating current does the switching.</p>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. AC Induction Motors</h2>
+  <p class="lede">A field that spins by itself</p>
+  <p>In an <strong>induction motor</strong>, AC in the stator windings creates a <strong>rotating magnetic field</strong>. That field <em>induces</em> current in the rotor, which has no wires connected to it. The rotor then chases the spinning field.</p>
+  <p><strong>Synchronous speed</strong> = (120 × frequency) ÷ number of poles. The rotor always runs a little slower. That difference is called <strong>slip</strong>.</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>A 4-pole motor on 60 Hz.<ul><li>Synchronous speed = 120 × 60 ÷ 4 = <strong>1,800 rpm</strong></li><li>Nameplate says 1,725 rpm, so slip = (1,800 − 1,725) ÷ 1,800 ≈ <strong>4.2%</strong></li><li>A 2-pole motor would be 3,600 rpm synchronous (about 3,450 actual), which is typical for compressors.</li></ul></div>
+  <p><strong>Three-phase</strong> power makes a rotating field on its own. <strong>Single-phase</strong> motors need help to start, so they add a <strong>start winding</strong> offset from the <strong>run winding</strong>:</p>
+  <ul><li><strong>Split-phase:</strong> start winding drops out once the motor reaches speed. Low starting torque.</li><li><strong>Capacitor-start (CSIR):</strong> a start capacitor boosts starting torque, then drops out.</li><li><strong>PSC (permanent split capacitor):</strong> a run capacitor stays in the circuit all the time. This is the most common type for condenser fans and older blowers.</li><li><strong>CSCR:</strong> has both a start and a run capacitor. Used on compressors that need extra starting torque.</li><li><strong>Shaded-pole:</strong> cheap, weak, and inefficient. Found on small fans.</li></ul>
+  <p>Single-phase compressors have three terminals: <strong>C (common), S (start), R (run).</strong></p>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Electronically Commutated Motors (ECMs)</h2>
+  <p class="lede">A motor with a computer on its back</p>
+  <p>An <strong>ECM</strong> is a brushless DC motor with a <strong>permanent-magnet rotor</strong> and a built-in electronic control module. The module rectifies AC to DC and switches the stator windings electronically. It acts like a commutator with no brushes.</p>
+  <p>Why they're everywhere now:</p>
+  <ul><li><strong>Efficient:</strong> they use much less electricity than PSC motors, especially at low speeds.</li><li><strong>Variable speed:</strong> they can ramp up slowly and run at many speeds.</li><li><strong>Programmable:</strong> some hold a <strong>constant airflow</strong> (CFM) by adjusting to duct conditions. Others hold <strong>constant torque</strong> and are set by tap wires.</li></ul>
+  <p>Heads-up: many ECMs have line voltage present at the motor at all times, even when not running. The module also stores energy, so Zach waits the time the manufacturer specifies after power-down before servicing one.</p>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Standard Motor Data</h2>
+  <p class="lede">Reading the nameplate</p>
+  <p>Every motor's <strong>nameplate</strong> tells you what it is and how to replace it:</p>
+  <ul><li><strong>Volts, Hz, phase:</strong> e.g., 208–230 V, 60 Hz, 1 phase</li><li><strong>HP:</strong> output power (1 hp ≈ 746 W)</li><li><strong>RPM:</strong> rated full-load speed</li><li><strong>FLA (full load amps):</strong> current at full rated load. Compressors list <strong>RLA (rated load amps)</strong> instead.</li><li><strong>LRA (locked rotor amps):</strong> the big inrush current at startup, often 4–6 times running current</li><li><strong>Service factor (SF):</strong> how much overload it can handle; SF 1.15 means 15% over rated hp</li><li><strong>Rotation:</strong> CW or CCW, viewed from a stated end (usually the lead end or the shaft end)</li><li><strong>Frame size, enclosure (open or totally enclosed), insulation class</strong></li><li><strong>Capacitor:</strong> µF and voltage rating for PSC motors</li></ul>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5" data-gated="1">
+  <h2>5. Motor Applications in HVACR Systems</h2>
+  <p class="lede">Where motors work</p>
+  <ul><li><strong>Compressors:</strong> <strong>hermetic</strong> (motor and compressor welded in a shell, cooled by refrigerant), <strong>semi-hermetic</strong> (bolted shell that can be opened), or <strong>open</strong> (motor outside, connected by a shaft or belt).</li><li><strong>Condenser fans:</strong> usually PSC or ECM, direct-drive, and often totally enclosed to handle weather.</li><li><strong>Indoor blowers:</strong> PSC (multi-speed taps) or ECM. Direct-drive in homes; belt-drive in many commercial units.</li><li><strong>Pumps:</strong> circulators for boilers and chilled water, and condensate pumps.</li><li><strong>Damper and valve actuators:</strong> small motors that position air dampers and water valves.</li><li><strong>Inducer (draft) motors:</strong> push combustion gases out of furnaces.</li></ul>
+  <p><strong>Direct drive</strong> puts the fan right on the motor shaft. <strong>Belt drive</strong> lets you change speed with pulleys.</p>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Nameplate hunt</h2>
+  <p>With Zach, on equipment that's shut off and locked out (or using motors on the truck shelf):</p>
+  <ol><li>Find three motors (for example a condenser fan, a blower, and an inducer). For each, write down the volts, phase, hp, rpm, FLA, rotation, and motor type (PSC, ECM, or shaded-pole).</li><li>For each one, calculate the likely number of poles. Find the synchronous speed just above the nameplate rpm (3,600, 1,800, 1,200, or 900), then poles = 7,200 ÷ that speed.</li><li>Ask Zach which one has a capacitor, and copy its µF and voltage rating from the label. <em>Don't touch the capacitor terminals.</em></li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 17 unlocked: Electrical Control Systems</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You know what makes motors spin and how to read them. Next, you'll learn what tells them <em>when</em> to spin: thermostats, relays, contactors, and the ladder diagrams that tie them together.</p>
+  <a class="start-next" id="startNext" href="m17.html">Start Module 17 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 16 · Electric Motors</footer>
+
+<script>
+var CFG={"mid": "m16", "sections": ["s1", "s2", "s3", "s4", "s5"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 16"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m16.js"></script>
+</body>
+</html>

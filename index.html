@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Training</title>
+<meta name="description" content="HVAC Training: interactive modules on refrigeration, boilers and chillers, and electrical. Works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/home.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="prof-slot" id="profileSlot"></div>
+  <div class="brand"><img src="icons/icon-192.png" alt=""><div><h1>HVAC Training</h1><p id="heroSub">Ian's training path, built up from the fundamentals.</p></div></div>
+  <span class="chip" id="offlineChip" hidden>✓ Works offline</span>
+  <div class="overall" aria-live="polite">
+    <div class="row"><span>Overall progress</span><b id="ovPct">0%</b></div>
+    <div class="bar" role="progressbar" aria-label="Overall progress" aria-valuemin="0" aria-valuemax="100" id="ovBarWrap"><i id="ovBar"></i></div>
+    <div class="row" style="margin-top:6px;font-size:.88rem;color:var(--muted)"><span id="ovMods">0 of 12 modules done</span><span id="ovSecs"></span></div>
+    <a class="btn primary block" id="continueBtn" href="m1.html">▶ Start with Module 1</a>
+  </div>
+  <p class="note" id="migNote" hidden></p>
+</div></header>
+<main class="wrap">
+  <a class="study-card" href="study.html" id="studyLink"><span class="go">›</span><span class="t">🃏 Flip Card Study</span><br><span class="d">Pick any chapters, shuffle a deck, and drill the cards. <span id="studySum"></span></span></a>
+  <div id="groups"></div>
+  <section class="settings" aria-labelledby="setH">
+    <h2 id="setH">Progress settings</h2>
+    <p>Progress is saved on this device only, separately for each profile (Ian, Landon, Admin). Each module card above has its own reset link.</p>
+    <button type="button" class="btn danger" id="resetAll">Reset all progress for <span id="resetWho">Ian</span></button>
+  </section>
+</main>
+<footer>HVAC Training · works offline once installed · no account needed</footer>
+
+<div class="banner" id="installBanner" hidden role="dialog" aria-label="Install app">
+  <img src="icons/icon-192.png" alt=""><div class="bt"><b>Install HVAC Training</b><br>Add it to your home screen and use it offline.</div>
+  <button type="button" class="btn primary" id="installBtn">Install</button><button type="button" class="x" id="installClose" aria-label="Dismiss">×</button>
+</div>
+<div class="banner" id="iosHint" hidden role="dialog" aria-label="Add to Home Screen">
+  <img src="icons/icon-192.png" alt=""><div class="bt"><b>Install on iPhone:</b> tap <b>Share</b> <span aria-hidden="true">⬆︎</span> then <b>Add to Home Screen</b>.</div>
+  <button type="button" class="x" id="iosClose" aria-label="Dismiss">×</button>
+</div>
+<div class="dlg" id="confirmDlg" hidden role="alertdialog" aria-modal="true" aria-labelledby="cfT">
+  <div class="box"><h3 id="cfT">Are you sure?</h3><p id="cfMsg"></p><div class="row"><button type="button" class="btn ghost" id="cfNo">Cancel</button><button type="button" class="btn danger" id="cfYes">Reset</button></div></div>
+</div>
+<script src="assets/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 5: Gases</title>
+<meta name="description" content="HVAC Module 5: Gases. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#121417;--panel:#1C1F24;--panel2:#262b33;--text:#EDEAE4;--muted:#9AA0A6;
+  --accent:#2EC4B6;--accent2:#f4a259;--good:#81c784;--warn:#ffcc80;--danger:#ff8a80;
+  --border:#343b45;--latent:#b388ff;--sens:#ff9f43;--hot:#ff6b5b;--cold:#5ab4ff;--radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--accent);z-index:100;transition:width .1s linear}
+header{padding:28px 18px 18px;text-align:center;background:linear-gradient(180deg,#14282a,var(--bg))}
+header h1{margin:0;font-size:2.2rem;font-weight:800;line-height:1.2;color:#fff}
+header .sub{margin:6px 0 0;font-size:1.1rem;color:var(--accent);font-weight:600}
+header .note{margin:6px 0 0;font-size:.9rem;color:var(--muted);font-style:italic}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.chip{background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:4px 12px;font-size:.88rem;color:var(--muted)}
+nav.toc{max-width:760px;margin:0 auto;padding:0 14px}
+nav.toc details{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:4px 14px}
+nav.toc summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+nav.toc ol{margin:4px 0 12px;padding-left:22px}
+nav.toc a{color:var(--accent);display:inline-block;padding:6px 0}
+main{max-width:760px;margin:0 auto;padding:14px}
+section{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;margin:16px 0}
+h2{margin:0 0 10px;font-size:1.5rem;font-weight:800;line-height:1.3;color:#fff}
+h3{font-size:1.1rem;margin:18px 0 8px;color:var(--accent2)}
+p{margin:10px 0}
+strong{color:#fff}
+ul,ol{padding-left:22px}
+li{margin:6px 0}
+.callout{border-left:5px solid var(--accent);background:var(--panel2);border-radius:10px;padding:12px 14px;margin:14px 0}
+.callout.analogy{border-color:#ba68c8}
+.callout.try{border-color:var(--good)}
+.callout.safety{border:2px solid var(--danger);background:#3a1d1d;border-left-width:8px}
+.callout.safety strong{color:#ffd2cc}
+.callout .label{display:block;font-weight:700;margin-bottom:4px}
+.hook{border-color:var(--accent2)}
+.hook .big{font-size:1.05rem}
+.predict{border:1px dashed var(--accent2);background:#221f17;border-radius:12px;padding:14px;margin:16px 0}
+.predict .q{font-weight:600;margin:0 0 10px}
+.predict label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;color:var(--text);background:#0d0f12;border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+textarea{min-height:76px;resize:vertical}
+textarea:focus,input:focus,button:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:700;min-height:48px;padding:10px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--accent);color:#05211e;margin-top:10px;touch-action:manipulation}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.answer{display:none;margin-top:12px;padding:12px 14px;background:#132a1b;border-left:5px solid var(--good);border-radius:10px}
+.answer.show{display:block;animation:fade .25s ease}
+.yours{display:none;margin-top:12px;font-size:.95rem;color:var(--muted)}
+.yours.show{display:block}
+.yours span{color:var(--text);white-space:pre-wrap}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cycle{list-style:none;padding:0;counter-reset:c}
+.cycle li{counter-increment:c;position:relative;padding:10px 12px 10px 52px;background:var(--panel2);border-radius:10px;margin:8px 0}
+.cycle li::before{content:counter(c);position:absolute;left:12px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#05211e;font-weight:800;display:flex;align-items:center;justify-content:center}
+/* flip cards */
+.quiz-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.counter{font-weight:700;color:var(--accent2)}
+.qbar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.qbar div{height:100%;width:0;background:var(--good);transition:width .3s}
+.cards{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.card{perspective:1000px;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent}
+.card-inner{display:grid;transition:transform .55s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d;height:100%}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:var(--radius);padding:18px 16px 40px;min-height:150px;display:flex;flex-direction:column;justify-content:center;position:relative;border:1px solid var(--border)}
+.front{background:linear-gradient(160deg,#163b38,#1C1F24)}
+.back{background:linear-gradient(160deg,#2a2440,#1C1F24);transform:rotateY(180deg)}
+.face .tag{font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.face .txt{font-size:1.05rem;font-weight:600}
+.face .hint{position:absolute;bottom:10px;right:14px;font-size:.8rem;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.card-inner{transition:none}html{scroll-behavior:auto}}
+/* table */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:1px solid var(--border);padding:6px;text-align:left;vertical-align:middle}
+th{background:var(--panel2);font-size:.9rem}
+td:first-child{font-weight:600;font-size:.95rem;white-space:nowrap}
+td input{min-height:44px;padding:8px}
+.recap li strong{color:var(--accent)}
+.teaser{border-color:var(--accent)}
+footer{text-align:center;color:var(--muted);padding:20px 14px 40px;font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.saved{font-size:.85rem;color:var(--muted);margin-top:6px}
+/* ---- app (PWA) additions ---- */
+.progress-panel{max-width:760px;margin:14px auto 0;padding:0 14px}
+.pp{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.pp-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.pp h2{font-size:1.15rem;margin:0}
+.pp-stats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:5px 10px;font-size:.92rem;color:var(--muted)}
+.stat b,.scoreline b{color:var(--text)}
+.offline-chip{font-size:.82rem;font-weight:700;color:#0b2410;background:var(--good);border-radius:999px;padding:3px 10px}
+.offline-chip[hidden]{display:none}
+#resumeBtn[hidden]{display:none}
+button.danger{color:#ffd2cc;border-color:#7a3a3a}
+.complete-row{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.mark-done{margin-top:0}
+.mark-done.done{background:#1c3b27;border-color:var(--good);color:#d7f5d9}
+section.sec-done{border-color:#3f6b48}
+section.sec-done h2::after{content:" ✓";color:var(--good)}
+nav.toc a.done::after{content:" ✓";color:var(--good)}
+.scoreline{font-size:.95rem;color:var(--muted);margin:4px 0 0}
+.selfcheck{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.selfcheck .sc-q{width:100%;font-size:.85rem;color:var(--muted)}
+.sc-btn{flex:1 1 120px;margin:0;min-height:44px;padding:8px 10px;font-size:.95rem;background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.sc-btn.got.on{background:var(--good);color:#0b2410;border-color:var(--good)}
+.sc-btn.miss.on{background:var(--danger);color:#2b0b0b;border-color:var(--danger)}
+.card.no-anim .card-inner{transition:none}
+.appbanner{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:200;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px;background:#18292b;border:1px solid var(--accent);border-radius:14px;padding:10px 10px 10px 12px;box-shadow:0 8px 30px rgba(0,0,0,.55)}
+.appbanner[hidden]{display:none}
+.ab-icon{width:40px;height:40px;border-radius:9px;flex:none}
+.ab-text{flex:1;min-width:0;font-size:.88rem;line-height:1.3}
+.ab-text strong{display:block}
+.appbanner button{margin:0;padding:10px 14px;white-space:nowrap}
+.ab-close{background:transparent;color:var(--muted);border:1px solid var(--border);min-width:44px;padding:0 10px}
+.share-ico{display:inline-block;width:1.1em;height:1.1em;vertical-align:-.2em}
+body.has-banner{padding-bottom:100px}
+main > section{scroll-margin-top:10px}
+/* ---- module 4/5 widgets ---- */
+.lede{font-size:1.15rem;font-weight:700;color:var(--accent);margin:0 0 6px}
+.terms{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.term{min-height:36px;margin:0;padding:4px 12px;border-radius:999px;background:transparent;border:1.5px solid var(--accent);color:var(--accent);font-weight:600;font-size:.9rem}
+.term[aria-expanded=true]{background:var(--accent);color:#05211e}
+.term-pop{display:none;margin:8px 0 2px;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--accent);font-size:.95rem}
+.term-pop.show{display:block;animation:fade .2s ease}
+.widget{background:#15181c;border:1px solid var(--border);border-radius:12px;padding:14px;margin:16px 0}
+.widget .wtitle{display:block;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.widget .wnote{font-size:.85rem;color:var(--muted);margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{margin:0;min-height:40px;padding:6px 14px;border-radius:999px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-weight:600;font-size:.92rem}
+.chips button[aria-pressed=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+input[type=number],select{width:100%;font:inherit;font-size:16px;color:var(--text);background:#0d0f12;border:1px solid var(--border);border-radius:10px;padding:10px 12px;min-height:46px}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:36px;margin:4px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media(max-width:380px){.grid3{grid-template-columns:1fr 1fr}}
+.fld label,.lbl{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.ro{background:var(--panel2);border-radius:10px;padding:8px 10px;border:1px solid var(--border)}
+.ro .k{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ro .v{display:block;font-size:1.25rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.math{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--panel2);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;white-space:pre-wrap}
+.math.show{display:block}
+.toggle{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:.95rem;cursor:pointer;min-height:44px}
+.toggle input{width:22px;height:22px;accent-color:var(--accent)}
+.warnbox{border-left:5px solid var(--hot);background:#3a1f1d;border-radius:10px;padding:10px 12px;margin:12px 0}
+.flash{animation:flash .6s ease 2}
+@keyframes flash{50%{background:#7a1f1a}}
+.bad .v{color:var(--hot)}
+svg{max-width:100%;height:auto;display:block}
+.svgbox{background:#0f1114;border-radius:10px;border:1px solid var(--border);margin-top:10px;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.status{font-weight:700;margin-top:10px}
+.ok{color:var(--accent)} .no{color:var(--hot)}
+.steps-list{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92rem;background:var(--panel2);border-radius:10px;padding:10px 12px;margin-top:10px;white-space:pre-wrap}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;margin:0;min-height:42px;padding:6px 10px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-size:.9rem}
+.tabs button[aria-selected=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+.flame{font-size:1.1rem}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--panel2);padding:2px 6px;border-radius:6px;white-space:nowrap}
+.pill{display:inline-block;font-size:.8rem;font-weight:800;border-radius:999px;padding:2px 10px}
+.check-row{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:700;min-height:44px;cursor:pointer}
+.check-row input{width:24px;height:24px;accent-color:var(--accent)}
+.result-big{font-size:1.15rem;font-weight:800;color:#fff;margin-top:10px}
+@media(prefers-reduced-motion:reduce){.anim,.anim *{animation:none!important;transition:none!important}}
+#segBar{display:flex;gap:4px;margin:8px 0 4px}
+#segBar div{flex:1;height:8px;border-radius:4px;background:var(--panel2)}
+#segBar div.on{background:var(--accent)}
+.streak-big{font-size:1.1rem;font-weight:700;color:var(--accent2);margin:6px 0 0}
+.streak-big small{color:var(--muted);font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+.sh-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.sh-split input[type=number]{margin-top:4px}
+.shbar{height:14px;border-radius:99px;background:var(--panel2);overflow:hidden;margin-top:12px;border:1px solid var(--border)}
+.shbar div{height:100%;width:0;background:var(--accent);transition:width .3s,background .3s}
+.shbar.danger div{background:var(--hot)}
+.jar-row{display:flex;gap:14px;align-items:flex-end}
+.jar{position:relative;width:90px;height:200px;border:3px solid #9AA0A6;border-top-width:6px;border-radius:6px 6px 14px 14px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;flex:none;background:#0f1114}
+.lay{width:100%;transition:height .25s linear}
+.lay.n2{background:#5ab4ff}.lay.o2{background:#2EC4B6}.lay.h2o{background:#b388ff}
+.jar-info{flex:1;min-width:0}
+.jar-info .legend span{display:block}
+#cycSvg .comp{cursor:pointer}
+#cycSvg .comp rect{transition:stroke .3s,fill .3s}
+#cycSvg .comp.active rect{stroke:#2EC4B6;stroke-width:4;fill:#173a38}
+#glSvg .piston{transition:transform .8s ease}
+.gl-res-bad{border-color:var(--hot)!important}
+.gl-res-bad .v{color:var(--hot)}
+td.ok,td.no{font-weight:800}
+td.ok{color:var(--accent)} td.no{color:var(--hot)}
+#logTable{min-width:420px}
+#practice td input{min-width:90px}
+@media(prefers-reduced-motion:reduce){.lay,#glSvg .piston,.shbar div{transition:none}}
+
+</style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m5">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 5</h1>
+  <p class="sub">Gases</p>
+  <p class="note">(topics follow Chapter 5 of Modern Refrigeration and Air Conditioning, 21st/22nd ed.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 50 min + ride-along practice</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#intro">Start Here</a></li>
+      <li><a href="#s1">1. Volume</a></li>
+      <li><a href="#s2">2. Pressure: Absolute vs. Gauge</a></li>
+      <li><a href="#s3">3. The Four Gas Laws</a></li>
+      <li><a href="#s4">4. Saturated Vapor and Superheat</a></li>
+      <li><a href="#s5">5. Dalton's Law and Pulling a Vacuum</a></li>
+      <li><a href="#s6">6. The Refrigeration Cycle</a></li>
+      <li><a href="#quiz">Quiz Cards</a></li>
+      <li><a href="#action">Action Item: Read the gauges</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/6</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/8</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">🔥 Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="intro" class="hook">
+  <h2>🧊 Start Here: Gases</h2>
+  <p class="big">In Module 4 you learned how heat moves and how to measure it. Now we'll work with the stuff that actually carries heat through a system: refrigerant gas. You'll learn why techs add 14.7 to gauge readings and how pressure reveals a refrigerant's temperature.</p>
+  <p><a href="m4.html" style="color:var(--accent)">← Need a refresher? Open Module 4: Energy and Matter</a></p>
+</section>
+
+<section id="s1">
+  <h2>1. Volume</h2>
+  <p class="lede">How much room a gas takes up</p>
+  <p><strong>Volume</strong> is the amount of space something occupies. It's measured in cubic feet (ft³) or cubic inches in US units, and cubic meters or liters in SI. A gas doesn't have a volume of its own; it expands to fill whatever holds it. Give the same pound of vapor more room and it spreads thinner; give it less and it crowds together. Volume, pressure, and temperature are tied together, and the gas laws describe how.</p>
+  <div class="widget">
+    <span class="wtitle">Movable-wall gas box</span>
+    <div class="svgbox"><canvas id="volBox" width="600" height="260" style="width:100%;display:block" role="img" aria-label="A box of bouncing gas particles with a movable right wall"></canvas></div>
+    <label class="lbl" for="volW">Drag to move the wall: <b id="volWv">100</b>% of the starting room</label>
+    <input type="range" id="volW" min="30" max="100" value="100">
+    <p class="status" id="volOut" aria-live="polite">Same amount of gas, same room.</p>
+  </div>
+  <div class="terms"><button class="term" data-def="The amount of space something occupies: ft³ or in³ (US), m³ or liters (SI).">volume</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2">
+  <h2>2. Pressure: Absolute vs. Gauge</h2>
+  <p class="lede">Where does zero start?</p>
+  <p><strong>Pressure</strong> is force spread over an area, measured in pounds per square inch (psi). The air around us presses down at about <strong>14.7 psi at sea level</strong>.</p>
+  <ul>
+    <li><strong>Gauge pressure (psig)</strong> treats atmospheric pressure as zero. Your manifold gauges read psig. An open gauge reads 0 psig.</li>
+    <li><strong>Absolute pressure (psia)</strong> starts at a perfect vacuum, true zero.</li>
+    <li><strong>psia = psig + 14.7</strong> (at sea level)</li>
+  </ul>
+  <p>Below atmospheric pressure, gauges show vacuum in inches of mercury (inHg). Deep vacuum is measured in <strong>microns</strong> (1 micron = 1/1,000 mm of mercury). Perfect vacuum is 0 microns, and atmospheric pressure is about 760,000 microns.</p>
+  <div class="widget">
+    <span class="wtitle">Dual-scale gauge</span>
+    <div class="svgbox"><svg id="dualGauge" viewBox="0 0 260 228" role="img" aria-label="Gauge with an absolute ring outside and a gauge ring inside"></svg></div>
+    <label class="lbl" for="pSlide">Move the needle (deep vacuum to 300 psig)</label>
+    <input type="range" id="pSlide" min="-14.7" max="300" step="0.1" value="0">
+    <div class="grid2">
+      <div class="fld"><label for="pG">Gauge (psig)</label><input type="number" inputmode="decimal" step="any" id="pG" value="0"></div>
+      <div class="fld"><label for="pA">Absolute (psia)</label><input type="number" inputmode="decimal" step="any" id="pA" value="14.7"></div>
+    </div>
+    <p class="status" id="pVac" aria-live="polite"></p>
+    <p class="wnote">psia = psig + 14.7 (sea level). Vacuum: inHg ≈ (14.7 − psia) × 2.036; microns ≈ psia × 51,715.</p>
+  </div>
+  <div class="terms"><button class="term" data-def="Gauge pressure. Treats atmospheric pressure as zero; what your manifold gauges read.">psig</button><button class="term" data-def="Absolute pressure. Starts at a perfect vacuum (true zero). psia = psig + 14.7.">psia</button><button class="term" data-def="Inches of mercury, used for vacuum below atmospheric pressure.">inHg</button><button class="term" data-def="1/1,000 mm of mercury. Used for deep vacuum; atmosphere ≈ 760,000 microns.">micron</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3">
+  <h2>3. The Four Gas Laws</h2>
+  <p class="lede">Squeeze it, heat it, predict it</p>
+  <p>Each law holds one thing constant and links the other two. <strong>Every pressure and temperature must be absolute</strong>: psia, and degrees <strong>Rankine (°R = °F + 460)</strong>.</p>
+  <ol>
+    <li><strong>Boyle's law (constant temperature):</strong> P₁V₁ = P₂V₂. Halve the volume and the pressure doubles. <em>Example:</em> 1 ft³ of air at 14.7 psia squeezed to 0.25 ft³ reaches 58.8 psia.</li>
+    <li><strong>Charles' law (constant pressure):</strong> V₁/T₁ = V₂/T₂. Gas expands as it warms.</li>
+    <li><strong>Gay-Lussac's law (constant volume):</strong> P₁/T₁ = P₂/T₂. Heat a sealed container and the pressure goes up.</li>
+    <li><strong>Combined gas law:</strong> (P₁V₁)/T₁ = (P₂V₂)/T₂, for when all three change.</li>
+  </ol>
+  <div class="callout"><span class="label">🧮 Worked example: a heated nitrogen cylinder</span>
+    <p>A sealed nitrogen cylinder reads <strong>2,000 psig at 70°F</strong> and is left in a truck that heats up to <strong>120°F</strong>. The volume is fixed, so we use Gay-Lussac's law.</p>
+    <ul>
+      <li>P₁ = 2,000 + 14.7 = <strong>2,014.7 psia</strong></li>
+      <li>T₁ = 70 + 460 = <strong>530°R</strong>; T₂ = 120 + 460 = <strong>580°R</strong></li>
+      <li>P₂ = 2,014.7 × (580 ÷ 530) ≈ <strong>2,204.8 psia</strong></li>
+      <li>Back to gauge: 2,204.8 − 14.7 ≈ <strong>2,190 psig</strong></li>
+    </ul>
+    <p>That's a rise of about 190 psi.</p>
+    <button type="button" class="secondary" id="loadCyl">▶ Run this example in the gas-law lab</button>
+  </div>
+  <div class="predict" data-id="p3">
+    <p class="q">⏸️ Pause and Predict: What answer do you get if you plug 2,000 psig, 70°F, and 120°F straight into P₂ = P₁ × (T₂ ÷ T₁)? Is it right?</p>
+    <label for="p3-in">Your prediction (optional)</label>
+    <textarea id="p3-in" placeholder="About ___ psig, and it's ___"></textarea>
+    <button type="button" class="reveal" aria-expanded="false" aria-controls="p3-ans">Reveal answer</button>
+    <div class="yours" aria-live="polite">Your answer: <span></span></div>
+    <div class="answer" id="p3-ans">2,000 × (120 ÷ 70) ≈ 3,429 psig, which is wildly wrong. See the common error below.</div>
+  </div>
+  <div class="warnbox" role="note"><strong>⚠️ Common error:</strong> Plugging °F and psig straight into the formula. 2,000 × (120 ÷ 70) ≈ 3,429 psig, which is wildly wrong. Fahrenheit's zero isn't true zero, so the ratio is meaningless. Always convert to Rankine and psia first.</div>
+  <p><em>Note:</em> This works for a cylinder holding only gas, like nitrogen. A refrigerant cylinder holding liquid and vapor follows its pressure-temperature (PT) chart instead (see Section 4).</p>
+  <div class="widget">
+    <span class="wtitle">Gas-law lab</span>
+    <div class="tabs" role="tablist" id="glTabs">
+      <button role="tab" data-v="boyle">Boyle</button><button role="tab" data-v="charles">Charles</button><button role="tab" data-v="gay">Gay-Lussac</button><button role="tab" data-v="combined">Combined</button>
+    </div>
+    <p class="wnote" id="glDesc" style="margin-top:0"></p>
+    <div class="grid2" id="glFields"></div>
+    <div class="grid2">
+      <div class="fld"><label for="glPU">Pressures entered as</label><select id="glPU"><option value="psig">psig (gauge)</option><option value="psia">psia (absolute)</option></select></div>
+      <div class="fld"><span class="lbl">Temperatures entered as</span><div class="ro" style="padding:10px">°F (the lab adds 460)</div></div>
+    </div>
+    <label class="toggle"><input type="checkbox" id="glMistake"> Units check: try the Fahrenheit mistake (skip the absolute conversion)</label>
+    <div class="svgbox"><svg id="glSvg" viewBox="0 0 300 170" aria-hidden="true"></svg></div>
+    <div class="readouts" id="glOutWrap" aria-live="polite">
+      <div class="ro" id="glRes"><span class="k" id="glResK">Result</span><span class="v" id="glResV">–</span></div>
+    </div>
+    <div class="steps-list" id="glSteps"></div>
+    <div class="warnbox" id="glWarn" hidden></div>
+  </div>
+  <div class="terms"><button class="term" data-def="Absolute temperature scale: °R = °F + 460. Zero °R is true zero.">Rankine</button><button class="term" data-def="Constant temperature: P₁V₁ = P₂V₂.">Boyle's law</button><button class="term" data-def="Constant pressure: V₁/T₁ = V₂/T₂.">Charles' law</button><button class="term" data-def="Constant volume: P₁/T₁ = P₂/T₂.">Gay-Lussac's law</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4">
+  <h2>4. Saturated Vapor and Superheat</h2>
+  <p class="lede">When pressure tells you temperature</p>
+  <p>When liquid and vapor refrigerant are together, as in a boiling evaporator or a cylinder that's partly liquid, the refrigerant is <strong>saturated</strong>. At saturation, each pressure matches exactly one temperature, the <strong>saturation temperature</strong>. A <strong>PT chart</strong> lists these pairs for each refrigerant. So a gauge reading tells you the boiling temperature inside a coil.</p>
+  <ul>
+    <li><strong>Superheat</strong> = actual vapor temperature − saturation temperature. Once all the liquid boils off, more heat raises the vapor's temperature above saturation. <em>Example:</em> the suction line reads 50°F, and the PT chart gives 40°F saturation. Superheat = 10°F.</li>
+    <li><strong>Subcooling</strong> works the same way on the liquid side: saturation temperature − actual liquid temperature.</li>
+  </ul>
+  <p>Superheat confirms that only vapor reaches the compressor. Liquid can damage it.</p>
+  <div class="widget">
+    <span class="wtitle">Superheat calculator</span>
+    <div class="chips" id="refChips"><button data-v="R-410A">R-410A</button><button data-v="R-22">R-22</button></div>
+    <div class="sh-split">
+      <div class="fld"><label for="shP">Suction gauge: <b id="shPv">118</b> psig</label><input type="range" id="shP" min="20" max="200" step="1" value="118"><input type="number" inputmode="decimal" step="any" id="shPn" value="118" aria-label="Suction pressure in psig"></div>
+      <div class="fld"><label for="shT">Suction line temp: <b id="shTv">50</b>°F</label><input type="range" id="shT" min="0" max="90" step="1" value="50"><input type="number" inputmode="decimal" step="any" id="shTn" value="50" aria-label="Suction line temperature in °F"></div>
+    </div>
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">Saturation temp (approx.)</span><span class="v" id="shSat">–</span></div>
+      <div class="ro"><span class="k">Superheat</span><span class="v" id="shOut">–</span></div>
+    </div>
+    <div class="shbar" aria-hidden="true"><div id="shFill"></div></div>
+    <p class="status" id="shMsg" aria-live="polite"></p>
+    <p class="wnote">⚠️ Built-in PT values are <strong>approximate</strong>, rounded from standard PT data, for practice only. On a real call, use a PT chart (or PT app) for that specific refrigerant.</p>
+  </div>
+  <div class="terms"><button class="term" data-def="Liquid and vapor together. Each pressure matches exactly one temperature.">saturated</button><button class="term" data-def="Actual vapor temperature − saturation temperature.">superheat</button><button class="term" data-def="Saturation temperature − actual liquid temperature.">subcooling</button><button class="term" data-def="Pressure-temperature chart: saturation pressure/temperature pairs for one refrigerant.">PT chart</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5">
+  <h2>5. Dalton's Law and Pulling a Vacuum</h2>
+  <p class="lede">Every gas pulls its own weight</p>
+  <p><strong>Dalton's law:</strong> In a mix of gases, the total pressure equals the sum of each gas's <strong>partial pressure</strong>. Each gas acts as if it were alone in the space.</p>
+  <p>Before charging, a system holds air (nitrogen and oxygen) and water vapor. Your micron gauge reads the <em>total</em> of those partial pressures. A vacuum pump removes them, and as pressure drops, moisture boils at lower temperatures. At about 70°F, water boils near <strong>19,000 microns</strong>. At a few hundred microns, its boiling point is well below freezing.</p>
+  <p>Why it matters on the job:</p>
+  <ul>
+    <li>When the pressure <strong>rises and levels off</strong> after you isolate the pump, moisture is still boiling off. Keep pulling.</li>
+    <li>When the pressure <strong>keeps rising steadily</strong>, air is leaking in. Find the leak.</li>
+    <li><strong>Triple evacuation</strong> breaks the vacuum with dry nitrogen, which dilutes the water vapor's partial pressure so that more moisture leaves with each pull.</li>
+  </ul>
+  <div class="widget anim">
+    <span class="wtitle">Pressure jar</span>
+    <div class="jar-row">
+      <div class="jar" id="jar" aria-hidden="true"><div class="lay h2o" id="layH"></div><div class="lay o2" id="layO"></div><div class="lay n2" id="layN"></div></div>
+      <div class="jar-info">
+        <div class="ro"><span class="k">Micron gauge (total)</span><span class="v" id="jarTotal">760,000</span></div>
+        <div class="legend" style="flex-direction:column;gap:4px" id="jarLegend"></div>
+      </div>
+    </div>
+    <p class="wnote">Bar height uses a log scale so you can still see it at a few hundred microns; layer sizes show each gas's share of the total.</p>
+    <div class="row"><button type="button" id="runPump">▶ Run pump</button><button type="button" class="secondary" id="isolate" disabled>🔒 Isolate</button><button type="button" class="secondary" id="jarReset">↺ Reset</button></div>
+    <div class="svgbox"><svg id="holdSvg" viewBox="0 0 300 140" role="img" aria-label="Vacuum hold test graph"></svg></div>
+    <div id="diag" hidden>
+      <p class="status">After isolating: is it moisture or a leak?</p>
+      <div class="row"><button type="button" class="secondary" id="dMoist">💧 Moisture</button><button type="button" class="secondary" id="dLeak">🕳️ Leak</button></div>
+    </div>
+    <p class="status" id="jarMsg" aria-live="polite"></p>
+  </div>
+  <div class="terms"><button class="term" data-def="Total pressure of a gas mix = the sum of each gas's partial pressure.">Dalton's law</button><button class="term" data-def="The pressure one gas in a mix would make if it were alone in the space.">partial pressure</button><button class="term" data-def="Breaking the vacuum with dry nitrogen between pulls to dilute the water vapor.">triple evacuation</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6">
+  <h2>6. The Refrigeration Cycle</h2>
+  <p class="lede">Four steps, one loop</p>
+  <ol class="cycle">
+    <li><strong>Compression:</strong> The compressor squeezes low-pressure vapor into hot, high-pressure vapor.</li>
+    <li><strong>Condensation:</strong> In the condenser, the vapor gives up heat to outdoor air and turns to liquid. That's the hot air off the coil from Module 4.</li>
+    <li><strong>Expansion:</strong> The metering device (TXV, piston, or capillary tube) drops the pressure sharply, and some liquid flashes to vapor as it cools.</li>
+    <li><strong>Evaporation:</strong> In the evaporator, cold low-pressure refrigerant boils by absorbing heat from indoor air, then returns to the compressor.</li>
+  </ol>
+  <p>Heat is absorbed indoors through latent heat at low pressure and rejected outdoors at high pressure.</p>
+  <div class="widget">
+    <span class="wtitle">Cycle animator</span>
+    <div class="svgbox"><svg id="cycSvg" viewBox="0 0 320 250" role="img" aria-label="Refrigeration cycle loop with compressor, condenser, metering device, and evaporator"></svg></div>
+    <div class="legend"><span><i style="background:#ff6b5b"></i>Hot vapor</span><span><i style="background:#ff9f43"></i>Hot liquid</span><span><i style="background:#5ab4ff"></i>Cold liquid/vapor</span></div>
+    <div class="row"><button type="button" id="cycPlay">⏸ Pause</button><button type="button" class="secondary" id="cycStep">Next step →</button></div>
+    <div class="callout" id="cycInfo" aria-live="polite" style="margin-top:12px"><span class="label">Tap a component</span>Tap any part of the loop to pause and see its pressure side, state change, and heat direction.</div>
+  </div>
+  <div class="terms"><button class="term" data-def="The TXV, piston, or capillary tube that drops the pressure before the evaporator.">metering device</button><button class="term" data-def="Hot, high-pressure part of the system: compressor discharge, condenser, liquid line.">high side</button><button class="term" data-def="Cold, low-pressure part: after the metering device, evaporator, suction line.">low side</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz">
+  <div class="quiz-top">
+    <h2>🃏 Quiz Cards</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Flip to check. Build your streak.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🔥 streak resets on a miss.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action">
+  <h2>🛠️ Action Item: Read the gauges, predict the temperature</h2>
+  <p>On your next ride-along, write down each gauge reading and the refrigerant type. Predict the saturation temperature <em>before</em> you look it up. Then check your guess on a PT chart (or the PT app) for <strong>that specific refrigerant</strong>. The same pressure means very different temperatures in different refrigerants.</p>
+  <h3>Practice table</h3>
+  <p><em>All values are approximate examples rounded from standard PT data. Always confirm on a PT chart.</em> Type your prediction, then tap Check.</p>
+  <div class="table-wrap">
+    <table id="practice">
+      <thead><tr><th>Call</th><th>Refrigerant</th><th>Side</th><th>Gauge reading</th><th>My prediction (°F)</th><th>Approx. saturation temp</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="row"><button type="button" id="practiceCheck">✓ Check my predictions</button></div>
+  <p class="status" id="practiceOut" aria-live="polite"></p>
+  <div class="widget">
+    <span class="wtitle">Ride-along logbook</span>
+    <div class="chips" id="logRef"><button data-v="R-410A">R-410A</button><button data-v="R-22">R-22</button><button data-v="R-454B">R-454B</button><button data-v="R-32">R-32</button><button data-v="Other">Other</button></div>
+    <div class="grid3">
+      <div class="fld"><label for="logP">Gauge (psig)</label><input type="number" inputmode="decimal" step="any" id="logP"></div>
+      <div class="fld"><label for="logGuess">My prediction °F</label><input type="number" inputmode="decimal" step="any" id="logGuess"></div>
+      <div class="fld"><label for="logPT">PT chart value °F</label><input type="number" inputmode="decimal" step="any" id="logPT"></div>
+    </div>
+    <p class="result-big" id="logErr" aria-live="polite">Error: –</p>
+    <button type="button" id="logAdd">+ Save to logbook</button>
+    <div class="table-wrap"><table id="logTable"><thead><tr><th>#</th><th>Refrigerant</th><th>psig</th><th>Guess</th><th>PT</th><th>Error</th></tr></thead><tbody></tbody></table></div>
+    <button type="button" class="secondary danger" id="logClear">Clear logbook</button>
+  </div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I predicted saturation temps on real calls.</label>
+</section>
+
+</main>
+<footer><a href="m4.html" style="color:var(--accent)">← Module 4</a> · HVAC Module 5 · Gases</footer>
+
+
+<script>
+var CFG={"prefix": "hvac5:", "sections": ["s1", "s2", "s3", "s4", "s5", "s6"], "firstId": "intro", "appName": "HVAC Module 5", "shortName": "Module 5", "appDesc": "Gases: interactive HVAC lesson for Ian.", "mid": "m5"};
+</script>
+<script src="assets/core.js"></script>
+<script>
+/* ===== Module 5 widgets ===== */
+(function(){
+  "use strict";
+  var $=H.$, num=H.num, fmt=H.fmt, each=H.each, store=H.store, RM=H.reduceMotion;
+  var SVGNS="http://www.w3.org/2000/svg";
+  function svgEl(tag,attrs,txt){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+  var ATM=14.7;
+
+  /* ---- Section 1: movable-wall gas box ---- */
+  var vc=$("volBox"), vx=vc.getContext&&vc.getContext("2d"), vs=$("volW"), VW=vc.width, VH=vc.height, VR=7;
+  var dots=[]; for(var i=0;i<30;i++){var a=Math.random()*Math.PI*2;dots.push({x:20+Math.random()*(VW-40),y:20+Math.random()*(VH-40),vx:Math.cos(a)*2.2,vy:Math.sin(a)*2.2});}
+  var hits=0, hitT=0;
+  function wallX(){return 30+(VW-60)*(+vs.value/100);}
+  function stepVol(){
+    var wx=wallX();
+    dots.forEach(function(d){
+      d.x+=d.vx; d.y+=d.vy;
+      if(d.x<30+VR){d.x=30+VR;d.vx=Math.abs(d.vx);hits++;}
+      if(d.x>wx-VR){d.x=wx-VR;d.vx=-Math.abs(d.vx);hits++;}
+      if(d.y<VR){d.y=VR;d.vy=Math.abs(d.vy);hits++;}
+      if(d.y>VH-VR){d.y=VH-VR;d.vy=-Math.abs(d.vy);hits++;}
+    });
+  }
+  function drawVol(){
+    if(!vx) return; var wx=wallX();
+    vx.clearRect(0,0,VW,VH);
+    vx.fillStyle="#262b33"; vx.fillRect(0,0,30,VH);
+    vx.fillStyle="#2EC4B6"; vx.fillRect(wx,0,14,VH);
+    vx.fillStyle="#9AA0A6"; vx.fillRect(wx+14,VH/2-6,VW-wx,12);
+    vx.fillStyle="#ff9f43"; dots.forEach(function(d){vx.beginPath();vx.arc(d.x,d.y,VR,0,Math.PI*2);vx.fill();});
+  }
+  function placeStatic(){var wx=wallX();dots.forEach(function(d,i){d.x=30+VR+((i*97)%Math.max(1,(wx-30-2*VR)));d.y=VR+((i*53)%(VH-2*VR));});}
+  function volText(){
+    var p=+vs.value; $("volWv").textContent=p;
+    $("volOut").textContent=p>=100?"Same amount of gas (30 particles), full room.":"Same amount of gas (30 particles), less room: about "+fmt(100/p,1)+"× as crowded, so the particles hit the walls more often (pressure goes up).";
+  }
+  vs.addEventListener("input",function(){volText();if(RM){placeStatic();drawVol();}else{dots.forEach(function(d){var wx=wallX();if(d.x>wx-VR)d.x=wx-VR-Math.random()*20;});}});
+  var dragging=false;
+  function evX(e){var r=vc.getBoundingClientRect();return (e.clientX-r.left)*(VW/r.width);}
+  vc.addEventListener("pointerdown",function(e){if(Math.abs(evX(e)-wallX())<40){dragging=true;vc.setPointerCapture(e.pointerId);}});
+  vc.addEventListener("pointermove",function(e){if(!dragging)return;var p=Math.round((evX(e)-30)/(VW-60)*100);vs.value=Math.max(30,Math.min(100,p));vs.dispatchEvent(new Event("input"));});
+  vc.addEventListener("pointerup",function(){dragging=false;});
+  vc.style.touchAction="pan-y";
+  var volVis=true;
+  volText();
+  if(RM){placeStatic();drawVol();}
+  else{ if("IntersectionObserver" in window) new IntersectionObserver(function(en){volVis=en[0].isIntersecting;}).observe(vc);
+    (function loop(){ if(volVis){stepVol();drawVol();} requestAnimationFrame(loop); })(); }
+
+  /* ---- Section 2: dual-scale gauge + converter ---- */
+  var dg=$("dualGauge"), GX=130, GY=112, ROUT=88, RIN=60, PMAXA=300+ATM;
+  function gAng(psia){return (225-270*psia/PMAXA)*Math.PI/180;}
+  function gpt(a,r){return [GX+r*Math.cos(a),GY-r*Math.sin(a)];}
+  function arcPath(r,p0,p1){var a=gpt(gAng(p0),r),b=gpt(gAng(p1),r);var large=(gAng(p0)-gAng(p1))>Math.PI?1:0;return "M"+a[0]+" "+a[1]+" A"+r+" "+r+" 0 "+large+" 1 "+b[0]+" "+b[1];}
+  dg.appendChild(svgEl("path",{d:arcPath(ROUT,0,PMAXA),stroke:"#2EC4B6","stroke-width":"3",fill:"none"}));
+  dg.appendChild(svgEl("path",{d:arcPath(RIN,0,ATM),stroke:"#b388ff","stroke-width":"8",fill:"none"}));
+  dg.appendChild(svgEl("path",{d:arcPath(RIN,ATM,PMAXA),stroke:"#f4a259","stroke-width":"3",fill:"none"}));
+  [0,50,100,150,200,250,300].forEach(function(v){var a=gAng(v),p=gpt(a,ROUT+12),q=gpt(a,ROUT),q2=gpt(a,ROUT-6);
+    dg.appendChild(svgEl("line",{x1:q[0],y1:q[1],x2:q2[0],y2:q2[1],stroke:"#2EC4B6","stroke-width":"2"}));
+    dg.appendChild(svgEl("text",{x:p[0],y:p[1]+3,"text-anchor":"middle","font-size":"9",fill:"#2EC4B6"},v));});
+  [0,50,100,150,200,250,300].forEach(function(v){var a=gAng(v+ATM),p=gpt(a,RIN-13),q=gpt(a,RIN+4),q2=gpt(a,RIN-4);
+    dg.appendChild(svgEl("line",{x1:q[0],y1:q[1],x2:q2[0],y2:q2[1],stroke:"#f4a259","stroke-width":"2"}));
+    dg.appendChild(svgEl("text",{x:p[0],y:p[1]+3,"text-anchor":"middle","font-size":"8",fill:"#f4a259"},v));});
+  dg.appendChild(svgEl("text",{x:GX,y:206,"text-anchor":"middle","font-size":"10",fill:"#2EC4B6"},"outer ring: psia (absolute)"));
+  dg.appendChild(svgEl("text",{x:GX,y:220,"text-anchor":"middle","font-size":"10",fill:"#f4a259"},"inner ring: psig (gauge) · purple = vacuum"));
+  var gNeedle=svgEl("line",{x1:GX,y1:GY,x2:GX,y2:GY-70,stroke:"#EDEAE4","stroke-width":"3","stroke-linecap":"round"}); dg.appendChild(gNeedle);
+  dg.appendChild(svgEl("circle",{cx:GX,cy:GY,r:"6",fill:"#EDEAE4"}));
+  var gRead=svgEl("text",{x:GX,y:GY+60,"text-anchor":"middle","font-size":"12","font-weight":"700",fill:"#EDEAE4"},""); dg.appendChild(gRead);
+  var pS=$("pSlide"), pG=$("pG"), pA=$("pA");
+  function setP(psig,src){
+    var psia=psig+ATM;
+    if(src!=="slide") pS.value=Math.max(-ATM,Math.min(300,psig));
+    if(src!=="g") pG.value=parseFloat(psig.toFixed(2));
+    if(src!=="a") pA.value=parseFloat(psia.toFixed(2));
+    var a=gAng(Math.max(0,Math.min(PMAXA,psia))), p=gpt(a,ROUT-8);
+    gNeedle.setAttribute("x2",p[0]); gNeedle.setAttribute("y2",p[1]);
+    gRead.textContent=fmt(psig,1)+" psig = "+fmt(psia,1)+" psia";
+    var m;
+    if(psia<0) m="⚠️ Below 0 psia isn't possible: perfect vacuum is true zero.";
+    else if(psig<0) m="Vacuum: about "+fmt((ATM-psia)*2.036,1)+" inHg below atmosphere, or about "+fmt(psia*51715,0)+" microns.";
+    else m="Above atmospheric. Gap between the rings is always 14.7 psi.";
+    $("pVac").textContent=m;
+  }
+  pS.addEventListener("input",function(){setP(+pS.value,"slide");});
+  pG.addEventListener("input",function(){var v=num(pG.value);if(!isNaN(v))setP(v,"g");});
+  pA.addEventListener("input",function(){var v=num(pA.value);if(!isNaN(v))setP(v-ATM,"a");});
+  setP(0);
+
+  /* ---- Section 3: gas-law lab ---- */
+  var LAWS={
+    boyle:{desc:"Boyle's law (constant temperature): P₁V₁ = P₂V₂. Solves for P₂.",f:[["P1","P₁ pressure"],["V1","V₁ volume (ft³)"],["V2","V₂ volume (ft³)"]],d:{P1:14.7,V1:1,V2:0.25,pu:"psia"},out:"P2"},
+    charles:{desc:"Charles' law (constant pressure): V₁/T₁ = V₂/T₂. Solves for V₂.",f:[["V1","V₁ volume (ft³)"],["T1","T₁ (°F)"],["T2","T₂ (°F)"]],d:{V1:1,T1:70,T2:120,pu:"psig"},out:"V2"},
+    gay:{desc:"Gay-Lussac's law (constant volume): P₁/T₁ = P₂/T₂. Solves for P₂.",f:[["P1","P₁ pressure"],["T1","T₁ (°F)"],["T2","T₂ (°F)"]],d:{P1:2000,T1:70,T2:120,pu:"psig"},out:"P2"},
+    combined:{desc:"Combined gas law: (P₁V₁)/T₁ = (P₂V₂)/T₂. Solves for P₂.",f:[["P1","P₁ pressure"],["V1","V₁ volume (ft³)"],["T1","T₁ (°F)"],["V2","V₂ volume (ft³)"],["T2","T₂ (°F)"]],d:{P1:100,V1:1,T1:70,V2:0.5,T2:120,pu:"psig"},out:"P2"}
+  };
+  var law="gay", glState={}; try{glState=JSON.parse(store.get("gl")||"{}")||{};}catch(e){glState={};}
+  var glF=$("glFields"), glPU=$("glPU"), glM=$("glMistake"), inputs={};
+  function vals(){var o={};for(var k in inputs)o[k]=inputs[k].value;o.pu=glPU.value;return o;}
+  function saveGl(){glState[law]=vals();store.set("gl",JSON.stringify(glState));}
+  function buildFields(){
+    var L=LAWS[law], st=glState[law]||L.d; glF.innerHTML=""; inputs={};
+    L.f.forEach(function(f){var w=H.el("div","fld"),lb=H.el("label",null,f[1]),inp=document.createElement("input");
+      inp.type="number";inp.step="any";inp.setAttribute("inputmode","decimal");inp.id="gl-"+f[0];lb.setAttribute("for",inp.id);
+      inp.value=st[f[0]]!=null?st[f[0]]:L.d[f[0]]; inp.addEventListener("input",function(){saveGl();gl();});
+      w.appendChild(lb);w.appendChild(inp);glF.appendChild(w);inputs[f[0]]=inp;});
+    glPU.value=st.pu||L.d.pu; glPU.parentNode.style.display=law==="charles"?"none":"";
+    $("glDesc").textContent=L.desc;
+    each($("glTabs").querySelectorAll("button"),function(b){b.setAttribute("aria-selected",String(b.getAttribute("data-v")===law));});
+    gl();
+  }
+  each($("glTabs").querySelectorAll("button"),function(b){b.type="button";b.addEventListener("click",function(){law=b.getAttribute("data-v");store.set("glLaw",law);buildFields();});});
+  glPU.addEventListener("change",function(){saveGl();gl();}); glM.addEventListener("change",gl);
+  /* piston drawing */
+  var gs=$("glSvg");
+  var cylG=svgEl("g",{transform:"translate(0,-20)"}); gs.appendChild(cylG);
+  cylG.appendChild(svgEl("rect",{x:20,y:30,width:200,height:90,rx:6,fill:"none",stroke:"#9AA0A6","stroke-width":"3"}));
+  var gasR=svgEl("rect",{x:23,y:33,width:150,height:84,fill:"rgba(46,196,182,.25)"}); cylG.appendChild(gasR);
+  var piston=svgEl("g",{"class":"piston"}); piston.appendChild(svgEl("rect",{x:0,y:32,width:12,height:86,fill:"#EDEAE4"})); piston.appendChild(svgEl("rect",{x:12,y:70,width:80,height:10,fill:"#9AA0A6"})); cylG.appendChild(piston);
+  var flame=svgEl("text",{x:120,y:124,"text-anchor":"middle","font-size":"16"},""); gs.appendChild(flame);
+  var gLbl1=svgEl("text",{x:20,y:146,"font-size":"11",fill:"#9AA0A6"},""), gLbl2=svgEl("text",{x:150,y:146,"font-size":"12","font-weight":"700",fill:"#EDEAE4"},""), gLbl3=svgEl("text",{x:20,y:163,"font-size":"10",fill:"#9AA0A6"},"");
+  gs.appendChild(gLbl1);gs.appendChild(gLbl2);gs.appendChild(gLbl3);
+  function drawPiston(vr,heat,p1,p2,bad){
+    var w=Math.max(20,Math.min(194,150*vr)); gasR.setAttribute("width",w);
+    piston.style.transform="translateX("+(23+w)+"px)";
+    flame.textContent=heat>0?"🔥":heat<0?"❄️":"";
+    gLbl1.textContent=p1?"Start: P₁ "+p1:""; gLbl2.textContent=(/^V/.test(p2)?"":"→ P₂ ")+p2; gLbl2.setAttribute("fill",bad?"#ff6b5b":"#EDEAE4"); gLbl3.textContent="V₂/V₁ = "+fmt(vr,2);
+  }
+  function gl(){
+    var L=LAWS[law], v={}, k; for(k in inputs) v[k]=num(inputs[k].value);
+    var pu=glPU.value, mistake=glM.checked, res=$("glRes"), warn=$("glWarn"), steps=[], out, unit, bad=false, warnTxt="";
+    for(k in v){ if(isNaN(v[k])){ $("glResV").textContent="–"; $("glSteps").textContent="Fill in every box."; warn.hidden=true; return; } }
+    var toA=function(p){return pu==="psig"?p+ATM:p;}, fromA=function(p){return pu==="psig"?p-ATM:p;};
+    var R=function(t){return t+460;};
+    if((v.T1!=null&&R(v.T1)<=0)||(v.T2!=null&&R(v.T2)<=0)){ $("glResV").textContent="–"; $("glSteps").textContent="Temperatures must be above −460°F (absolute zero)."; warn.hidden=true; return; }
+    if((v.V1!=null&&v.V1<=0)||(v.V2!=null&&v.V2<=0)){ $("glResV").textContent="–"; $("glSteps").textContent="Volumes must be greater than zero."; warn.hidden=true; return; }
+    var pLab=pu, rawR;
+    if(law==="charles"){
+      var V2=v.V1*R(v.T2)/R(v.T1);
+      steps=["T₁ = "+v.T1+" + 460 = "+R(v.T1)+"°R","T₂ = "+v.T2+" + 460 = "+R(v.T2)+"°R","V₂ = "+v.V1+" × ("+R(v.T2)+" ÷ "+R(v.T1)+") = "+fmt(V2,3)+" ft³"];
+      rawR=v.T1===0?Infinity:v.V1*v.T2/v.T1; out=V2; unit=" ft³";
+      if(mistake){bad=true; steps=["⚠️ Using °F directly: V₂ = "+v.V1+" × ("+v.T2+" ÷ "+v.T1+") = "+(isFinite(rawR)?fmt(rawR,3):"÷ 0 (undefined!)")+" ft³","Correct (°R): "+fmt(V2,3)+" ft³"]; out=rawR; warnTxt="Use absolute temperature (°R). Fahrenheit's zero isn't true zero, so the ratio is meaningless.";}
+      drawPiston(out/v.V1,v.T2-v.T1,"","V₂ "+fmt(out,3)+" ft³",bad);
+      $("glResK").textContent="V₂"; $("glResV").textContent=isFinite(out)?fmt(out,3)+unit:"undefined";
+    } else {
+      var P1a=toA(v.P1), P2a;
+      steps.push("P₁ = "+(pu==="psig"?v.P1+" + 14.7 = ":"")+fmt(P1a,1)+" psia");
+      if(law==="boyle"){ P2a=P1a*v.V1/v.V2; steps.push("P₂ = "+fmt(P1a,1)+" × ("+v.V1+" ÷ "+v.V2+") = "+fmt(P2a,1)+" psia"); rawR=v.P1*v.V1/v.V2; }
+      else if(law==="gay"){ P2a=P1a*R(v.T2)/R(v.T1); steps.push("T₁ = "+v.T1+" + 460 = "+R(v.T1)+"°R; T₂ = "+v.T2+" + 460 = "+R(v.T2)+"°R"); steps.push("P₂ = "+fmt(P1a,1)+" × ("+R(v.T2)+" ÷ "+R(v.T1)+") ≈ "+fmt(P2a,1)+" psia"); rawR=v.T1===0?Infinity:v.P1*v.T2/v.T1; }
+      else { P2a=P1a*v.V1*R(v.T2)/(R(v.T1)*v.V2); steps.push("T₁ = "+R(v.T1)+"°R; T₂ = "+R(v.T2)+"°R"); steps.push("P₂ = "+fmt(P1a,1)+" × ("+v.V1+" ÷ "+v.V2+") × ("+R(v.T2)+" ÷ "+R(v.T1)+") ≈ "+fmt(P2a,1)+" psia"); rawR=v.T1===0?Infinity:v.P1*v.V1*v.T2/(v.T1*v.V2); }
+      if(pu==="psig") steps.push("Back to gauge: "+fmt(P2a,1)+" − 14.7 ≈ "+fmt(P2a-ATM,1)+" psig");
+      out=fromA(P2a);
+      if(mistake){
+        if(law==="boyle"&&pu==="psia"){ warnTxt="Boyle's law has no temperature, and you already entered psia, so there's no mistake to make here. Switch to psig to see the gauge-pressure error."; }
+        else { bad=true; var why=law==="boyle"?"Use absolute pressure (psia). Gauge zero isn't true zero.":"Use absolute temperature (°R)"+(pu==="psig"?" and absolute pressure (psia)":"")+". Fahrenheit's zero isn't true zero, so the ratio is meaningless.";
+          warnTxt=why; steps=["⚠️ Raw numbers: P₂ = "+(isFinite(rawR)?fmt(rawR,1):"÷ 0 (undefined!)")+" "+pu,"Correct: "+fmt(out,1)+" "+pu+(isFinite(rawR)?" (off by "+fmt(Math.abs(rawR-out),0)+" psi)":"")]; out=rawR; }
+      }
+      drawPiston(law==="gay"?1:v.V2/v.V1,(v.T2!=null?v.T2-v.T1:0),fmt(v.P1,v.P1%1?1:0)+" "+pu,(isFinite(out)?fmt(out,1):"?")+" "+pu,bad);
+      $("glResK").textContent="P₂"; $("glResV").textContent=isFinite(out)?fmt(out,1)+" "+pu+(bad?"":(pu==="psig"?" ("+fmt(P2a,1)+" psia)":"")):"undefined";
+    }
+    res.classList.toggle("gl-res-bad",bad);
+    if(bad){res.classList.remove("flash");void res.offsetWidth;if(!RM)res.classList.add("flash");}
+    $("glSteps").textContent=steps.join("\n");
+    warn.hidden=!warnTxt; warn.textContent=warnTxt?("⚠️ "+warnTxt):"";
+  }
+  var savedLaw=store.get("glLaw"); if(savedLaw&&LAWS[savedLaw]) law=savedLaw;
+  buildFields();
+  $("loadCyl").addEventListener("click",function(){
+    law="gay"; glState.gay={P1:2000,T1:70,T2:120,pu:"psig"}; glM.checked=false; store.set("glLaw",law); buildFields(); saveGl();
+    $("glTabs").scrollIntoView({block:"center"});
+  });
+
+  /* ---- Section 4: saturation / superheat ---- */
+  /* Approximate saturation pressures (psig) vs temperature (°F), rounded from standard PT data. Practice only. */
+  var PT={
+    "R-410A":[[-20,26.3],[-10,36.5],[0,48.6],[10,62.6],[20,78.5],[30,96.8],[40,118],[45,129.9],[50,142.2],[60,169.6],[70,200.6],[80,235.3],[90,273.9],[100,316.7],[105,340],[110,364],[115,389.7],[120,416.2],[130,473.6]],
+    "R-22":[[-20,10.1],[-10,16.5],[0,24],[10,32.8],[20,43],[30,54.9],[40,68.5],[50,84],[60,101.6],[70,121.4],[80,143.6],[90,168.4],[100,195.9],[110,226.4],[120,259.9],[130,296.8]]
+  };
+  function satT(ref,psig){
+    var t=PT[ref]; if(!t||isNaN(psig)) return NaN;
+    if(psig<t[0][1]||psig>t[t.length-1][1]) return NaN;
+    for(var i=1;i<t.length;i++){ if(psig<=t[i][1]){ var a=t[i-1],b=t[i]; return a[0]+(psig-a[1])*(b[0]-a[0])/(b[1]-a[1]); } }
+    return NaN;
+  }
+  var ref="R-410A", shP=$("shP"), shPn=$("shPn"), shT=$("shT"), shTn=$("shTn");
+  function sh(){
+    var p=num(shPn.value), t=num(shTn.value), s=satT(ref,p);
+    $("shPv").textContent=isNaN(p)?"–":fmt(p,0); $("shTv").textContent=isNaN(t)?"–":fmt(t,0);
+    $("shSat").textContent=isNaN(s)?"off chart":"≈ "+fmt(s,1)+"°F";
+    var bar=document.querySelector(".shbar"), fill=$("shFill"), msg=$("shMsg");
+    if(isNaN(s)||isNaN(t)){ $("shOut").textContent="–"; fill.style.width="0"; msg.textContent=isNaN(s)?"That pressure is outside this small practice table. Use a full PT chart.":""; return; }
+    var S=t-s; $("shOut").textContent=fmt(S,1)+"°F";
+    var danger=S<=3; bar.classList.toggle("danger",danger);
+    fill.style.width=Math.max(4,Math.min(100,S/30*100))+"%";
+    $("shOut").style.color=danger?"var(--hot)":"var(--accent)";
+    msg.textContent=S<0?"Line reads colder than saturation: check your readings (liquid may be present).":danger?"⚠️ Superheat near 0°F: liquid floodback risk to the compressor.":"Vapor only: "+fmt(S,1)+"°F of superheat. Superheat = "+fmt(t,0)+" − "+fmt(s,1)+".";
+    store.set("sh",JSON.stringify({r:ref,p:shPn.value,t:shTn.value}));
+  }
+  function setRange(){ if(ref==="R-22"){shP.min=10;shP.max=150;} else {shP.min=30;shP.max=250;} }
+  shP.addEventListener("input",function(){shPn.value=shP.value;sh();});
+  shPn.addEventListener("input",function(){var v=num(shPn.value);if(!isNaN(v))shP.value=v;sh();});
+  shT.addEventListener("input",function(){shTn.value=shT.value;sh();});
+  shTn.addEventListener("input",function(){var v=num(shTn.value);if(!isNaN(v))shT.value=v;sh();});
+  var shSaved={}; try{shSaved=JSON.parse(store.get("sh")||"{}")||{};}catch(e){}
+  var refChips=H.chipGroup($("refChips"),function(v){
+    var changed=ref!==v; ref=v; setRange();
+    if(changed){ shPn.value=v==="R-22"?70:118; shP.value=shPn.value; }
+    sh();
+  });
+  if(shSaved.r&&PT[shSaved.r]){ ref=shSaved.r; setRange(); shPn.value=shSaved.p; shP.value=shSaved.p; shTn.value=shSaved.t; shT.value=shSaved.t; }
+  refChips.pick(ref);
+
+  /* ---- Section 5: Dalton's law pressure jar ---- */
+  var J0={n:593000,o:159000,h:8000}, J={n:J0.n,o:J0.o,h:J0.h}, jarBusy=false, scenario=null, holdPts=[];
+  var lN=$("layN"), lO=$("layO"), lH=$("layH");
+  function jarDraw(){
+    var tot=J.n+J.o+J.h, hp=Math.max(6,Math.log10(Math.max(tot,1))/Math.log10(760000)*100);
+    lN.style.height=(hp*J.n/tot)+"%"; lO.style.height=(hp*J.o/tot)+"%"; lH.style.height=(hp*J.h/tot)+"%";
+    $("jarTotal").textContent=fmt(tot,0)+" µ";
+    $("jarLegend").innerHTML='<span><i style="background:#5ab4ff"></i>Nitrogen: '+fmt(J.n,0)+' µ</span><span><i style="background:#2EC4B6"></i>Oxygen: '+fmt(J.o,0)+' µ</span><span><i style="background:#b388ff"></i>Water vapor: '+fmt(J.h,0)+' µ</span>';
+  }
+  var hs=$("holdSvg"), HX0=40,HX1=290,HY0=120,HY1=12, HMAX=5000;
+  function hx(t){return HX0+t/10*(HX1-HX0);} function hy(p){return HY0-Math.min(p,HMAX)/HMAX*(HY0-HY1);}
+  function holdAxes(){
+    hs.innerHTML="";
+    hs.appendChild(svgEl("line",{x1:HX0,y1:HY0,x2:HX1,y2:HY0,stroke:"#59616c"})); hs.appendChild(svgEl("line",{x1:HX0,y1:HY0,x2:HX0,y2:HY1,stroke:"#59616c"}));
+    [0,2500,5000].forEach(function(p){hs.appendChild(svgEl("text",{x:HX0-4,y:hy(p)+3,"text-anchor":"end","font-size":"8",fill:"#9AA0A6"},fmt(p,0)));});
+    hs.appendChild(svgEl("text",{x:(HX0+HX1)/2,y:HY0+14,"text-anchor":"middle","font-size":"9",fill:"#9AA0A6"},"minutes after isolating (0–10) · microns"));
+  }
+  holdAxes();
+  var holdLine=null;
+  function animate(dur,fn,done){
+    if(RM){fn(1);done&&done();return;}
+    var t0=null; function f(ts){if(t0==null)t0=ts;var k=Math.min(1,(ts-t0)/dur);fn(k);if(k<1)requestAnimationFrame(f);else done&&done();} requestAnimationFrame(f);
+  }
+  $("runPump").addEventListener("click",function(){
+    if(jarBusy) return; jarBusy=true; var s={n:J.n,o:J.o,h:J.h};
+    $("jarMsg").textContent="Pump running… every gas's partial pressure drops.";
+    holdAxes(); $("diag").hidden=true; scenario=null;
+    animate(3500,function(k){
+      J.n=s.n*Math.pow(117/s.n,k); J.o=s.o*Math.pow(31/s.o,k); J.h=s.h*Math.pow(250/s.h,k); jarDraw();
+    },function(){jarBusy=false; $("isolate").disabled=false;
+      $("jarMsg").textContent="Down to about "+fmt(J.n+J.o+J.h,0)+" microns. Notice water vapor is now the biggest share: moisture keeps boiling off. Tap Isolate to close the pump valve and watch the gauge.";});
+  });
+  $("isolate").addEventListener("click",function(){
+    if(jarBusy) return; jarBusy=true; $("isolate").disabled=true;
+    scenario=Math.random()<0.5?"moisture":"leak";
+    var s={n:J.n,o:J.o,h:J.h}, start=s.n+s.o+s.h;
+    holdAxes(); holdLine=svgEl("polyline",{fill:"none",stroke:"#f4a259","stroke-width":"3",points:""}); hs.appendChild(holdLine);
+    $("jarMsg").textContent="Valve closed. Watching the micron gauge for 10 minutes…";
+    animate(4000,function(k){
+      var pts=[]; for(var i=0;i<=Math.round(k*60);i++){var t=i/6, p=scenario==="moisture"?start+1600*(1-Math.exp(-t/1.8)):start+450*t; pts.push(hx(t)+","+hy(p));}
+      holdLine.setAttribute("points",pts.join(" "));
+      var t=k*10;
+      if(scenario==="moisture"){J.h=s.h+1600*(1-Math.exp(-t/1.8));}
+      else{var add=450*t; J.n=s.n+add*0.78; J.o=s.o+add*0.21; J.h=s.h+add*0.01;}
+      jarDraw();
+    },function(){jarBusy=false; $("diag").hidden=false; $("jarMsg").textContent="";});
+  });
+  function diagnose(g){
+    if(!scenario) return;
+    var right=g===scenario;
+    $("jarMsg").innerHTML=(right?'<span class="ok">✓ Right!</span> ':'<span class="no">✗ Not quite.</span> ')+
+      (scenario==="moisture"?"The pressure rose and leveled off, so moisture is still boiling off. Keep pulling (or try a triple evacuation with dry nitrogen).":"The pressure kept rising steadily, so air is leaking in. Find the leak.");
+    $("diag").hidden=true;
+  }
+  $("dMoist").addEventListener("click",function(){diagnose("moisture");});
+  $("dLeak").addEventListener("click",function(){diagnose("leak");});
+  $("jarReset").addEventListener("click",function(){if(jarBusy)return;J={n:J0.n,o:J0.o,h:J0.h};jarDraw();holdAxes();$("diag").hidden=true;$("isolate").disabled=true;scenario=null;$("jarMsg").textContent="Back to atmospheric pressure (about 760,000 microns).";});
+  jarDraw();
+
+  /* ---- Section 6: refrigeration cycle animator ---- */
+  var cs=$("cycSvg"), L0=58,R0=262,T0=50,B0=200, PER=2*(R0-L0)+2*(B0-T0);
+  function posAt(s){ s=((s%PER)+PER)%PER; var h=B0-T0, w=R0-L0;
+    if(s<h) return [R0,B0-s]; s-=h; if(s<w) return [R0-s,T0]; s-=w; if(s<h) return [L0,T0+s]; s-=h; return [L0+s,B0]; }
+  var hH=B0-T0, wW=R0-L0;
+  var sComp=hH/2, sCondEnd=hH+wW*0.5, sMeter=hH+wW+hH/2;
+  function colAt(s){ s=((s%PER)+PER)%PER; return s<sComp?"#5ab4ff":s<sCondEnd?"#ff6b5b":s<sMeter?"#ff9f43":"#5ab4ff"; }
+  cs.appendChild(svgEl("rect",{x:L0,y:T0,width:wW,height:hH,fill:"none",stroke:"#3a4049","stroke-width":"10","stroke-linejoin":"round"}));
+  cs.appendChild(svgEl("text",{x:160,y:16,"text-anchor":"middle","font-size":"10",fill:"#ff9f43"},"OUTDOORS · high side · heat out ↑"));
+  cs.appendChild(svgEl("text",{x:160,y:242,"text-anchor":"middle","font-size":"10",fill:"#5ab4ff"},"INDOORS · low side · heat in from room air"));
+  var dotsG=svgEl("g",{}); cs.appendChild(dotsG);
+  var cdots=[]; for(var di=0;di<26;di++){var c=svgEl("circle",{r:"4.5"});dotsG.appendChild(c);cdots.push({el:c,s:di*PER/26});}
+  var COMPS=[
+    {id:"compressor",name:"1. Compressor",x:R0,y:T0+hH/2,w:86,h:34,info:"<strong>Compression.</strong> High side out (low-pressure vapor in). The compressor squeezes low-pressure vapor into hot, high-pressure vapor. State: stays vapor, gets hot. Heat: energy added by the motor."},
+    {id:"condenser",name:"2. Condenser",x:L0+wW/2,y:T0,w:96,h:34,info:"<strong>Condensation.</strong> High-pressure side. The vapor gives up heat to outdoor air and turns to liquid. State: vapor → liquid. Heat: OUT to the outdoors (the hot air off the coil from Module 4)."},
+    {id:"metering",name:"3. Metering",x:L0,y:T0+hH/2,w:70,h:34,info:"<strong>Expansion.</strong> High side → low side. The metering device (TXV, piston, or capillary tube) drops the pressure sharply, and some liquid flashes to vapor as it cools. State: liquid → cold liquid + some flash vapor."},
+    {id:"evaporator",name:"4. Evaporator",x:L0+wW/2,y:B0,w:96,h:34,info:"<strong>Evaporation.</strong> Low-pressure side. Cold refrigerant boils by absorbing heat from indoor air, then returns to the compressor. State: liquid → vapor (latent heat). Heat: IN from the room."}
+  ];
+  COMPS.forEach(function(c,i){
+    var g=svgEl("g",{"class":"comp",tabindex:"0",role:"button","aria-label":c.name});
+    g.appendChild(svgEl("rect",{x:c.x-c.w/2,y:c.y-c.h/2,width:c.w,height:c.h,rx:"7",fill:"#262b33",stroke:"#59616c","stroke-width":"2"}));
+    g.appendChild(svgEl("text",{x:c.x,y:c.y+4,"text-anchor":"middle","font-size":"10","font-weight":"700",fill:"#EDEAE4"},c.name));
+    g.addEventListener("click",function(){showStep(i);setPlay(false);});
+    g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showStep(i);setPlay(false);}});
+    cs.appendChild(g); c.g=g;
+  });
+  var step=0, playing=!RM, lastTs=null, stepAcc=0;
+  function showStep(i){ step=i; COMPS.forEach(function(c,j){c.g.classList.toggle("active",j===i);}); $("cycInfo").innerHTML='<span class="label">'+COMPS[i].name.replace(/^\d\.\s*/,"Step "+(i+1)+": ")+"</span>"+COMPS[i].info; }
+  function placeDots(){ cdots.forEach(function(d){var p=posAt(d.s);d.el.setAttribute("cx",p[0]);d.el.setAttribute("cy",p[1]);d.el.setAttribute("fill",colAt(d.s));}); }
+  function setPlay(p){ playing=p; $("cycPlay").textContent=p?"⏸ Pause":"▶ Play"; lastTs=null; if(p) requestAnimationFrame(tick); }
+  var cycVis=true;
+  function tick(ts){
+    if(!playing) return;
+    if(lastTs!=null&&cycVis){ var dt=(ts-lastTs)/1000; cdots.forEach(function(d){d.s+=dt*55;}); placeDots(); stepAcc+=dt; if(stepAcc>3.5){stepAcc=0;showStep((step+1)%4);} }
+    lastTs=ts; requestAnimationFrame(tick);
+  }
+  if("IntersectionObserver" in window) new IntersectionObserver(function(en){cycVis=en[0].isIntersecting;}).observe(cs);
+  $("cycPlay").addEventListener("click",function(){setPlay(!playing);});
+  $("cycStep").addEventListener("click",function(){stepAcc=0;showStep((step+1)%4);});
+  placeDots(); COMPS.forEach(function(c){c.g.classList.remove("active");});
+  showStep(0);
+  setPlay(playing);
+
+  /* ---- Action item: practice table + logbook ---- */
+  var ROWS=[[1,"R-410A","Suction",118,40],[2,"R-410A","Suction",130,45],[3,"R-410A","Liquid/head",340,105],[4,"R-410A","Liquid/head",400,116],[5,"R-22","Suction",70,41],[6,"R-22","Liquid/head",200,101]];
+  var tb=document.querySelector("#practice tbody"), pin=[];
+  ROWS.forEach(function(r){
+    var tr=document.createElement("tr");
+    [r[0],r[1],r[2],r[3]+" psig"].forEach(function(x){tr.appendChild(H.el("td",null,String(x)));});
+    var td=document.createElement("td"), inp=document.createElement("input"); inp.type="number"; inp.step="any"; inp.setAttribute("inputmode","decimal"); inp.placeholder="°F"; inp.id="pr-"+r[0]; inp.setAttribute("aria-label","Call "+r[0]+" prediction in °F");
+    H.persistInput(inp,"pr"+r[0]); td.appendChild(inp); tr.appendChild(td);
+    var ans=H.el("td",null,"? (tap Check)"); tr.appendChild(ans); tb.appendChild(tr); pin.push([inp,ans,r]);
+  });
+  $("practiceCheck").addEventListener("click",function(){
+    var n=0,ok=0;
+    pin.forEach(function(x){ var v=num(x[0].value), a=x[2][4]; x[1].className="";
+      if(isNaN(v)){x[1].textContent="~"+a+"°F";return;} n++;
+      var e=v-a, good=Math.abs(e)<=3; if(good)ok++;
+      x[1].textContent="~"+a+"°F "+(good?"✓":"✗")+" ("+(e>=0?"+":"")+fmt(e,0)+")"; x[1].className=good?"ok":"no"; });
+    $("practiceOut").textContent=n?ok+" of "+n+" predictions within ±3°F.":"Answers revealed. Next time, type a prediction first!";
+  });
+  var logRef="R-410A", logs=[]; try{logs=JSON.parse(store.get("log")||"[]")||[];}catch(e){logs=[];}
+  H.chipGroup($("logRef"),function(v){logRef=v;}).pick("R-410A");
+  ["logP","logGuess","logPT"].forEach(function(id){H.persistInput($(id),id);$(id).addEventListener("input",logErr);});
+  function errHtml(g,p){var e=g-p;return (Math.abs(e)<=3?'<span class="ok">✓ ':'<span class="no">')+(e>=0?"+":"")+fmt(e,1)+"°F</span>";}
+  function logErr(){var g=num($("logGuess").value),p=num($("logPT").value);$("logErr").innerHTML="Error: "+(isNaN(g)||isNaN(p)?"–":errHtml(g,p)+(Math.abs(g-p)<=3?" within ±3°F":""));}
+  function logDraw(){var b=document.querySelector("#logTable tbody");b.innerHTML="";
+    logs.forEach(function(l,i){var tr=document.createElement("tr");tr.innerHTML="<td>"+(i+1)+"</td><td></td><td></td><td></td><td></td><td>"+errHtml(l.g,l.p)+"</td>";
+      tr.children[1].textContent=l.r;tr.children[2].textContent=l.psig;tr.children[3].textContent=l.g+"°F";tr.children[4].textContent=l.p+"°F";b.appendChild(tr);});}
+  $("logAdd").addEventListener("click",function(){
+    var P=num($("logP").value),g=num($("logGuess").value),p=num($("logPT").value);
+    if(isNaN(P)||isNaN(g)||isNaN(p)){$("logErr").textContent="Fill in gauge, prediction, and PT chart value first.";return;}
+    logs.push({r:logRef,psig:P,g:g,p:p}); store.set("log",JSON.stringify(logs)); logDraw();
+    ["logP","logGuess","logPT"].forEach(function(id){$(id).value="";store.del("f:"+id);}); logErr();
+  });
+  $("logClear").addEventListener("click",function(){if(!logs.length||!window.confirm("Clear all logbook entries?"))return;logs=[];store.set("log","[]");logDraw();});
+  logDraw(); logErr();
+})();
+
+</script>
+</body>
+</html>

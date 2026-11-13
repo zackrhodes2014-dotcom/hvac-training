@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Flip Card Study · HVAC Training</title>
+<meta name="description" content="Shuffle flip cards from any HVAC Training modules. Works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/study.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body>
+<nav class="topbar"><a class="btn primary" href="./" id="homeBtn">⌂ Home</a><span class="tb-t">🃏 Study</span><span class="prof-slot" id="profileSlot"></span></nav>
+<main class="wrap">
+  <section id="picker" aria-labelledby="pkH">
+    <h1 id="pkH">Pick your chapters</h1>
+    <p class="muted">Check the modules to study. Your last pick is remembered.</p>
+    <div class="quick" role="group" aria-label="Quick select">
+      <button type="button" class="btn sm" id="selAll">Select all</button>
+      <button type="button" class="btn sm ghost" id="selNone">Clear</button>
+      <button type="button" class="btn sm" data-group="ref">Refrigeration</button>
+      <button type="button" class="btn sm" data-group="mech">Boilers &amp; Chillers</button>
+      <button type="button" class="btn sm" data-group="elec">Electrical</button>
+    </div>
+    <div id="modList" class="modlist"></div>
+    <div class="buildrow"><button type="button" class="btn primary block" id="buildBtn">Build deck</button><p class="muted center" id="pickCount" aria-live="polite"></p></div>
+    <div class="settings"><h2>Study stats</h2><p>Seen = cards you've flipped at least once (here or in a module quiz). Correct = cards whose latest answer was "Got it".</p><button type="button" class="btn danger" id="resetStudy">Reset study stats</button></div>
+  </section>
+
+  <section id="deck" hidden aria-labelledby="dkH">
+    <h1 id="dkH" class="sr">Deck</h1>
+    <div class="deckbar"><button type="button" class="btn sm ghost" id="backPick">‹ Chapters</button><span id="deckPos" aria-live="polite">Card 1 of 1</span></div>
+    <div class="bar"><i id="deckBar"></i></div>
+    <div class="scard" id="scard" tabindex="0" role="button" aria-label="Flip card">
+      <div class="scard-in" id="scardIn">
+        <div class="face front"><span class="mtag" id="mtagF"></span><div class="qa" id="cardQ"></div><span class="hint">Tap to flip</span></div>
+        <div class="face back"><span class="mtag" id="mtagB"></span><div class="qa" id="cardA"></div></div>
+      </div>
+    </div>
+    <div class="answer-row" id="answerRow">
+      <button type="button" class="btn miss" id="missBtn" disabled>✗ Missed it</button>
+      <button type="button" class="btn got" id="gotBtn" disabled>✓ Got it</button>
+    </div>
+    <button type="button" class="btn block" id="nextBtn" disabled>Next ›</button>
+  </section>
+
+  <section id="summary" hidden aria-labelledby="smH">
+    <h1 id="smH">Deck done!</h1>
+    <div class="big" id="smScore"></div>
+    <div id="smStats" class="modlist"></div>
+    <button type="button" class="btn primary block" id="reshuffle">🔀 Reshuffle this deck</button>
+    <button type="button" class="btn block" id="missedOnly">Study missed cards only</button>
+    <button type="button" class="btn ghost block" id="toPicker">Change chapters</button>
+  </section>
+</main>
+<div class="dlg" id="confirmDlg" hidden role="alertdialog" aria-modal="true" aria-labelledby="cfT">
+  <div class="box"><h3 id="cfT">Reset study stats?</h3><p>Seen and correct counts for every card will be cleared. Module progress is not touched.</p><div class="row"><button type="button" class="btn ghost" id="cfNo">Cancel</button><button type="button" class="btn danger" id="cfYes">Reset</button></div></div>
+</div>
+<script src="assets/study.js"></script>
+</body>
+</html>

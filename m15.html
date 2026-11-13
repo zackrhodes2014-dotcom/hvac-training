@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 15: Basic Electronics</title>
+<meta name="description" content="HVAC Module 15: Basic Electronics. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m15">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 15</h1>
+  <p class="sub">Basic Electronics</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 15 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 40 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: The blinking light</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Semiconductor Basics: Materials and Diodes</a></li>
+      <li><a href="#s2">2. Semiconductor Basics: Transistors, Thermistors, and Switches</a></li>
+      <li><a href="#s3">3. Control Circuits and Electronic Devices: Boards and Sensors</a></li>
+      <li><a href="#s4">4. Control Circuits and Electronic Devices: Handling Electronics</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Read a board, not a live one</a></li>
+      <li><a href="#next">Module 16 unlocked: Electric Motors</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/4</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/6</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ The blinking light</h2>
+  <p class="big">You peek through the little sight window on a furnace's blower door while Zach watches the unit run. A small LED on the control board blinks: three flashes, pause, three flashes. Taped inside the door is a chart. Three flashes means a pressure switch problem. That little board is reading sensors, timing the igniter, proving the flame, and reporting faults. It's all electronics. Learn the basics, and those blinking codes start to tell you a story.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Semiconductor Basics: Materials and Diodes</h2>
+  <p class="lede">Not quite a conductor, not quite an insulator</p>
+  <p><strong>Semiconductors</strong> such as silicon conduct electricity better than an insulator but worse than a metal. Their real power comes from <strong>doping</strong>, which means mixing in tiny amounts of other elements:</p>
+  <ul><li><strong>N-type</strong> material has extra free electrons (negative carriers).</li><li><strong>P-type</strong> material has "holes," spots missing an electron, which act as positive carriers.</li></ul>
+  <p>Joining P and N material makes a <strong>PN junction</strong>, the heart of a <strong>diode</strong>. A diode is a one-way valve for current:</p>
+  <ul><li><strong>Forward biased</strong> (positive to the P side): it conducts, after losing a small voltage. That's about 0.6–0.7 V for silicon.</li><li><strong>Reverse biased:</strong> it blocks current.</li></ul>
+  <p>Diodes arranged in a <strong>rectifier</strong> turn AC into DC. Control boards and ECM motors use rectifiers to make their DC power. A <strong>light-emitting diode (LED)</strong> glows when current flows forward. That's the status light on a board.</p>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Semiconductor Basics: Transistors, Thermistors, and Switches</h2>
+  <p class="lede">Tiny parts that make decisions</p>
+  <ul><li><strong>Transistor:</strong> a three-lead device where a small current or voltage controls a much larger one. It can act as an <strong>electronic switch</strong> (on/off with no moving parts) or an <strong>amplifier</strong>. Control boards use transistors to drive relays.</li><li><strong>Thermistor:</strong> a resistor whose value changes with temperature. The most common type in HVAC is <strong>NTC (negative temperature coefficient)</strong>: <em>as temperature rises, resistance drops</em>. Thermostats, outdoor sensors, and coil sensors use them.</li><li><strong>SCR and triac:</strong> solid-state switches that handle AC loads. Some thermostats and speed controls switch power with these instead of relay contacts.</li><li><strong>Photocell / flame sensors:</strong> devices that respond to light or flame and tell a board whether a burner is lit.</li></ul>
+  <div class="callout"><span class="label">🧮 Worked example (LED resistor)</span>An LED needs about 2 V and 20 mA (0.02 A) from a 5 V supply. The resistor has to drop the other 3 V.<ul><li>R = (5 − 2) ÷ 0.02 = <strong>150 Ω</strong></li><li>Resistor power = 3 V × 0.02 A = <strong>0.06 W</strong>, so a small 1/4-watt resistor is plenty.</li></ul></div>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Control Circuits and Electronic Devices: Boards and Sensors</h2>
+  <p class="lede">The brain of the unit</p>
+  <p>Most modern equipment uses a <strong>printed circuit board (PCB)</strong> to run the sequence of operation. A typical gas furnace board:</p>
+  <ol><li>Gets a call for heat from the thermostat (24 V on W).</li><li>Starts the inducer motor and waits for the <strong>pressure switch</strong> to close.</li><li>Powers the igniter, then opens the gas valve.</li><li>Confirms flame with the <strong>flame sensor</strong>. The board reads a tiny DC current (just a few microamps) that flows through the flame. That method is called <strong>flame rectification</strong>.</li><li>Starts the blower after a delay.</li></ol>
+  <p>If any step fails, the board shuts things down and flashes a <strong>fault code</strong>.</p>
+  <p>Boards use <strong>integrated circuits (ICs)</strong> and <strong>microprocessors</strong>, which pack thousands to millions of transistors onto one chip. They follow a program and read <strong>inputs</strong> (sensors, switches, thermostat signals) to decide <strong>outputs</strong> (relays, motors, valves).</p>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Control Circuits and Electronic Devices: Handling Electronics</h2>
+  <p class="lede">Treat boards gently</p>
+  <p>Electronic parts are sensitive:</p>
+  <ul><li><strong>Static discharge</strong> can kill a chip instantly, even if you don't feel a spark. Before touching a board, touch bare grounded metal on the unit. Handle boards by the edges.</li><li><strong>Power surges</strong> and lightning can fry boards. Surge protectors help.</li><li><strong>Heat and moisture</strong> shorten their life. Check for rust, water stains, and burned spots.</li><li><strong>Communicating systems</strong> send data between the thermostat, furnace, and outdoor unit over a few wires. They often need the manufacturer's diagnostic tools, so a standard meter reading may not tell the whole story.</li></ul>
+  <p>Never assume the board is bad. Many "bad boards" turn out to be a bad sensor, a loose wire, or a blown low-voltage fuse. Boards often have a small 3 or 5 A fuse in the 24 V circuit.</p>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Read a board, not a live one</h2>
+  <ol><li>With Zach, look at a furnace or air handler that's powered down and locked out (or a spare board in the truck). Find and photograph the LED, the low-voltage fuse, the thermostat terminal strip (R, C, W, Y, G), and any relays.</li><li>Copy the fault-code chart from the door into your notes. Pick two codes and write what part you'd check first for each.</li><li>Using a spare thermistor sensor (unplugged), measure its resistance with a meter at room temperature. Then hold it in your hand for a minute and measure again. Did the reading go down?</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 16 unlocked: Electric Motors</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You understand the small parts that make equipment smart. Next, we'll look at the muscle: the motors that spin compressors, fans, and blowers, and how to read their nameplates.</p>
+  <a class="start-next" id="startNext" href="m16.html">Start Module 16 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 15 · Basic Electronics</footer>
+
+<script>
+var CFG={"mid": "m15", "sections": ["s1", "s2", "s3", "s4"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 15"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m15.js"></script>
+</body>
+</html>

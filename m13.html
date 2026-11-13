@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 13: Basic Electricity</title>
+<meta name="description" content="HVAC Module 13: Basic Electricity. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m13">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 13</h1>
+  <p class="sub">Basic Electricity</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 13 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 50 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: The fan that wouldn't spin</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Fundamental Principles of Electricity</a></li>
+      <li><a href="#s2">2. Types of Electricity and Electrical Materials</a></li>
+      <li><a href="#s3">3. Circuit Fundamentals</a></li>
+      <li><a href="#s4">4. Magnetism</a></li>
+      <li><a href="#s5">5. Electrical Generators</a></li>
+      <li><a href="#s6">6. Transformer Basics</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Meter basics, the safe way</a></li>
+      <li><a href="#next">Module 14 unlocked: Electrical Power</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/6</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/8</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ The fan that wouldn't spin</h2>
+  <p class="big">It's 95°F out and the AC is blowing warm air. At the condenser, the compressor hums but the fan just sits there. Zach locks out the disconnect, pulls out his meter, and finds the problem in ten minutes without guessing at parts. He knows how voltage, current, and resistance behave. This module gives you that foundation.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Fundamental Principles of Electricity</h2>
+  <p class="lede">Electrons on the move</p>
+  <p>Atoms have a nucleus with electrons around it. In metals like copper, the outer electrons are loosely held and can hop from atom to atom. A steady flow of them is <strong>electric current</strong>.</p>
+  <p>Three quantities describe every circuit:</p>
+  <ul><li><strong>Voltage (E)</strong>, in <strong>volts</strong>: the push, like water pressure.</li><li><strong>Current (I)</strong>, in <strong>amps</strong>: the flow, like gallons per minute.</li><li><strong>Resistance (R)</strong>, in <strong>ohms (Ω)</strong>: opposition to flow, like a kink in the hose.</li></ul>
+  <p><strong>Ohm's law</strong> ties them together: <strong>E = I × R</strong>. Rearranged: I = E ÷ R, and R = E ÷ I.</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>A 240 V electric heat strip has a resistance of 24 Ω.<ul><li>Current = 240 ÷ 24 = <strong>10 A</strong></li><li>At 48 Ω, current drops to 5 A. More resistance, less current.</li></ul></div>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Types of Electricity and Electrical Materials</h2>
+  <p class="lede">Static, DC, and AC</p>
+  <ul><li><strong>Static electricity</strong> is built-up charge that stays put until it jumps, like a doorknob shock. It can damage circuit boards.</li><li><strong>Direct current (DC)</strong> flows one direction only. Batteries make DC.</li><li><strong>Alternating current (AC)</strong> reverses direction over and over. In the U.S. it does this 60 times a second, called <strong>60 hertz (Hz)</strong>. Homes and HVAC equipment run on AC.</li></ul>
+  <p>Materials fall into three groups:</p>
+  <ul><li><strong>Conductors</strong> carry current easily: copper, aluminum, silver.</li><li><strong>Insulators</strong> resist it: plastic, rubber, glass. Wire insulation keeps current where it belongs.</li><li><strong>Semiconductors</strong> sit in between (Module 15).</li></ul>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Circuit Fundamentals</h2>
+  <p class="lede">A complete loop</p>
+  <p>A <strong>circuit</strong> needs a power source, a path (wires), and a <strong>load</strong> (a motor, heater, or coil). A <strong>switch</strong> opens or closes the path.</p>
+  <ul><li><strong>Closed circuit:</strong> the loop is complete and current flows.</li><li><strong>Open circuit:</strong> the path is broken (a switch is off or a wire is cut), so nothing flows.</li><li><strong>Short circuit:</strong> current bypasses the load, current spikes, and a breaker or fuse should trip.</li></ul>
+  <p><strong>Series circuits</strong> put loads one after another on a single path. Total resistance adds up: R = R1 + R2. If one part opens, everything stops.</p>
+  <p><strong>Parallel circuits</strong> give each load its own path at full voltage. Total resistance is lower than the smallest branch. House outlets are parallel.</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>at 120 V with a 10 Ω and a 20 Ω load:<ul><li><strong>Series:</strong> 10 + 20 = 30 Ω, so current = 120 ÷ 30 = <strong>4 A</strong></li><li><strong>Parallel:</strong> (10 × 20) ÷ (10 + 20) ≈ 6.67 Ω, so current = 120 ÷ 6.67 = <strong>18 A</strong> (12 A through the 10 Ω branch plus 6 A through the 20 Ω branch)</li></ul></div>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Magnetism</h2>
+  <p class="lede">Electricity and magnets are partners</p>
+  <p>Magnets have a <strong>north</strong> and <strong>south pole</strong>. Like poles repel and opposites attract. Around each is an invisible <strong>magnetic field</strong>.</p>
+  <p>The big idea: <strong>current through a wire creates a magnetic field.</strong> Coil the wire around an iron core and you get an <strong>electromagnet</strong> that switches on and off with the current. Contactors, relays, and solenoid valves work this way: the energized coil pulls a metal part that closes contacts or opens a valve.</p>
+  <p>It works in reverse too: a moving magnetic field <strong>induces</strong> voltage in a wire. That drives generators and transformers.</p>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5" data-gated="1">
+  <h2>5. Electrical Generators</h2>
+  <p class="lede">Making electricity by spinning</p>
+  <p>A <strong>generator</strong> spins a wire loop in a magnetic field (or magnets past coils), inducing voltage. Each half-turn the wire passes the opposite pole, so voltage flips direction, making the <strong>sine wave</strong> of AC.</p>
+  <p>One full wave is one <strong>cycle</strong>; 60 cycles per second is 60 Hz.</p>
+  <ul><li><strong>Single-phase</strong> power has one sine wave and is common in homes.</li><li><strong>Three-phase</strong> power has three waves offset by 120 degrees. It's common in commercial buildings and runs motors smoothly.</li></ul>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6" data-gated="1">
+  <h2>6. Transformer Basics</h2>
+  <p class="lede">Changing voltage up or down</p>
+  <p>A <strong>transformer</strong> has two coils on an iron core. AC in the <strong>primary</strong> induces voltage in the <strong>secondary</strong>, changed by the <strong>turns ratio</strong>:</p>
+  <ul><li>More turns on the secondary: voltage goes up (<strong>step-up</strong>).</li><li>Fewer turns on the secondary: voltage goes down (<strong>step-down</strong>).</li></ul>
+  <p>Nearly every furnace and air handler steps 120 V or 240 V down to <strong>24 V</strong> for the controls. Transformers only work on AC and are rated in <strong>VA (volt-amps)</strong>.</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>A 40 VA transformer steps 240 V down to 24 V.<ul><li>Turns ratio = 240 ÷ 24 = <strong>10:1</strong></li><li>Max secondary current = 40 ÷ 24 ≈ <strong>1.67 A</strong></li><li>Primary current at full load ≈ 40 ÷ 240 ≈ <strong>0.17 A</strong></li></ul></div>
+  <div class="widget" id="w-s6" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Meter basics, the safe way</h2>
+  <p>With Zach beside you:</p>
+  <ol><li>Set a digital multimeter to DC volts and measure a fresh 9 V battery. Write down the reading. (A new one usually reads a little over 9 V.)</li><li>Set the meter to ohms. Touch the leads together first (it should read close to 0 Ω), then measure an unplugged incandescent bulb or a loose resistor.</li><li>On a furnace Zach has locked out, find the control transformer. Copy its primary volts, secondary volts, and VA. Calculate max secondary amps (VA ÷ secondary volts).</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 14 unlocked: Electrical Power</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You know volts, amps, and ohms. Next: how power gets from the street to the condenser, how it's measured in watts and kilowatt-hours, and what goes wrong when it isn't right.</p>
+  <a class="start-next" id="startNext" href="m14.html">Start Module 14 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 13 · Basic Electricity</footer>
+
+<script>
+var CFG={"mid": "m13", "sections": ["s1", "s2", "s3", "s4", "s5", "s6"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 13"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m13.js"></script>
+</body>
+</html>

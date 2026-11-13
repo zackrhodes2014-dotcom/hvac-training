@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 4: Energy and Matter</title>
+<meta name="description" content="HVAC Module 4: Energy and Matter. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{
+  --bg:#121417;--panel:#1C1F24;--panel2:#262b33;--text:#EDEAE4;--muted:#9AA0A6;
+  --accent:#2EC4B6;--accent2:#f4a259;--good:#81c784;--warn:#ffcc80;--danger:#ff8a80;
+  --border:#343b45;--latent:#b388ff;--sens:#ff9f43;--hot:#ff6b5b;--cold:#5ab4ff;--radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--accent);z-index:100;transition:width .1s linear}
+header{padding:28px 18px 18px;text-align:center;background:linear-gradient(180deg,#14282a,var(--bg))}
+header h1{margin:0;font-size:2.2rem;font-weight:800;line-height:1.2;color:#fff}
+header .sub{margin:6px 0 0;font-size:1.1rem;color:var(--accent);font-weight:600}
+header .note{margin:6px 0 0;font-size:.9rem;color:var(--muted);font-style:italic}
+.meta{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.chip{background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:4px 12px;font-size:.88rem;color:var(--muted)}
+nav.toc{max-width:760px;margin:0 auto;padding:0 14px}
+nav.toc details{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:4px 14px}
+nav.toc summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+nav.toc ol{margin:4px 0 12px;padding-left:22px}
+nav.toc a{color:var(--accent);display:inline-block;padding:6px 0}
+main{max-width:760px;margin:0 auto;padding:14px}
+section{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;margin:16px 0}
+h2{margin:0 0 10px;font-size:1.5rem;font-weight:800;line-height:1.3;color:#fff}
+h3{font-size:1.1rem;margin:18px 0 8px;color:var(--accent2)}
+p{margin:10px 0}
+strong{color:#fff}
+ul,ol{padding-left:22px}
+li{margin:6px 0}
+.callout{border-left:5px solid var(--accent);background:var(--panel2);border-radius:10px;padding:12px 14px;margin:14px 0}
+.callout.analogy{border-color:#ba68c8}
+.callout.try{border-color:var(--good)}
+.callout.safety{border:2px solid var(--danger);background:#3a1d1d;border-left-width:8px}
+.callout.safety strong{color:#ffd2cc}
+.callout .label{display:block;font-weight:700;margin-bottom:4px}
+.hook{border-color:var(--accent2)}
+.hook .big{font-size:1.05rem}
+.predict{border:1px dashed var(--accent2);background:#221f17;border-radius:12px;padding:14px;margin:16px 0}
+.predict .q{font-weight:600;margin:0 0 10px}
+.predict label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;color:var(--text);background:#0d0f12;border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+textarea{min-height:76px;resize:vertical}
+textarea:focus,input:focus,button:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:700;min-height:48px;padding:10px 18px;border-radius:12px;border:0;cursor:pointer;background:var(--accent);color:#05211e;margin-top:10px;touch-action:manipulation}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.answer{display:none;margin-top:12px;padding:12px 14px;background:#132a1b;border-left:5px solid var(--good);border-radius:10px}
+.answer.show{display:block;animation:fade .25s ease}
+.yours{display:none;margin-top:12px;font-size:.95rem;color:var(--muted)}
+.yours.show{display:block}
+.yours span{color:var(--text);white-space:pre-wrap}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cycle{list-style:none;padding:0;counter-reset:c}
+.cycle li{counter-increment:c;position:relative;padding:10px 12px 10px 52px;background:var(--panel2);border-radius:10px;margin:8px 0}
+.cycle li::before{content:counter(c);position:absolute;left:12px;top:10px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#05211e;font-weight:800;display:flex;align-items:center;justify-content:center}
+/* flip cards */
+.quiz-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.counter{font-weight:700;color:var(--accent2)}
+.qbar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.qbar div{height:100%;width:0;background:var(--good);transition:width .3s}
+.cards{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.card{perspective:1000px;cursor:pointer;border-radius:var(--radius);-webkit-tap-highlight-color:transparent}
+.card-inner{display:grid;transition:transform .55s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d;height:100%}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.face{grid-area:1/1;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:var(--radius);padding:18px 16px 40px;min-height:150px;display:flex;flex-direction:column;justify-content:center;position:relative;border:1px solid var(--border)}
+.front{background:linear-gradient(160deg,#163b38,#1C1F24)}
+.back{background:linear-gradient(160deg,#2a2440,#1C1F24);transform:rotateY(180deg)}
+.face .tag{font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.face .txt{font-size:1.05rem;font-weight:600}
+.face .hint{position:absolute;bottom:10px;right:14px;font-size:.8rem;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.card-inner{transition:none}html{scroll-behavior:auto}}
+/* table */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:1px solid var(--border);padding:6px;text-align:left;vertical-align:middle}
+th{background:var(--panel2);font-size:.9rem}
+td:first-child{font-weight:600;font-size:.95rem;white-space:nowrap}
+td input{min-height:44px;padding:8px}
+.recap li strong{color:var(--accent)}
+.teaser{border-color:var(--accent)}
+footer{text-align:center;color:var(--muted);padding:20px 14px 40px;font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.saved{font-size:.85rem;color:var(--muted);margin-top:6px}
+/* ---- app (PWA) additions ---- */
+.progress-panel{max-width:760px;margin:14px auto 0;padding:0 14px}
+.pp{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.pp-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.pp h2{font-size:1.15rem;margin:0}
+.pp-stats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:5px 10px;font-size:.92rem;color:var(--muted)}
+.stat b,.scoreline b{color:var(--text)}
+.offline-chip{font-size:.82rem;font-weight:700;color:#0b2410;background:var(--good);border-radius:999px;padding:3px 10px}
+.offline-chip[hidden]{display:none}
+#resumeBtn[hidden]{display:none}
+button.danger{color:#ffd2cc;border-color:#7a3a3a}
+.complete-row{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.mark-done{margin-top:0}
+.mark-done.done{background:#1c3b27;border-color:var(--good);color:#d7f5d9}
+section.sec-done{border-color:#3f6b48}
+section.sec-done h2::after{content:" ✓";color:var(--good)}
+nav.toc a.done::after{content:" ✓";color:var(--good)}
+.scoreline{font-size:.95rem;color:var(--muted);margin:4px 0 0}
+.selfcheck{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.selfcheck .sc-q{width:100%;font-size:.85rem;color:var(--muted)}
+.sc-btn{flex:1 1 120px;margin:0;min-height:44px;padding:8px 10px;font-size:.95rem;background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.sc-btn.got.on{background:var(--good);color:#0b2410;border-color:var(--good)}
+.sc-btn.miss.on{background:var(--danger);color:#2b0b0b;border-color:var(--danger)}
+.card.no-anim .card-inner{transition:none}
+.appbanner{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:200;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:10px;background:#18292b;border:1px solid var(--accent);border-radius:14px;padding:10px 10px 10px 12px;box-shadow:0 8px 30px rgba(0,0,0,.55)}
+.appbanner[hidden]{display:none}
+.ab-icon{width:40px;height:40px;border-radius:9px;flex:none}
+.ab-text{flex:1;min-width:0;font-size:.88rem;line-height:1.3}
+.ab-text strong{display:block}
+.appbanner button{margin:0;padding:10px 14px;white-space:nowrap}
+.ab-close{background:transparent;color:var(--muted);border:1px solid var(--border);min-width:44px;padding:0 10px}
+.share-ico{display:inline-block;width:1.1em;height:1.1em;vertical-align:-.2em}
+body.has-banner{padding-bottom:100px}
+main > section{scroll-margin-top:10px}
+/* ---- module 4/5 widgets ---- */
+.lede{font-size:1.15rem;font-weight:700;color:var(--accent);margin:0 0 6px}
+.terms{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.term{min-height:36px;margin:0;padding:4px 12px;border-radius:999px;background:transparent;border:1.5px solid var(--accent);color:var(--accent);font-weight:600;font-size:.9rem}
+.term[aria-expanded=true]{background:var(--accent);color:#05211e}
+.term-pop{display:none;margin:8px 0 2px;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--accent);font-size:.95rem}
+.term-pop.show{display:block;animation:fade .2s ease}
+.widget{background:#15181c;border:1px solid var(--border);border-radius:12px;padding:14px;margin:16px 0}
+.widget .wtitle{display:block;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.widget .wnote{font-size:.85rem;color:var(--muted);margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{margin:0;min-height:40px;padding:6px 14px;border-radius:999px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-weight:600;font-size:.92rem}
+.chips button[aria-pressed=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+input[type=number],select{width:100%;font:inherit;font-size:16px;color:var(--text);background:#0d0f12;border:1px solid var(--border);border-radius:10px;padding:10px 12px;min-height:46px}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:36px;margin:4px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media(max-width:380px){.grid3{grid-template-columns:1fr 1fr}}
+.fld label,.lbl{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px}
+.ro{background:var(--panel2);border-radius:10px;padding:8px 10px;border:1px solid var(--border)}
+.ro .k{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ro .v{display:block;font-size:1.25rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.math{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--panel2);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;white-space:pre-wrap}
+.math.show{display:block}
+.toggle{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:.95rem;cursor:pointer;min-height:44px}
+.toggle input{width:22px;height:22px;accent-color:var(--accent)}
+.warnbox{border-left:5px solid var(--hot);background:#3a1f1d;border-radius:10px;padding:10px 12px;margin:12px 0}
+.flash{animation:flash .6s ease 2}
+@keyframes flash{50%{background:#7a1f1a}}
+.bad .v{color:var(--hot)}
+svg{max-width:100%;height:auto;display:block}
+.svgbox{background:#0f1114;border-radius:10px;border:1px solid var(--border);margin-top:10px;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.status{font-weight:700;margin-top:10px}
+.ok{color:var(--accent)} .no{color:var(--hot)}
+.steps-list{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92rem;background:var(--panel2);border-radius:10px;padding:10px 12px;margin-top:10px;white-space:pre-wrap}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tabs button{flex:1 1 auto;margin:0;min-height:42px;padding:6px 10px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-size:.9rem}
+.tabs button[aria-selected=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+.flame{font-size:1.1rem}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--panel2);padding:2px 6px;border-radius:6px;white-space:nowrap}
+.pill{display:inline-block;font-size:.8rem;font-weight:800;border-radius:999px;padding:2px 10px}
+.check-row{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:700;min-height:44px;cursor:pointer}
+.check-row input{width:24px;height:24px;accent-color:var(--accent)}
+.result-big{font-size:1.15rem;font-weight:800;color:#fff;margin-top:10px}
+@media(prefers-reduced-motion:reduce){.anim,.anim *{animation:none!important;transition:none!important}}
+#segBar{display:flex;gap:4px;margin:8px 0 4px}
+#segBar div{flex:1;height:8px;border-radius:4px;background:var(--panel2)}
+#segBar div.on{background:var(--accent)}
+.streak-big{font-size:1.1rem;font-weight:700;color:var(--accent2);margin:6px 0 0}
+.streak-big small{color:var(--muted);font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+.hl{stroke:#ff9f43;stroke-dasharray:6 6;animation:rise 1.2s linear infinite;transition:stroke .4s}
+.hl.d2{animation-delay:-.4s}.hl.d3{animation-delay:-.8s}
+.heat-hot .hl{stroke:#ff3b30;stroke-width:5}
+@keyframes rise{to{stroke-dashoffset:-24}}
+.fan{transform-origin:160px 80px;animation:fanspin .25s linear infinite}
+@keyframes fanspin{0%{transform:scaleX(1)}50%{transform:scaleX(.2)}100%{transform:scaleX(1)}}
+.ladder-wrap{display:flex;gap:12px;align-items:stretch;margin-top:8px}
+.ladder{position:relative;flex:1;height:320px;border-left:3px solid #59616c;border-right:3px solid #59616c;margin:4px 0}
+.rung{position:absolute;left:0;right:0;transform:translateY(50%);margin:0;min-height:30px;padding:2px 8px;font-size:.85rem;font-weight:700;border-radius:8px;background:var(--panel2);color:var(--text);border:1px solid var(--border);text-align:left}
+.rung[aria-pressed=true]{background:var(--accent);color:#05211e}
+.waterline{position:absolute;left:-8px;right:-8px;border-top:2px dashed var(--cold);pointer-events:none}
+.waterline span{position:absolute;right:0;top:-18px;font-size:.75rem;color:var(--cold)}
+.beaker-col{width:120px;display:flex;flex-direction:column;justify-content:flex-end}
+.beaker{position:relative;height:170px;border:3px solid #9AA0A6;border-top:0;border-radius:0 0 14px 14px;overflow:hidden}
+.beaker .water{position:absolute;left:0;right:0;bottom:0;height:62%;background:rgba(90,180,255,.35);border-top:2px solid var(--cold)}
+.block{position:absolute;left:50%;width:40px;height:30px;margin-left:-20px;top:-40px;border-radius:5px;background:var(--accent2);transition:top 1.1s cubic-bezier(.3,.7,.4,1),opacity .2s;opacity:0}
+.block.show{opacity:1}
+.beaker-col button{font-size:.9rem;padding:8px}
+#liftBox,#liftRope{transition:transform 2s linear}
+.unlock{display:flex;justify-content:center;margin:6px 0}
+.unlock .burst{opacity:0;transform-origin:60px 60px}
+.unlock .shackle{transform-origin:76px 58px;transition:transform .6s ease}
+.unlock.open .shackle{transform:translateY(-8px) rotate(25deg)}
+.unlock.open .burst{animation:burst .8s ease forwards}
+@keyframes burst{0%{opacity:0;transform:scale(.4)}60%{opacity:1}100%{opacity:.85;transform:scale(1)}}
+.start-next{display:inline-block;margin-top:10px;font-weight:800;min-height:48px;line-height:48px;padding:0 20px;border-radius:12px;background:var(--accent);color:#05211e;text-decoration:none;transform:translateY(20px);opacity:0;transition:transform .5s ease .5s,opacity .5s ease .5s}
+.unlocked .start-next{transform:none;opacity:1}
+@media(prefers-reduced-motion:reduce){.hl,.fan{animation:none}.start-next{transition:none}}
+
+</style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m4">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 4</h1>
+  <p class="sub">Energy and Matter</p>
+  <p class="note">(topics follow Chapter 4 of Modern Refrigeration and Air Conditioning, 21st/22nd ed.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 45 min + hands-on activity</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Why is that coil so hot?</a></li>
+      <li><a href="#s1">1. Measurement Systems</a></li>
+      <li><a href="#s2">2. Matter and Energy</a></li>
+      <li><a href="#s3">3. Mass, Weight, and Density</a></li>
+      <li><a href="#s4">4. Force, Work, and Power</a></li>
+      <li><a href="#s5">5. Heat</a></li>
+      <li><a href="#s6">6. Refrigeration Effect</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Measure it yourself</a></li>
+      <li><a href="#next">Module 5 unlocked: Gases</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/6</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/8</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">🔥 Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>🔥 Why is that coil so hot?</h2>
+  <p class="big">You're standing next to an outdoor condensing unit on a July afternoon. The fan is roaring, and when you hold your hand above the top grille, the air coming off the coil feels like a hair dryer. That heat didn't come from a flame. It was picked up inside the house and carried outside by the refrigerant. By the end of this module you'll know how to measure that heat and judge how well the machine moved it.</p>
+  <div class="widget anim">
+    <span class="wtitle">Feel the heat</span>
+    <div class="svgbox">
+      <svg id="condSvg" viewBox="0 0 320 200" role="img" aria-label="Outdoor condensing unit with heat rising off the coil">
+        <g id="heatLines" class="heat-cool" fill="none" stroke-width="4" stroke-linecap="round">
+          <path class="hl" d="M110 70 q8 -10 0 -20 q-8 -10 0 -20 q8 -10 0 -20"/>
+          <path class="hl d2" d="M160 70 q8 -10 0 -20 q-8 -10 0 -20 q8 -10 0 -20"/>
+          <path class="hl d3" d="M210 70 q8 -10 0 -20 q-8 -10 0 -20 q8 -10 0 -20"/>
+        </g>
+        <rect x="70" y="80" width="180" height="100" rx="8" fill="#2a3038" stroke="#4a525d" stroke-width="2"/>
+        <g stroke="#59616c" stroke-width="2">
+          <line x1="80" y1="95" x2="240" y2="95"/><line x1="80" y1="110" x2="240" y2="110"/><line x1="80" y1="125" x2="240" y2="125"/>
+          <line x1="80" y1="140" x2="240" y2="140"/><line x1="80" y1="155" x2="240" y2="155"/><line x1="80" y1="170" x2="240" y2="170"/>
+        </g>
+        <ellipse cx="160" cy="80" rx="60" ry="8" fill="#1a1e23" stroke="#4a525d" stroke-width="2"/>
+        <g id="fan" class="fan"><line x1="115" y1="80" x2="205" y2="80" stroke="#9AA0A6" stroke-width="3"/></g>
+        <rect x="70" y="180" width="180" height="8" fill="#3a4049"/>
+      </svg>
+    </div>
+    <button type="button" id="feelHeat">✋ Tap to feel the heat</button>
+    <p class="status" id="heatCaption" aria-live="polite"></p>
+  </div>
+</section>
+
+<section id="s1">
+  <h2>1. Measurement Systems</h2>
+  <p class="lede">Two rulers, one job</p>
+  <p>HVAC techs in the U.S. work in two measurement systems. The <strong>US customary system</strong> uses feet, pounds, °F, psi, and Btu. The <strong>SI (metric) system</strong> uses meters, kilograms, °C, kilopascals, and joules or watts. Manuals and imported parts often use SI, so you need both.</p>
+  <h3>Handy conversions</h3>
+  <ul>
+    <li>1 inch = 2.54 cm (exact)</li>
+    <li>1 lb = 0.4536 kg</li>
+    <li>1 psi ≈ 6.895 kPa</li>
+    <li>1 Btu ≈ 1,055 joules</li>
+    <li>1 watt = 3.412 Btu/h</li>
+    <li>°F = (°C × 1.8) + 32, and °C = (°F − 32) ÷ 1.8</li>
+  </ul>
+  <p>Example: a room at 25°C is (25 × 1.8) + 32 = 77°F. A 150 lb technician has a mass of about 150 × 0.4536 ≈ 68 kg.</p>
+  <div class="widget">
+    <span class="wtitle">Unit converter</span>
+    <p class="lbl">Pick a quantity:</p>
+    <div class="chips" id="convKinds">
+      <button data-v="length">Length</button><button data-v="mass">Mass</button><button data-v="pressure">Pressure</button><button data-v="energy">Energy</button><button data-v="temperature">Temperature</button>
+    </div>
+    <div class="grid2">
+      <div class="fld"><label for="convA" id="convALbl">US</label><input type="number" inputmode="decimal" step="any" id="convA"></div>
+      <div class="fld"><label for="convB" id="convBLbl">SI</label><input type="number" inputmode="decimal" step="any" id="convB"></div>
+    </div>
+    <p class="wnote">Type in either box; the other one updates live.</p>
+    <label class="toggle"><input type="checkbox" id="convShow"> Show the math</label>
+    <div class="math" id="convMath" aria-live="polite"></div>
+  </div>
+  <div class="terms"><button class="term" data-def="The US customary system: feet, pounds, °F, psi, and Btu.">US customary</button><button class="term" data-def="The metric system: meters, kilograms, °C, kilopascals, and joules or watts.">SI</button><button class="term" data-def="British thermal unit. 1 Btu raises 1 lb of water 1°F (about 1,055 joules).">Btu</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2">
+  <h2>2. Matter and Energy</h2>
+  <p class="lede">Everything is stuff, and stuff holds energy</p>
+  <p><strong>Matter</strong> is anything that has mass and takes up space. It shows up in three common states:</p>
+  <ul>
+    <li><strong>Solid:</strong> fixed shape and volume (copper tubing, ice).</li>
+    <li><strong>Liquid:</strong> fixed volume, takes the shape of its container (water, liquid refrigerant).</li>
+    <li><strong>Gas (vapor):</strong> no fixed shape or volume; spreads out to fill its container (air, refrigerant vapor).</li>
+  </ul>
+  <p>What changes a substance from one state to another is energy, usually heat. <strong>Energy</strong> is the ability to do work. You'll meet it in several forms: <strong>thermal</strong> (heat), <strong>mechanical</strong> (a spinning fan), <strong>electrical</strong> (current in a compressor motor), <strong>chemical</strong> (fuel in a furnace), and <strong>radiant</strong> (sunlight on a roof). Energy is never created or destroyed; it only changes form. An air conditioner turns electrical energy into mechanical energy to move heat.</p>
+  <div class="widget">
+    <span class="wtitle">Molecule box</span>
+    <div class="svgbox"><canvas id="molBox" width="600" height="300" style="width:100%;display:block" role="img" aria-label="Particles in a box; drag the Energy slider to change state"></canvas></div>
+    <label class="lbl" for="molE">Energy</label>
+    <input type="range" id="molE" min="0" max="100" value="10">
+    <p class="status" id="molState" aria-live="polite">Solid</p>
+    <p class="lbl" style="margin-top:12px">Tap an energy form to see it in HVAC:</p>
+    <div class="chips" id="eforms">
+      <button data-v="Thermal: the heat your refrigerant picks up indoors and dumps outdoors at the condenser.">Thermal</button>
+      <button data-v="Mechanical: a spinning condenser or blower fan moving air.">Mechanical</button>
+      <button data-v="Electrical: current flowing through the compressor motor windings.">Electrical</button>
+      <button data-v="Chemical: natural gas or propane burned in a furnace.">Chemical</button>
+      <button data-v="Radiant: sunlight beating down on a roof and heating the attic and ductwork.">Radiant</button>
+    </div>
+    <p class="status" id="eformOut" aria-live="polite"></p>
+  </div>
+  <div class="terms"><button class="term" data-def="Anything that has mass and takes up space.">matter</button><button class="term" data-def="The ability to do work. It is never created or destroyed; it only changes form.">energy</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3">
+  <h2>3. Mass, Weight, and Density</h2>
+  <p class="lede">Heavy vs. packed tight</p>
+  <p><strong>Mass</strong> is the amount of matter in an object; it doesn't change if you go to the Moon. <strong>Weight</strong> is the force gravity puts on that mass, so it would change on the Moon. On Earth, we treat a pound of mass and a pound of weight as the same number.</p>
+  <p><strong>Density</strong> is mass per unit of volume: density = mass ÷ volume. In US units it's usually lb/ft³. Water is about 62.4 lb/ft³. Denser materials sink in water; lighter ones float. <strong>Specific gravity</strong> compares a material's density to water's, so water = 1.0.</p>
+  <h3>Approximate densities</h3>
+  <ul>
+    <li>Air (sea level, about 70°F): 0.075 lb/ft³</li>
+    <li>Pine wood: about 30 lb/ft³</li>
+    <li>Ice: about 57 lb/ft³</li>
+    <li>Water: 62.4 lb/ft³</li>
+    <li>Aluminum: about 169 lb/ft³</li>
+    <li>Steel: about 490 lb/ft³</li>
+    <li>Copper: about 559 lb/ft³</li>
+  </ul>
+  <div class="widget anim">
+    <span class="wtitle">Density ladder</span>
+    <p class="wnote" style="margin-top:0">Rungs run from least dense (bottom) to most dense (top); the dashed blue line marks water. Tap a rung for its numbers, then drop it in the beaker.</p>
+    <div class="ladder-wrap">
+      <div class="ladder" id="ladder"></div>
+      <div class="beaker-col">
+        <div class="beaker" id="beaker"><div class="water"></div><div class="block" id="block"></div></div>
+        <button type="button" id="dropBtn" disabled>Drop in water</button>
+      </div>
+    </div>
+    <p class="status" id="ladderOut" aria-live="polite">Tap a material on the ladder.</p>
+  </div>
+  <div class="terms"><button class="term" data-def="The amount of matter in an object. It's the same on Earth and on the Moon.">mass</button><button class="term" data-def="The force gravity puts on a mass. It changes with gravity.">weight</button><button class="term" data-def="Mass per unit of volume: density = mass ÷ volume (lb/ft³).">density</button><button class="term" data-def="A material's density compared to water's. Water = 1.0; above 1 sinks, below 1 floats.">specific gravity</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4">
+  <h2>4. Force, Work, and Power</h2>
+  <p class="lede">Push, move, and how fast</p>
+  <ul>
+    <li><strong>Force</strong> is a push or pull, measured in pounds (lb) or newtons (N).</li>
+    <li><strong>Work</strong> happens when a force moves something a distance: work = force × distance, measured in foot-pounds (ft-lb). No movement means no work.</li>
+    <li><strong>Power</strong> is how fast work gets done: power = work ÷ time. One <strong>horsepower</strong> equals 550 ft-lb per second, and 1 hp ≈ 746 watts.</li>
+  </ul>
+  <div class="callout"><span class="label">🧮 Worked example</span>Ian lifts a 50 lb condenser fan motor 4 ft onto a tailgate.
+    <ul>
+      <li>Work = 50 lb × 4 ft = <strong>200 ft-lb</strong></li>
+      <li>If he does it in 2 seconds: power = 200 ÷ 2 = <strong>100 ft-lb/s</strong></li>
+      <li>In horsepower: 100 ÷ 550 ≈ <strong>0.18 hp</strong></li>
+    </ul>
+  </div>
+  <div class="predict" data-id="p4">
+    <p class="q">⏸️ Pause and Predict: Ian lifts the same motor in 1 second instead of 2. What happens to the work and the power?</p>
+    <label for="p4-in">Your prediction (optional)</label>
+    <textarea id="p4-in" placeholder="Work: ...  Power: ..."></textarea>
+    <button type="button" class="reveal" aria-expanded="false" aria-controls="p4-ans">Reveal answer</button>
+    <div class="yours" aria-live="polite">Your answer: <span></span></div>
+    <div class="answer" id="p4-ans">Lift it in 1 second and the work is the same 200 ft-lb, but the power doubles to about 0.36 hp.</div>
+  </div>
+  <div class="widget anim">
+    <span class="wtitle">Lift simulator</span>
+    <div class="lift-stage svgbox"><svg viewBox="0 0 300 170" aria-hidden="true"><rect x="20" y="10" width="40" height="30" rx="5" fill="#2EC4B6"/><text x="40" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#05211e">M</text><line x1="60" y1="20" x2="200" y2="20" stroke="#9AA0A6" stroke-width="3"/><line id="liftRope" x1="200" y1="20" x2="200" y2="125" stroke="#9AA0A6" stroke-width="2"/><g id="liftBox"><rect x="180" y="125" width="40" height="30" rx="4" fill="#f4a259"/><text x="200" y="145" text-anchor="middle" font-size="10" font-weight="700" fill="#1a1205" id="liftBoxLbl">50 lb</text></g><line x1="160" y1="155" x2="300" y2="155" stroke="#59616c" stroke-width="2"/><text x="240" y="167" font-size="10" fill="#9AA0A6">floor</text></svg></div>
+    <div class="fld"><label for="lW">Weight: <b id="lWv">50</b> lb</label><input type="range" id="lW" min="1" max="200" value="50"></div>
+    <div class="fld"><label for="lH">Height: <b id="lHv">4</b> ft</label><input type="range" id="lH" min="0" max="10" step="0.5" value="4"></div>
+    <div class="fld"><label for="lT">Time: <b id="lTv">2</b> s</label><input type="range" id="lT" min="0.5" max="10" step="0.5" value="2"></div>
+    <button type="button" id="liftGo">▲ Lift it</button>
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">Work</span><span class="v" id="lWork">200 ft-lb</span></div>
+      <div class="ro"><span class="k">Power</span><span class="v" id="lPow">100 ft-lb/s</span></div>
+      <div class="ro"><span class="k">Horsepower</span><span class="v" id="lHp">0.18 hp</span></div>
+      <div class="ro"><span class="k">Watts</span><span class="v" id="lWatt">136 W</span></div>
+    </div>
+    <p class="wnote">Watts = hp × 746.</p>
+  </div>
+  <div class="terms"><button class="term" data-def="A push or pull, measured in pounds (lb) or newtons (N).">force</button><button class="term" data-def="Force × distance, in foot-pounds. No movement means no work.">work</button><button class="term" data-def="How fast work gets done: work ÷ time.">power</button><button class="term" data-def="550 ft-lb per second, or about 746 watts.">horsepower</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5">
+  <h2>5. Heat</h2>
+  <p class="lede">Heat you can feel vs. heat you can't</p>
+  <p><strong>Heat</strong> is energy moving from something hotter to something colder. In the US it's measured in <strong>British thermal units (Btu)</strong>: 1 Btu raises 1 lb of water 1°F.</p>
+  <ul>
+    <li><strong>Sensible heat</strong> changes temperature, and a thermometer can see it. Warming 1 lb of water from 32°F to 212°F takes 180 Btu.</li>
+    <li><strong>Latent heat</strong> changes state with <em>no</em> temperature change. Melting 1 lb of ice at 32°F takes <strong>144 Btu</strong> (latent heat of fusion). Boiling 1 lb of water at 212°F (sea level) takes about <strong>970 Btu</strong> (latent heat of vaporization).</li>
+  </ul>
+  <div class="predict" data-id="p5">
+    <p class="q">⏸️ Pause and Predict: How many Btu does it take to turn 1 lb of ice at 32°F into steam at 212°F? Is most of it sensible or latent?</p>
+    <label for="p5-in">Your prediction (optional)</label>
+    <textarea id="p5-in" placeholder="About ___ Btu, mostly ___"></textarea>
+    <button type="button" class="reveal" aria-expanded="false" aria-controls="p5-ans">Reveal answer</button>
+    <div class="yours" aria-live="polite">Your answer: <span></span></div>
+    <div class="answer" id="p5-ans">From 1 lb of ice at 32°F to steam at 212°F: 144 + 180 + 970 = <strong>1,294 Btu</strong>. Most of that is latent heat. That's why AC systems boil refrigerant in the evaporator.</div>
+  </div>
+  <div class="widget">
+    <span class="wtitle">Phase-change simulator (1 lb of water)</span>
+    <div class="svgbox"><svg id="phaseSvg" viewBox="0 0 340 210" role="img" aria-label="Temperature versus heat added graph"></svg></div>
+    <label class="lbl" for="phaseQ">Btu added: <b id="phaseQv">0</b> of 1,294</label>
+    <input type="range" id="phaseQ" min="0" max="1294" value="0" step="1">
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">Temperature</span><span class="v" id="phT">32°F</span></div>
+      <div class="ro"><span class="k">State</span><span class="v" id="phS">Ice</span></div>
+      <div class="ro"><span class="k">Heat type now</span><span class="v" id="phK">Latent</span></div>
+    </div>
+    <p class="wnote" id="phNote"></p>
+    <div class="legend"><span><i style="background:var(--sens)"></i>Sensible (temperature rises)</span><span><i style="background:var(--latent)"></i>Latent (state changes, temperature flat)</span></div>
+  </div>
+  <div class="terms"><button class="term" data-def="Heat that changes temperature. A thermometer can see it.">sensible heat</button><button class="term" data-def="Heat that changes state (melting, boiling) with no temperature change.">latent heat</button><button class="term" data-def="144 Btu to melt 1 lb of ice at 32°F.">latent heat of fusion</button><button class="term" data-def="About 970 Btu to boil 1 lb of water at 212°F (sea level).">latent heat of vaporization</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6">
+  <h2>6. Refrigeration Effect</h2>
+  <p class="lede">How much heat, for how much electricity</p>
+  <p>The <strong>refrigeration effect</strong> is the heat a system absorbs in the evaporator. System capacity is rated in <strong>tons</strong>: 1 ton = 12,000 Btu/h, roughly the cooling from melting one ton of ice over 24 hours (2,000 lb × 144 Btu/lb = 288,000 Btu per day).</p>
+  <ul>
+    <li><strong>COP (coefficient of performance)</strong> = cooling output ÷ energy input, with both in the same units. It has no units. A COP of 3.5 means 3.5 units of heat moved for every unit of energy paid for.</li>
+    <li><strong>EER (energy efficiency ratio)</strong> = cooling in Btu/h ÷ power input in watts. Because 1 W = 3.412 Btu/h, <strong>EER = COP × 3.412</strong>.</li>
+  </ul>
+  <div class="callout"><span class="label">🧮 Worked example</span>A unit delivers 36,000 Btu/h (3 tons) while drawing 3,000 W.
+    <ul><li>EER = 36,000 ÷ 3,000 = <strong>12.0</strong></li><li>COP = 12.0 ÷ 3.412 ≈ <strong>3.52</strong></li></ul>
+  </div>
+  <div class="widget">
+    <span class="wtitle">COP / EER calculator</span>
+    <div class="grid2">
+      <div class="fld"><label for="copQ">Cooling output</label><input type="number" inputmode="decimal" step="any" id="copQ" value="36000"></div>
+      <div class="fld"><label for="copU">Units</label><select id="copU"><option value="btuh">Btu/h</option><option value="tons">tons</option></select></div>
+    </div>
+    <div class="fld" style="margin-top:10px"><label for="copW">Power input (watts)</label><input type="number" inputmode="decimal" step="any" id="copW" value="3000"></div>
+    <div class="svgbox"><svg id="copGauge" viewBox="0 0 240 152" role="img" aria-label="COP gauge"></svg></div>
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">COP</span><span class="v" id="copOut">3.52</span></div>
+      <div class="ro"><span class="k">EER</span><span class="v" id="eerOut">12.0</span></div>
+      <div class="ro"><span class="k">Rating band</span><span class="v" id="bandOut">Green</span></div>
+    </div>
+    <p class="wnote">ⓘ EER = COP × 3.412, because 1 W = 3.412 Btu/h. Color bands: red below COP 2.5, yellow from 2.5 to 3.5, green above 3.5. (These bands are for teaching, not official ratings.)</p>
+  </div>
+  <div class="terms"><button class="term" data-def="The heat a system absorbs in the evaporator.">refrigeration effect</button><button class="term" data-def="12,000 Btu/h of cooling.">ton</button><button class="term" data-def="Coefficient of performance: cooling output ÷ energy input, same units, no units left over.">COP</button><button class="term" data-def="Energy efficiency ratio: Btu/h of cooling ÷ watts in. EER = COP × 3.412.">EER</button></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🔥 streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action">
+  <h2>🛠️ Action Item: Measure it yourself</h2>
+  <p>Choose one:</p>
+  <div class="widget">
+    <span class="wtitle">Option A: Density</span>
+    <p style="margin-top:0">Find a solid block (a brick or a block of wood). Measure its length, width, and height in feet, then multiply them for the volume. Weigh it on a bathroom or kitchen scale. Divide weight by volume to get lb/ft³, then compare your answer to the density ladder. <em>Example:</em> a 0.5 × 0.25 × 0.25 ft block is 0.03125 ft³. If it weighs 3.9 lb, its density is about 125 lb/ft³, which is in the range for brick.</p>
+    <div class="grid3">
+      <div class="fld"><label for="dL">Length (ft)</label><input type="number" inputmode="decimal" step="any" id="dL" placeholder="0.5"></div>
+      <div class="fld"><label for="dW">Width (ft)</label><input type="number" inputmode="decimal" step="any" id="dW" placeholder="0.25"></div>
+      <div class="fld"><label for="dH">Height (ft)</label><input type="number" inputmode="decimal" step="any" id="dH" placeholder="0.25"></div>
+      <div class="fld"><label for="dM">Weight (lb)</label><input type="number" inputmode="decimal" step="any" id="dM" placeholder="3.9"></div>
+    </div>
+    <p class="wnote">Tip: inches ÷ 12 = feet.</p>
+    <p class="result-big" id="densOut" aria-live="polite">Fill in all four boxes.</p>
+  </div>
+  <div class="widget">
+    <span class="wtitle">Option B: Heat content</span>
+    <p style="margin-top:0">Weigh a pot of water (a gallon is about 8.34 lb). Record its starting temperature, heat it to a measured end temperature, and calculate Btu = weight × temperature rise.</p>
+    <div class="grid3">
+      <div class="fld"><label for="hM">Water (lb)</label><input type="number" inputmode="decimal" step="any" id="hM" placeholder="8.34"></div>
+      <div class="fld"><label for="hT1">Start °F</label><input type="number" inputmode="decimal" step="any" id="hT1" placeholder="60"></div>
+      <div class="fld"><label for="hT2">End °F</label><input type="number" inputmode="decimal" step="any" id="hT2" placeholder="150"></div>
+    </div>
+    <p class="result-big" id="heatOut" aria-live="polite">Fill in all three boxes.</p>
+  </div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I measured something and did the math.</label>
+</section>
+
+<section id="next" class="teaser">
+  <h2>Module 5 unlocked: Gases</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  <p>Nice work, Ian. You now know how heat moves and how to measure it. Next, we'll work with the stuff that actually carries heat through a system: refrigerant gas. You'll learn why techs add 14.7 to gauge readings and how pressure reveals a refrigerant's temperature.</p>
+  <a class="start-next" id="startNext" href="m5.html">Start Module 5 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 4 · Energy and Matter · <a href="m5.html" style="color:var(--accent)">Module 5 →</a></footer>
+
+
+<script>
+var CFG={"prefix": "hvac4:", "sections": ["s1", "s2", "s3", "s4", "s5", "s6"], "firstId": "hook", "appName": "HVAC Module 4", "shortName": "Module 4", "appDesc": "Energy and Matter: interactive HVAC lesson for Ian.", "mid": "m4"};
+</script>
+<script src="assets/core.js"></script>
+<script>
+/* ===== Module 4 widgets ===== */
+(function(){
+  "use strict";
+  var $=H.$, num=H.num, fmt=H.fmt, each=H.each, store=H.store;
+  var SVGNS="http://www.w3.org/2000/svg";
+  function svgEl(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+  /* Hook: feel the heat */
+  var hot=false;
+  $("feelHeat").addEventListener("click",function(){
+    hot=!hot;
+    $("heatLines").classList.toggle("heat-hot",hot);
+    $("heatCaption").textContent=hot?"This heat was inside the house 30 seconds ago.":"";
+    this.textContent=hot?"↺ Cool it back down":"✋ Tap to feel the heat";
+  });
+
+  /* Section 1: unit converter */
+  var KINDS={
+    length:{a:"inches (in)",b:"centimeters (cm)",ab:function(x){return x*2.54;},ba:function(y){return y/2.54;},mab:"cm = in × 2.54",mba:"in = cm ÷ 2.54",def:12},
+    mass:{a:"pounds (lb)",b:"kilograms (kg)",ab:function(x){return x*0.4536;},ba:function(y){return y/0.4536;},mab:"kg = lb × 0.4536",mba:"lb = kg ÷ 0.4536",def:150},
+    pressure:{a:"psi",b:"kilopascals (kPa)",ab:function(x){return x*6.895;},ba:function(y){return y/6.895;},mab:"kPa = psi × 6.895",mba:"psi = kPa ÷ 6.895",def:14.7},
+    energy:{a:"Btu",b:"joules (J)",ab:function(x){return x*1055;},ba:function(y){return y/1055;},mab:"J = Btu × 1,055",mba:"Btu = J ÷ 1,055",def:1},
+    temperature:{a:"°F",b:"°C",ab:function(x){return (x-32)/1.8;},ba:function(y){return y*1.8+32;},mab:"°C = (°F − 32) ÷ 1.8",mba:"°F = (°C × 1.8) + 32",def:77}
+  };
+  var kind="temperature", cA=$("convA"), cB=$("convB"), cMath=$("convMath");
+  function round(n){return isFinite(n)?parseFloat(n.toPrecision(6)):"";}
+  function convFrom(side){
+    var k=KINDS[kind], x;
+    if(side==="a"){x=num(cA.value); if(isNaN(x)){cB.value="";cMath.textContent="";return;}
+      var y=k.ab(x); cB.value=round(y); cMath.textContent=k.mab+"\n= "+mathLine(kind,"ab",x)+" = "+fmt(y,2)+" "+k.b;}
+    else{x=num(cB.value); if(isNaN(x)){cA.value="";cMath.textContent="";return;}
+      var z=k.ba(x); cA.value=round(z); cMath.textContent=k.mba+"\n= "+mathLine(kind,"ba",x)+" = "+fmt(z,2)+" "+k.a;}
+    store.set("conv",JSON.stringify({k:kind,a:cA.value}));
+  }
+  function mathLine(kd,dir,x){
+    var m={length:["× 2.54","÷ 2.54"],mass:["× 0.4536","÷ 0.4536"],pressure:["× 6.895","÷ 6.895"],energy:["× 1,055","÷ 1,055"]};
+    if(kd==="temperature") return dir==="ab"?"("+x+" − 32) ÷ 1.8":"("+x+" × 1.8) + 32";
+    return x+" "+m[kd][dir==="ab"?0:1];
+  }
+  cA.addEventListener("input",function(){convFrom("a");});
+  cB.addEventListener("input",function(){convFrom("b");});
+  $("convShow").addEventListener("change",function(){cMath.classList.toggle("show",this.checked);});
+  var saved={}; try{saved=JSON.parse(store.get("conv")||"{}")||{};}catch(e){}
+  var convChips=H.chipGroup($("convKinds"),function(v){
+    var first=kind!==v||cA.value==="";
+    kind=v; var k=KINDS[v];
+    $("convALbl").textContent="US: "+k.a; $("convBLbl").textContent="SI: "+k.b;
+    if(first) cA.value=k.def;
+    convFrom("a");
+  });
+  if(saved.k&&KINDS[saved.k]){kind=saved.k; cA.value=saved.a; } else {kind="";}
+  convChips.pick(saved.k&&KINDS[saved.k]?saved.k:"temperature");
+
+  /* Section 2: molecule box */
+  var cv=$("molBox"), ctx=cv.getContext&&cv.getContext("2d"), mE=$("molE"), W=cv.width, Hh=cv.height;
+  var parts=[], R=11, cols=8, rows=4;
+  for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+    var hx=W/2-(cols-1)*R*1.1+c*R*2.2, hy=Hh-20-R-(rows-1-r)*R*2.2;
+    parts.push({hx:hx,hy:hy,x:hx,y:hy,vx:Math.random()*2-1,vy:Math.random()*2-1});
+  }
+  function molState(e){return e<34?"solid":e<67?"liquid":"gas";}
+  var MOL_TXT={solid:"Solid: tightly packed, vibrating in place (fixed shape and volume).",liquid:"Liquid: particles slide past each other (fixed volume, takes the container's shape).",gas:"Gas (vapor): particles fly freely and fill the whole box."};
+  function stepMol(){
+    var e=+mE.value, st=molState(e);
+    parts.forEach(function(p){
+      if(st==="solid"){
+        var j=0.5+e/12; p.x=p.hx+(Math.random()*2-1)*j; p.y=p.hy+(Math.random()*2-1)*j; p.vx=Math.random()*2-1; p.vy=Math.random()*2-1;
+      }else{
+        var sp=st==="liquid"?0.6+(e-34)/30:2+(e-67)/6;
+        var m=Math.sqrt(p.vx*p.vx+p.vy*p.vy)||1; p.vx=p.vx/m*sp; p.vy=p.vy/m*sp;
+        if(st==="liquid") p.vy+=0.08;
+        p.x+=p.vx; p.y+=p.vy;
+        var top=st==="liquid"?Hh*0.5:R;
+        if(p.x<R){p.x=R;p.vx=Math.abs(p.vx);} if(p.x>W-R){p.x=W-R;p.vx=-Math.abs(p.vx);}
+        if(p.y<top){p.y=top;p.vy=Math.abs(p.vy);} if(p.y>Hh-R){p.y=Hh-R;p.vy=-Math.abs(p.vy);}
+      }
+    });
+  }
+  function staticMol(){
+    var st=molState(+mE.value);
+    parts.forEach(function(p,i){
+      if(st==="solid"){p.x=p.hx;p.y=p.hy;}
+      else if(st==="liquid"){p.x=R+((i*97)%(W-2*R)); p.y=Hh*0.55+((i*53)%(Hh*0.45-R));}
+      else{p.x=R+((i*131)%(W-2*R)); p.y=R+((i*71)%(Hh-2*R));}
+    });
+  }
+  function drawMol(){
+    if(!ctx) return;
+    var e=+mE.value;
+    ctx.clearRect(0,0,W,Hh);
+    var col=e<34?"#5ab4ff":e<67?"#2EC4B6":"#ff9f43";
+    ctx.fillStyle=col;
+    parts.forEach(function(p){ctx.beginPath();ctx.arc(p.x,p.y,R,0,Math.PI*2);ctx.fill();});
+  }
+  var molVisible=true;
+  function molLoop(){ if(molVisible){stepMol();drawMol();} requestAnimationFrame(molLoop); }
+  function molLabel(){var st=molState(+mE.value);$("molState").textContent=MOL_TXT[st];}
+  mE.addEventListener("input",function(){molLabel(); if(H.reduceMotion){staticMol();drawMol();}});
+  molLabel();
+  if(H.reduceMotion){staticMol();drawMol();}
+  else{
+    if("IntersectionObserver" in window){new IntersectionObserver(function(en){molVisible=en[0].isIntersecting;}).observe(cv);}
+    requestAnimationFrame(molLoop);
+  }
+  H.chipGroup($("eforms"),function(v){$("eformOut").textContent=v;});
+
+  /* Section 3: density ladder + beaker */
+  var MATS=[["Air",0.075],["Pine wood",30],["Ice",57],["Water",62.4],["Aluminum",169],["Steel",490],["Copper",559]];
+  var ladder=$("ladder"), picked=null, block=$("block"), dropBtn=$("dropBtn");
+  MATS.forEach(function(m,i){
+    var b=H.el("button","rung",m[0]); b.type="button"; b.setAttribute("aria-pressed","false");
+    var pct=6+i*(88/(MATS.length-1)); b.style.bottom=pct+"%";
+    if(m[0]==="Water"){var wl=H.el("div","waterline"); wl.style.bottom=pct+"%"; wl.appendChild(H.el("span",null,"water")); ladder.appendChild(wl);}
+    b.addEventListener("click",function(){
+      each(ladder.querySelectorAll(".rung"),function(o){o.setAttribute("aria-pressed",String(o===b));});
+      picked=m; dropBtn.disabled=false;
+      var sg=m[1]/62.4;
+      $("ladderOut").textContent=m[0]+": "+fmt(m[1],m[1]<1?3:1)+" lb/ft³ ≈ "+fmt(m[1]*16.02,m[1]<1?2:0)+" kg/m³ · specific gravity "+fmt(sg,sg<0.01?4:2);
+      block.classList.remove("show"); block.style.transition="none"; block.style.top="-40px";
+    });
+    ladder.appendChild(b);
+  });
+  dropBtn.addEventListener("click",function(){
+    if(!picked) return;
+    var bh=170, surface=bh*0.38, sg=picked[1]/62.4, top, msg;
+    if(sg<0.999){ top=surface-30*(1-sg); msg=sg<0.01?" is far lighter than water, so it bubbles up and escapes (it floats).":" floats: it's less dense than water ("+fmt(sg,2)+" × water)."; if(sg<0.01) top=-40; }
+    else if(sg>1.001){ top=bh-34; msg=" sinks: it's "+fmt(sg,1)+" times as dense as water."; }
+    else { top=surface+20; msg=" is the reference (specific gravity 1.0), so it neither floats nor sinks."; }
+    block.style.background=sg<0.999?"#f4a259":sg>1.001?"#9AA0A6":"#5ab4ff";
+    block.style.transition="none"; block.style.top="-40px"; block.classList.add("show");
+    void block.offsetWidth;
+    block.style.transition=""; block.style.top=top+"px";
+    $("ladderOut").textContent=picked[0]+msg;
+  });
+
+  /* Section 4: lift simulator */
+  var lW=$("lW"), lH=$("lH"), lT=$("lT");
+  function liftCalc(){
+    var w=+lW.value, h=+lH.value, t=+lT.value;
+    var work=w*h, pw=work/t, hp=pw/550;
+    $("lWv").textContent=w; $("lHv").textContent=h; $("lTv").textContent=t; $("liftBoxLbl").textContent=w+" lb";
+    $("lWork").textContent=fmt(work,0)+" ft-lb"; $("lPow").textContent=fmt(pw,pw<10?1:0)+" ft-lb/s";
+    $("lHp").textContent=fmt(hp,2)+" hp"; $("lWatt").textContent=fmt(hp*746,0)+" W";
+  }
+  [lW,lH,lT].forEach(function(i){i.addEventListener("input",liftCalc);});
+  liftCalc();
+  var box=$("liftBox"), rope=$("liftRope");
+  rope.style.transformBox="fill-box"; rope.style.transformOrigin="top";
+  $("liftGo").addEventListener("click",function(){
+    var d=(+lH.value)*10, t=+lT.value;
+    box.style.transition="none"; rope.style.transition="none";
+    box.style.transform="translateY(0)"; rope.style.transform="scaleY(1)";
+    void box.getBoundingClientRect();
+    var tr=H.reduceMotion?"none":"transform "+t+"s linear";
+    box.style.transition=tr; rope.style.transition=tr;
+    box.style.transform="translateY("+(-d)+"px)"; rope.style.transform="scaleY("+((105-d)/105)+")";
+  });
+
+  /* Section 5: phase-change simulator */
+  var ph=$("phaseSvg"), pq=$("phaseQ");
+  var X0=44,X1=328,Y0=182,Y1=16, TMAX=240;
+  function px(q){return X0+(q/1294)*(X1-X0);} function py(t){return Y0-(t/TMAX)*(Y0-Y1);}
+  function tempAt(q){return q<=144?32:q<=324?32+(q-144):212;}
+  ph.appendChild(svgEl("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:"#59616c"}));
+  ph.appendChild(svgEl("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:"#59616c"}));
+  [0,32,100,212].forEach(function(t){
+    ph.appendChild(svgEl("line",{x1:X0-4,y1:py(t),x2:X1,y2:py(t),stroke:"#2a3038","stroke-dasharray":"3 4"}));
+    var tx=svgEl("text",{x:X0-6,y:py(t)+4,"text-anchor":"end","font-size":"10",fill:"#9AA0A6"}); tx.textContent=t+"°F"; ph.appendChild(tx);
+  });
+  [0,144,324,1294].forEach(function(q){var tx=svgEl("text",{x:px(q),y:Y0+14,"text-anchor":"middle","font-size":"9",fill:"#9AA0A6"});tx.textContent=q;ph.appendChild(tx);});
+  var axl=svgEl("text",{x:(X0+X1)/2,y:Y0+26,"text-anchor":"middle","font-size":"10",fill:"#9AA0A6"}); axl.textContent="Btu added"; ph.appendChild(axl);
+  var SEGS=[[0,144,"latent"],[144,324,"sens"],[324,1294,"latent"]];
+  var ghost=[], live=[];
+  SEGS.forEach(function(s){
+    var col=s[2]==="latent"?"#b388ff":"#ff9f43";
+    var g=svgEl("line",{x1:px(s[0]),y1:py(tempAt(s[0])),x2:px(s[1]),y2:py(tempAt(s[1])),stroke:col,"stroke-width":"2",opacity:".25"});
+    var l=svgEl("line",{x1:px(s[0]),y1:py(tempAt(s[0])),x2:px(s[0]),y2:py(tempAt(s[0])),stroke:col,"stroke-width":"4","stroke-linecap":"round"});
+    ph.appendChild(g); ph.appendChild(l); live.push(l);
+  });
+  var lbl1=svgEl("text",{x:px(72),y:py(32)-8,"text-anchor":"middle","font-size":"9",fill:"#b388ff"}); lbl1.textContent="melting"; ph.appendChild(lbl1);
+  var lbl2=svgEl("text",{x:px(800),y:py(212)-8,"text-anchor":"middle","font-size":"9",fill:"#b388ff"}); lbl2.textContent="boiling"; ph.appendChild(lbl2);
+  var dot=svgEl("circle",{r:"6",fill:"#EDEAE4",stroke:"#121417","stroke-width":"2"}); ph.appendChild(dot);
+  function phase(){
+    var q=+pq.value, t=tempAt(q);
+    SEGS.forEach(function(s,i){var e=Math.max(s[0],Math.min(q,s[1])); live[i].setAttribute("x2",px(e)); live[i].setAttribute("y2",py(tempAt(e)));});
+    dot.setAttribute("cx",px(q)); dot.setAttribute("cy",py(t));
+    $("phaseQv").textContent=fmt(q,0); $("phT").textContent=fmt(t,0)+"°F";
+    var st,k;
+    if(q===0){st="Ice";k="Latent next";}
+    else if(q<144){st="Ice + water ("+Math.round(q/144*100)+"% melted)";k="Latent";}
+    else if(q===144){st="Water (all melted)";k="Sensible next";}
+    else if(q<324){st="Water";k="Sensible";}
+    else if(q===324){st="Water at 212°F (boiling starts)";k="Latent next";}
+    else if(q<1294){st="Water + steam ("+Math.round((q-324)/970*100)+"% boiled)";k="Latent";}
+    else {st="Steam";k="Done";}
+    $("phS").textContent=st; $("phK").textContent=k;
+    $("phK").style.color=/^Latent/.test(k)?"var(--latent)":/^Sensible/.test(k)?"var(--sens)":"";
+    var lat=Math.min(q,144)+Math.max(0,q-324), sen=Math.max(0,Math.min(q,324)-144);
+    $("phNote").textContent="So far: "+fmt(sen,0)+" Btu sensible + "+fmt(lat,0)+" Btu latent = "+fmt(q,0)+" Btu.";
+    store.set("phaseQ",String(q));
+  }
+  var pqs=store.get("phaseQ"); if(pqs!=null) pq.value=pqs;
+  pq.addEventListener("input",phase); phase();
+
+  /* Section 6: COP / EER calculator + gauge */
+  var g=$("copGauge"), CX=120, CY=120, RR=92, CMAX=6;
+  function ang(cop){return Math.PI*(1-Math.min(cop,CMAX)/CMAX);}
+  function pt(a,r){return [CX+r*Math.cos(a),CY-r*Math.sin(a)];}
+  function arc(c0,c1,col){var a0=ang(c0),a1=ang(c1),p0=pt(a0,RR),p1=pt(a1,RR);
+    g.appendChild(svgEl("path",{d:"M"+p0[0]+" "+p0[1]+" A"+RR+" "+RR+" 0 0 1 "+p1[0]+" "+p1[1],stroke:col,"stroke-width":"16",fill:"none"}));}
+  arc(0,2.5,"#ff6b5b"); arc(2.5,3.5,"#ffd166"); arc(3.5,6,"#2EC4B6");
+  [0,1,2,2.5,3,3.5,4,5,6].forEach(function(c){var p=pt(ang(c),RR-20);var t=svgEl("text",{x:p[0],y:p[1]+3,"text-anchor":"middle","font-size":"9",fill:"#9AA0A6"});t.textContent=c;g.appendChild(t);});
+  var needle=svgEl("line",{x1:CX,y1:CY,x2:CX,y2:CY-RR+10,stroke:"#EDEAE4","stroke-width":"4","stroke-linecap":"round"}); g.appendChild(needle);
+  g.appendChild(svgEl("circle",{cx:CX,cy:CY,r:"7",fill:"#EDEAE4"}));
+  var copT=svgEl("text",{x:CX,y:CY+26,"text-anchor":"middle","font-size":"13","font-weight":"700",fill:"#EDEAE4"}); copT.textContent="COP"; g.appendChild(copT);
+  var cQ=$("copQ"), cU=$("copU"), cW=$("copW");
+  H.persistInput(cQ,"copQ"); H.persistInput(cU,"copU"); H.persistInput(cW,"copW");
+  function cop(){
+    var q=num(cQ.value), w=num(cW.value); if(cU.value==="tons") q=q*12000;
+    var ok=q>0&&w>0, C=ok?q/(w*3.412):NaN, E=ok?q/w:NaN;
+    $("copOut").textContent=ok?fmt(C,2):"–"; $("eerOut").textContent=ok?fmt(E,1):"–";
+    var band=!ok?"–":C<2.5?"Red":C<=3.5?"Yellow":"Green", col=!ok?"":C<2.5?"#ff6b5b":C<=3.5?"#ffd166":"#2EC4B6";
+    $("bandOut").textContent=band; $("bandOut").style.color=col; $("copOut").style.color=col;
+    var a=ang(ok?C:0), p=pt(a,RR-10); needle.setAttribute("x2",p[0]); needle.setAttribute("y2",p[1]);
+    copT.textContent=ok?"COP "+fmt(C,2):"COP";
+  }
+  [cQ,cU,cW].forEach(function(i){i.addEventListener("input",cop);i.addEventListener("change",cop);});
+  cop();
+
+  /* Action item worksheet */
+  ["dL","dW","dH","dM","hM","hT1","hT2"].forEach(function(id){H.persistInput($(id),id);});
+  function dens(){
+    var L=num($("dL").value),Wd=num($("dW").value),Ht=num($("dH").value),M=num($("dM").value);
+    if(!(L>0&&Wd>0&&Ht>0&&M>0)){$("densOut").textContent="Fill in all four boxes.";return;}
+    var v=L*Wd*Ht, d=M/v, best=null, bd=1e9;
+    MATS.concat([["Brick (typical)",120]]).forEach(function(m){var x=Math.abs(Math.log(d/m[1]));if(x<bd){bd=x;best=m;}});
+    $("densOut").textContent="Volume = "+fmt(v,5).replace(/0+$/,"").replace(/\.$/,"")+" ft³ · Density ≈ "+fmt(d,1)+" lb/ft³ ("+(d>62.4?"sinks":"floats")+" in water). Closest match: "+best[0]+" (about "+best[1]+" lb/ft³).";
+  }
+  function heat(){
+    var M=num($("hM").value),a=num($("hT1").value),b=num($("hT2").value);
+    if(isNaN(M)||isNaN(a)||isNaN(b)||M<=0){$("heatOut").textContent="Fill in all three boxes.";return;}
+    var q=M*(b-a);
+    $("heatOut").textContent="Btu = "+fmt(M,2)+" lb × "+fmt(b-a,1)+"°F = "+fmt(q,0)+" Btu of sensible heat"+(q<0?" (negative means it lost heat)":"")+".";
+  }
+  ["dL","dW","dH","dM"].forEach(function(id){$(id).addEventListener("input",dens);});
+  ["hM","hT1","hT2"].forEach(function(id){$(id).addEventListener("input",heat);});
+  dens(); heat();
+
+  /* Unlock message */
+  var nx=$("next"), un=$("unlock");
+  function openLock(){un.classList.add("open"); nx.classList.add("unlocked");}
+  if(H.reduceMotion||!("IntersectionObserver" in window)) openLock();
+  else new IntersectionObserver(function(en,obs){ if(en[0].isIntersecting){openLock();obs.disconnect();} },{threshold:0.4}).observe(nx);
+})();
+
+</script>
+</body>
+</html>

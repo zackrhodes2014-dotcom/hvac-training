@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 14: Electrical Power</title>
+<meta name="description" content="HVAC Module 14: Electrical Power. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m14">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 14</h1>
+  <p class="sub">Electrical Power</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 14 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 40 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Click, hum, trip</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Electrical Power</a></li>
+      <li><a href="#s2">2. Power Circuits</a></li>
+      <li><a href="#s3">3. Electrical Problems</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Read the label, do the math</a></li>
+      <li><a href="#next">Module 15 unlocked: Basic Electronics</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/3</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/5</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ Click, hum, trip</h2>
+  <p class="big">A homeowner calls: every time the AC kicks on, the breaker trips a few minutes later. Zach doesn't just reset it and leave. He checks the nameplate, the breaker size, the wire, and the incoming voltage. It turns out a loose lug at the disconnect is heating up and dropping voltage. The motor is pulling extra amps to make up the difference. Power problems like this cause a huge share of service calls, and this module shows you how power is measured, delivered, and lost.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Electrical Power</h2>
+  <p class="lede">Watts: how fast energy is used</p>
+  <p><strong>Power</strong> is the rate at which electrical energy does work. It's measured in <strong>watts (W)</strong>. For a simple resistive load like a heat strip:</p>
+  <p><strong>Watts = Volts × Amps</strong> (P = E × I)</p>
+  <p>1,000 watts is a <strong>kilowatt (kW)</strong>. The utility bills you for <strong>kilowatt-hours (kWh)</strong>: kilowatts multiplied by hours of running.</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>A heat strip draws 10 A at 240 V.<ul><li>Power = 240 × 10 = <strong>2,400 W (2.4 kW)</strong></li><li>Running 5 hours: 2.4 × 5 = <strong>12 kWh</strong></li><li>At $0.15 per kWh: 12 × 0.15 = <strong>$1.80</strong></li></ul></div>
+  <p><strong>Motors are different.</strong> Coils and motors are <em>inductive</em> loads. Their current and voltage don't peak together, so the real power is less than volts × amps. The ratio is the <strong>power factor (PF)</strong>, a number between 0 and 1. Volts × amps gives <strong>apparent power</strong> in volt-amps (VA). Multiplying by PF gives real power in watts.</p>
+  <p>For <strong>three-phase</strong> loads: <strong>Watts = Volts × Amps × 1.732 × PF</strong> (1.732 is the square root of 3).</p>
+  <div class="callout"><span class="label">🧮 Worked example</span>A three-phase motor draws 15 A at 208 V with a PF of 0.85.<ul><li>208 × 15 × 1.732 × 0.85 ≈ <strong>4,593 W (about 4.6 kW)</strong></li></ul></div>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Power Circuits</h2>
+  <p class="lede">From the pole to the unit</p>
+  <p>Power reaches a building through the <strong>service entrance</strong>, passes the utility meter, and lands in the <strong>main panel</strong>, where <strong>circuit breakers</strong> split it into branch circuits.</p>
+  <p><strong>Single-phase residential (120/240 V):</strong> The utility transformer feeds two hot legs (L1 and L2) and a <strong>neutral</strong>. Either hot to neutral gives about 120 V for lights and outlets. Hot to hot gives about 240 V for condensers, heat strips, and water heaters.</p>
+  <p><strong>Three-phase commercial:</strong> Three hot legs (L1, L2, L3). Common systems are 208 V and 460/480 V.</p>
+  <p>Key parts of an HVAC power circuit:</p>
+  <ul><li><strong>Breaker or fuse:</strong> opens the circuit if current gets too high, protecting the <em>wire</em>.</li><li><strong>Disconnect:</strong> a switch within sight of the unit so the tech can kill power locally. It gets locked out before work.</li><li><strong>Wire size:</strong> measured in <strong>AWG</strong>. A <em>smaller</em> number means a <em>thicker</em> wire that carries more current. 14 AWG is thinner than 10 AWG.</li><li><strong>Ground:</strong> a green or bare wire that gives fault current a safe path back so the breaker trips instead of the cabinet becoming live.</li><li><strong>Nameplate MCA and MOCP:</strong> <strong>Minimum Circuit Ampacity</strong> sets the smallest wire allowed. <strong>Maximum Overcurrent Protection</strong> sets the largest breaker or fuse allowed.</li></ul>
+  <p><strong>Voltage drop:</strong> Long wire has resistance. Example: a unit draws 16 A through 100 ft of 12 AWG copper (200 ft out and back, about 1.59 Ω per 1,000 ft).</p>
+  <ul><li>Wire resistance ≈ 0.2 × 1.59 ≈ 0.32 Ω</li><li>Drop = 16 × 0.32 ≈ <strong>5.1 V</strong>, about <strong>2.1%</strong> of 240 V</li></ul>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Electrical Problems</h2>
+  <p class="lede">When power goes wrong</p>
+  <ul><li><strong>Low voltage:</strong> Motors draw more current, run hot, and may fail to start. A common rule is to keep supply voltage within <strong>±10%</strong> of the rating. A 208/230 V unit should see roughly <strong>187–253 V</strong>.</li><li><strong>High voltage:</strong> Overheats coils and stresses insulation and electronics.</li><li><strong>Voltage unbalance (three-phase):</strong> When the three legs aren't equal, motor windings overheat fast. Unbalance % = (largest deviation from average ÷ average) × 100. Many motor makers want it under <strong>2%</strong>.</li><li><strong>Open circuit:</strong> A broken wire, blown fuse, or burned contact stops current.</li><li><strong>Short circuit:</strong> Current bypasses the load. Breakers trip and wires can melt.</li><li><strong>Ground fault:</strong> A hot wire touches the metal cabinet or ground. <strong>GFCI</strong> devices detect this and cut power fast to protect people.</li><li><strong>Loose connections:</strong> These add resistance, which creates heat. You'll see discolored terminals, melted insulation, and voltage drop.</li></ul>
+  <div class="callout"><span class="label">🧮 Worked example (unbalance)</span>Leg readings are 230 V, 236 V, and 224 V.<ul><li>Average = (230 + 236 + 224) ÷ 3 = 230 V</li><li>Largest deviation = 6 V</li><li>Unbalance = 6 ÷ 230 × 100 ≈ <strong>2.6%</strong>. That's too high, so the utility or wiring needs a look.</li></ul></div>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Read the label, do the math</h2>
+  <ol><li>With Zach, find the nameplate on an outdoor unit that's shut off (or use a clear photo of one). Write down the voltage range, phase, MCA, MOCP, and the compressor RLA.</li><li>Find the matching breaker in the panel (without opening the panel cover). Is the breaker size at or below the MOCP?</li><li>Look up your household electric rate on a utility bill. Pick an appliance with a watt rating on its label (a hair dryer or microwave). Calculate the cost of running it for 30 minutes: kW × 0.5 h × rate.</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Module 15 unlocked: Basic Electronics</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  
+  <p>Nice work, Ian. You can follow power from the street to the unit and spot the problems that come with it. Next, you'll go small: the diodes, sensors, and circuit boards that make modern furnaces and thermostats think.</p>
+  <a class="start-next" id="startNext" href="m15.html">Start Module 15 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 14 · Electrical Power</footer>
+
+<script>
+var CFG={"mid": "m14", "sections": ["s1", "s2", "s3"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 14"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m14.js"></script>
+</body>
+</html>

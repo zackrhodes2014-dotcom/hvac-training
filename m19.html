@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 19: Servicing Electric Motors and Controls</title>
+<meta name="description" content="HVAC Module 19: Servicing Electric Motors and Controls. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m19">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 19</h1>
+  <p class="sub">Servicing Electric Motors and Controls</p>
+  <p class="note">(An interactive learning module for Ian. Topics follow Chapter 19 of Modern Refrigeration and Air Conditioning (22nd ed.); all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 50 min + hands-on activity</span>
+    <span class="chip">⚡ Electrical</span>
+    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Hum, click, silence</a></li>
+      <li><a href="#safety">⚠️ Safety card</a></li>
+      <li><a href="#s1">1. Troubleshooting Electric Motors</a></li>
+      <li><a href="#s2">2. Servicing Hermetic Compressor Motors</a></li>
+      <li><a href="#s3">3. Servicing Fan Motors</a></li>
+      <li><a href="#s4">4. Servicing External Motors</a></li>
+      <li><a href="#s5">5. Servicing Motor Control Systems</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Inspection ride-along</a></li>
+      <li><a href="#next">Electrical series complete!</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/5</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/7</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/5</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/5</b></span>
+      <span class="stat" id="statStreak">⚡ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>⚡ Hum, click, silence</h2>
+  <p class="big">The contactor pulls in, the compressor hums a few seconds, then clicks off on overload. Zach locks out power, safely discharges the run capacitor, and tests it: 28 µF on a 45 µF label. The weak capacitor can't start the compressor. A new one and the unit runs. Most motor and control failures follow a few patterns, and this module teaches you to spot them.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="safety" class="safety-card">
+  <h2>⚠️ Read this before anything else</h2>
+  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
+  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
+  <div class="warnbox"><p><strong>Extra caution for this module:</strong> Never energize a compressor with its terminal cover off, and never stand in front of the terminals while a compressor is under pressure. A failed terminal can blow out and spray hot oil and refrigerant, which can catch fire.</p></div>
+  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
+</section>
+
+<section id="s1" data-gated="1">
+  <h2>1. Troubleshooting Electric Motors</h2>
+  <p class="lede">Electrical or mechanical?</p>
+  <p>Motor problems are <strong>electrical</strong> (windings, capacitor, power, controls) or <strong>mechanical</strong> (bearings, blade, belt). Common symptoms:</p>
+  <ul><li><strong>Won't run, no sound:</strong> no power reaching it, an open overload, an open winding, or a control not calling.</li><li><strong>Hums but won't start:</strong> a bad capacitor, a seized bearing, low voltage, or an open start winding.</li><li><strong>Runs hot or trips the overload:</strong> low voltage, a weak capacitor, a dirty coil, or tight bearings.</li><li><strong>Noisy:</strong> worn bearings, a loose blade, or a rubbing housing.</li></ul>
+  <p>Winding faults (checked with power off and leads disconnected):</p>
+  <ul><li><strong>Open winding:</strong> infinite resistance (OL on the meter). The wire is broken.</li><li><strong>Shorted winding:</strong> resistance lower than normal. Turns are touching each other.</li><li><strong>Grounded winding:</strong> a path from a winding to the metal frame. Dangerous; replace the motor.</li></ul>
+  <p>With power locked out, the shaft should spin freely by hand with no grinding or wobble.</p>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2" data-gated="1">
+  <h2>2. Servicing Hermetic Compressor Motors</h2>
+  <p class="lede">Reading C, S, and R</p>
+  <p>A single-phase compressor has two windings joined at <strong>Common</strong>. With power locked out and wires removed, Zach measures each terminal pair:</p>
+  <ul><li><strong>C to R</strong> (run winding) is the <em>lowest</em>.</li><li><strong>C to S</strong> (start winding) is <em>higher</em>.</li><li><strong>R to S</strong> is the <em>highest</em>, and it should equal <strong>C–R + C–S</strong>, since both windings are in series.</li></ul>
+  <div class="callout"><span class="label">🧮 Worked example</span>C–R = 0.8 Ω, C–S = 2.4 Ω.<ul><li>R–S should be 0.8 + 2.4 = <strong>3.2 Ω</strong>. If Zach reads 3.2 Ω, the windings check out.</li><li>If C–R and C–S read OL but R–S reads 3.2 Ω, the <strong>internal overload</strong> (in the common lead) is likely open. Let it cool, an hour or more, and recheck.</li></ul></div>
+  <p><strong>Ground test:</strong> each terminal to the shell or suction line should read open (infinite). A megohmmeter gives a better test.</p>
+  <p><strong>Other checks:</strong> capacitor, start components, contactor, and voltage at the compressor during a start attempt (a live test, Zach only).</p>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3" data-gated="1">
+  <h2>3. Servicing Fan Motors</h2>
+  <p class="lede">Capacitors, bearings, and rotation</p>
+  <p>Most fan motors in residential equipment are <strong>PSC</strong> or <strong>ECM</strong>.</p>
+  <h3>PSC fan motors</h3>
+  <ul><li>The <strong>run capacitor</strong> fails most often. It's rated in <strong>microfarads (µF)</strong> with a tolerance, often <strong>±5% or ±6%</strong>. A bulging top or leaking oil means replace it.</li><li>After safely discharging it, Zach reads it in capacitance mode. Example: a 7.5 µF ±6% capacitor should read between 7.5 × 0.94 = <strong>7.05 µF</strong> and 7.5 × 1.06 = <strong>7.95 µF</strong>.</li><li>Replace with the same µF and an equal or higher voltage rating (370 V or 440 V).</li><li><strong>Dual capacitors</strong> serve the compressor and fan in one can, with terminals marked <strong>C, HERM, and FAN</strong>.</li></ul>
+  <h3>ECM fan motors</h3>
+  <ul><li>Follow the manufacturer's procedure, often with a test tool, checking power and signal at the module. The module is sometimes replaceable alone.</li></ul>
+  <p><strong>Mechanical:</strong> check bearings, a loose or bent blade, rotation, and blade height in the shroud.</p>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4" data-gated="1">
+  <h2>4. Servicing External Motors</h2>
+  <p class="lede">Belts, bearings, and three-phase rotation</p>
+  <p><strong>External (open) motors</strong> sit outside the equipment they drive, through a belt or coupling. Examples are belt-drive blowers, pumps, and open-drive compressors.</p>
+  <ul><li><strong>Belts:</strong> check tension (a common rule is 1/64 inch of deflection per inch of span), cracks, and glazing. Replace multi-belt sets together.</li><li><strong>Alignment:</strong> a straightedge across both pulley faces checks it. Misalignment eats belts and bearings.</li><li><strong>Bearings:</strong> oil or grease on schedule unless sealed; don't over-grease.</li><li><strong>Couplings:</strong> check wear and alignment on direct-coupled pumps.</li><li><strong>Three-phase rotation:</strong> swapping any <strong>two</strong> of the three power leads reverses the direction. Always verify rotation on startup.</li></ul>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5" data-gated="1">
+  <h2>5. Servicing Motor Control Systems</h2>
+  <p class="lede">Contactors, relays, and overloads</p>
+  <ul><li><strong>Contactors:</strong> look for pitted, burned, or welded contacts, and ants jamming them. With power locked out, an open coil reading means bad. Match coil voltage, amp rating, and poles when replacing.</li><li><strong>Start components:</strong> relays and PTC starters can stick. A stuck start relay leaves the start capacitor in circuit and destroys it.</li><li><strong>Overloads:</strong> an open overload is usually a <em>symptom</em>. Find why the motor got hot.</li><li><strong>Time delays and boards:</strong> confirm the delay is timing out, not failing.</li><li><strong>Connections:</strong> tighten loose terminals and replace any discolored or melted wire ends. Heat damage spreads.</li></ul>
+  <p>After any repair, run the unit and confirm voltage, amps, and operation match specs.</p>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz" data-gated="1">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
+  </div>
+  <p class="lede">Five cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The ⚡ streak goes up on each "Got it" and resets on a miss. Five correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action" data-gated="1">
+  <h2>🛠️ Action Item: Inspection ride-along</h2>
+  <p>On Zach's next motor or capacitor service call:</p>
+  <ol><li>Copy the capacitor label (µF, tolerance, voltage) and calculate the acceptable range. Compare it to Zach's reading after he safely discharges and tests it.</li><li>On the locked-out unit, inspect the contactor contacts with a flashlight and describe them (clean, pitted, burned).</li><li>Copy the compressor terminal readings Zach takes (C–R, C–S, R–S) and check whether C–R + C–S equals R–S.</li><li>Spin a locked-out fan motor's blade by hand and note whether it turns freely.</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser" data-gated="1">
+  <h2>Electrical series complete!</h2>
+  <div class="unlock anim" id="unlock" aria-hidden="true">
+    <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
+  </div>
+  <p class="badge-done">🏅 Electrical Fundamentals Complete</p>
+  <p>Nice work, Ian. You've gone from electrons to fixing real motor and control problems. Next up, Zach will pick the next module in your path. Keep your meter handy.</p>
+  <a class="start-next" id="startNext" href="./">Back to all modules →</a>
+</section>
+
+</main>
+<footer>HVAC Module 19 · Servicing Electric Motors and Controls</footer>
+
+<script>
+var CFG={"mid": "m19", "sections": ["s1", "s2", "s3", "s4", "s5"], "firstId": "hook", "streakIcon": "⚡", "appName": "HVAC Module 19"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m19.js"></script>
+</body>
+</html>
