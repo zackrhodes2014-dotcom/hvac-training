@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 70 min + hands-on activity</span>
     <span class="chip">🏭 Boilers &amp; Chillers</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: The boiler that kept tripping</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Firetube Steam Boiler Basics</a></li>
       <li><a href="#s2">2. Water Softeners</a></li>
       <li><a href="#s3">3. Deaerator Tanks</a></li>
@@ -85,14 +83,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>A boiler room holds enough stored energy to level a building. Respect it every time:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works in a boiler room only with Zach right there, and only does what Zach tells him to.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Steam and scalding:</strong> Steam at 212°F or hotter burns instantly, and you can't always see a leak. Never put a hand near a hissing joint, open drain, or relief valve outlet.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>High pressure:</strong> Never open, loosen, or tap on any valve, fitting, or plug that's under pressure.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Hot surfaces:</strong> Boiler shells, steam lines, breechings, and stack pipes can burn through gloves. Assume every pipe is hot.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>Blowdown hazards:</strong> Blowdown dumps boiling water and steam into a tank or drain. Only Zach operates blowdown valves. Stand clear, and never leave a blowdown unattended.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="5"><span><strong>Gas and combustion:</strong> If you smell gas, leave and tell Zach. Never touch gas valves or burner linkage. Bad combustion can make carbon monoxide, which has no smell.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="6"><span><strong>Confined spaces:</strong> Never enter a boiler, firebox, tank, or pit. Those need permits, testing, and trained attendants.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="7"><span><strong>Lockout/tagout:</strong> Electrical, fuel, and water sources are locked and tagged before anyone opens equipment.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="8"><span><strong>Never bypass a safety:</strong> Never jumper a low water cutoff, wedge a switch, or tie down a relief valve. Safeties exist because boilers explode.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="9"><span><strong>Chemicals and salt:</strong> Treatment chemicals can burn skin and eyes. Wear gloves and eye protection. Lift 40–50 lb salt bags with your legs, and wipe up brine spills, since they're slippery.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Firetube Steam Boiler Basics</h2>
   <p class="lede">Fire in the tubes, water around them</p>
   <p>In a <strong>firetube boiler</strong>, hot combustion gases travel <em>through</em> tubes, and water surrounds those tubes inside a big steel shell. Cleaver-Brooks scotch marine style units (like the CB and CBLE lines) and Johnston firetube boilers are common examples in commercial buildings.</p>
@@ -107,7 +98,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Water Softeners</h2>
   <p class="lede">Hard water is a boiler's enemy</p>
   <p>Most city and well water contains dissolved <strong>calcium</strong> and <strong>magnesium</strong>, called <strong>hardness</strong>. When water boils off as steam, those minerals stay behind and bake onto the tubes as <strong>scale</strong>. Scale insulates, so the fire has to work harder. Even a thin layer wastes noticeable fuel. Worse, the tube metal behind the scale runs hotter and can bulge, crack, or leak.</p>
@@ -124,7 +115,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Deaerator Tanks</h2>
   <p class="lede">Getting the air out</p>
   <p>Water carries dissolved <strong>oxygen</strong> and <strong>carbon dioxide</strong>. Inside a hot boiler, oxygen attacks steel and eats small, deep <strong>pits</strong> that can go right through a tube. CO₂ travels out with the steam and mixes with condensate to form <strong>carbonic acid</strong>, which thins and eats condensate return lines.</p>
@@ -138,7 +129,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Condensate Return Units</h2>
   <p class="lede">Don't waste the hot water you already paid for</p>
   <p>When steam gives up its heat, it turns back into water called <strong>condensate</strong>. That water is hot, already softened, and already treated, so returning it saves fuel, water, salt, and chemicals.</p>
@@ -150,7 +141,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Feedwater and Pump Controls</h2>
   <p class="lede">Keeping the water line steady</p>
   <p>The boiler needs water put back as fast as it leaves as steam. A <strong>pump control</strong> watches the level and turns the feed pump on and off. Two common styles:</p>
@@ -162,7 +153,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s6" data-gated="1">
+<section id="s6">
   <h2>6. Typical Boiler Safeties</h2>
   <p class="lede">Layers of protection</p>
   <ul><li><strong>Primary low water cutoff (LWCO):</strong> if water drops below a safe level, it shuts off the burner. It's often combined with the pump control in one float or probe unit.</li><li><strong>Auxiliary low water cutoff:</strong> a second, separate cutoff set slightly <em>below</em> the primary. It's typically <strong>manual reset</strong>, so someone has to go look at why it tripped. There are two because a float chamber can clog with sludge and stick. One stuck switch must never be able to let the boiler run dry.</li><li><strong>Operating control and high limit (manual reset):</strong> covered in Section 1.</li><li><strong>Safety relief valve:</strong> vents steam at its rated pressure.</li><li><strong>Flame safeguard (programmer):</strong> a control (for example, Fireye or Honeywell) that runs the startup sequence: purge, pilot, main flame. A <strong>flame scanner</strong> watches the fire. If flame isn't proven, it closes the fuel valves and locks out.</li><li><strong>Combustion air proving switch:</strong> proves the blower is moving air before firing.</li><li><strong>Low and high gas pressure switches:</strong> shut down if gas pressure goes outside safe limits.</li><li><strong>Fuel shutoff valves:</strong> automatic safety shutoff valves close on any safety trip.</li></ul>
@@ -171,7 +162,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s7" data-gated="1">
+<section id="s7">
   <h2>7. Bottom Blowdown</h2>
   <p class="lede">Dumping the sludge</p>
   <p>As water boils off as steam, the minerals and dirt stay behind. Two problems build up:</p>
@@ -183,7 +174,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s7" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s8" data-gated="1">
+<section id="s8">
   <h2>8. Basic Steam System Components</h2>
   <p class="lede">Getting steam where it's going</p>
   <ul><li><strong>Steam header:</strong> the main pipe that collects steam from the boilers and sends it out.</li><li><strong>Main stop valves:</strong> isolate each boiler from the header.</li><li><strong>Steam traps:</strong> let condensate and air out, but hold steam in. Common types:<ul><li><strong>Thermostatic:</strong> opens when cooler condensate or air reaches it.</li><li><strong>Float and thermostatic (F&amp;T):</strong> a float drains condensate, and a thermostatic vent lets out air.</li><li><strong>Inverted bucket:</strong> a bucket floats and sinks to open and close the outlet.</li><li><strong>Thermodynamic (disc):</strong> a small disc snaps open and shut using flash steam pressure.</li></ul></li><li><strong>Failed-open trap:</strong> blows live steam into the return, wastes fuel, and overheats condensate units.</li><li><strong>Failed-closed trap:</strong> backs up condensate, so equipment heats poorly and <strong>water hammer</strong> can happen when steam slams slugs of water into fittings.</li><li><strong>Pressure reducing valve (PRV):</strong> drops header steam to a lower pressure for equipment that needs it. Pilot-operated PRVs hold the pressure steady. A typical station has a <strong>strainer</strong> upstream, a <strong>safety relief valve</strong> downstream sized for the lower pressure, gauges on both sides, and a <strong>bypass</strong> valve for maintenance.</li><li><strong>Drip legs:</strong> low pockets in steam mains with traps that drain condensate.</li><li><strong>Strainers:</strong> catch scale and dirt before traps and valves.</li><li><strong>Sight glasses:</strong> let you look at flow in a line.</li><li><strong>Vacuum breakers:</strong> let air in when steam condenses so equipment doesn't pull a vacuum.</li><li><strong>Check valves:</strong> stop water from flowing backward.</li></ul>
@@ -191,7 +182,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s8" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s9" data-gated="1">
+<section id="s9">
   <h2>9. Hot Water Boilers (Quick Look)</h2>
   <p class="lede">Same fire, different loop</p>
   <p>A hot water boiler heats water without boiling it and pumps it around a <strong>closed loop</strong>.</p>
@@ -201,7 +192,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s9" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/8</span>
@@ -215,7 +206,7 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Your first boiler room walkthrough</h2>
   <p>With Zach beside you:</p>
   <ol><li>Walk the boiler room and point out the burner, gauge glass, try cocks, pressure gauge, controls, relief valve, softener, brine tank, DA or feed tank, and condensate unit.</li><li>Read the softener's control head: regeneration mode (meter or timer), capacity, and next regen.</li><li>Run a hardness test on softened water and record the gpg.</li><li>Watch Zach do the bottom blowdown and LWCO blowdown test from a safe spot. Write down the steps in order.</li><li>Fill out one line of a daily boiler log: steam pressure, water level, stack temperature, and softener hardness.</li></ol>
@@ -223,7 +214,7 @@
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 7 unlocked: Chiller Fundamentals</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

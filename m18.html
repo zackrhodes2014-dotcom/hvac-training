@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 45 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: Guessing costs money</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Electrical Test Equipment</a></li>
       <li><a href="#s2">2. Electrical Diagrams</a></li>
       <li><a href="#s3">3. Electrical Troubleshooting Process</a></li>
@@ -80,14 +78,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Electrical Test Equipment</h2>
   <p class="lede">Know your tools before you trust them</p>
   <ul><li><strong>Digital multimeter (DMM):</strong> measures AC and DC <strong>volts</strong>, <strong>ohms</strong> (resistance), and <strong>continuity</strong> (a beep for a complete path). Many also measure <strong>capacitance</strong> (µF) and <strong>temperature</strong>.</li><li><strong>Clamp-on ammeter:</strong> clamps around <em>one</em> wire to read current without breaking the circuit. Clamp both wires of a cord and the readings cancel to near zero.</li><li><strong>Non-contact voltage tester:</strong> beeps near a live wire. It's a quick warning only, never proof that power is off.</li><li><strong>Megohmmeter ("megger"):</strong> applies a high test voltage to check winding insulation to ground. It's used by a qualified tech on de-energized, disconnected motors.</li><li><strong>Meter safety ratings:</strong> meters are labeled <strong>CAT II, III, or IV</strong> with a voltage. Use a meter rated for the job (CAT III or higher for HVAC equipment and panels). Check that the leads have no cracks and the probes have guards.</li></ul>
@@ -97,7 +88,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Electrical Diagrams</h2>
   <p class="lede">The map of the unit</p>
   <p>Manufacturers put diagrams inside panel doors. There are three common kinds:</p>
@@ -107,7 +98,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Electrical Troubleshooting Process</h2>
   <p class="lede">A repeatable game plan</p>
   <ol><li><strong>Gather info:</strong> Ask the customer what happened and when. Check the thermostat settings. Read fault codes.</li><li><strong>Observe:</strong> Look, listen, and smell. Burned wires, a humming motor, a tripped breaker, water damage.</li><li><strong>Check power:</strong> Is the correct voltage arriving at the unit? Most "dead" units have a power problem.</li><li><strong>Isolate the circuit:</strong> Use the diagram to find which rung or part isn't doing its job.</li><li><strong>Test the suspect part:</strong> Measure voltage across it while it should be working (a qualified tech does this), or resistance and continuity with power off and locked out.</li><li><strong>Repair or replace</strong>, with the correct matching part.</li><li><strong>Verify:</strong> Run the system through a full cycle and take readings. Then ask <em>why</em> it failed (a burned contactor may point to low voltage or a dragging motor).</li></ol>
@@ -115,7 +106,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Electrical Troubleshooting Strategies</h2>
   <p class="lede">Think like a detective</p>
   <ul><li><strong>Voltage across a switch:</strong> in a working, powered circuit, a <em>closed</em> switch reads close to <strong>0 V</strong> across it. An <em>open</em> switch reads the <strong>full supply voltage</strong> across it, because it's holding back the whole voltage. That makes finding an open safety switch fast.</li><li><strong>Voltage across a load:</strong> if the load has full voltage across it and still doesn't run, the load itself (or its mechanical side) is the problem.</li><li><strong>Half-splitting:</strong> test in the middle of a circuit to see which half the fault is in, then split again. Each test cuts the search in half.</li><li><strong>Hopscotching:</strong> keep one lead on a reference point (like C) and move the other lead along the circuit until the voltage disappears. The fault is between the last good reading and the first bad one.</li><li><strong>Amp readings:</strong> compare running current to the nameplate. Too high suggests a dragging motor, low voltage, or a bad capacitor. Too low suggests an unloaded or slipping drive.</li></ul>
@@ -124,7 +115,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -138,14 +129,14 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Practice the method, safely</h2>
   <ol><li>With Zach, check your meter on a known source (a 9 V battery for DC), then practice the live-dead-live order out loud each time Zach takes a reading on a job. Ian watches; Zach measures.</li><li>Take a ladder diagram from a real unit. Pretend the outdoor unit won't start. On paper, list where you'd test, in order, using half-splitting, and what reading would mean "good" or "bad" at each point.</li><li>With power off and locked out, use continuity mode to check a spare fuse from the truck and a spare length of wire.</li></ol>
   <div class="widget" id="w-action" data-gen="1"></div>
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 19 unlocked: Servicing Electric Motors and Controls</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

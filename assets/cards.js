@@ -180,6 +180,48 @@ window.HVAC_CARDS={
 "a": "Deficit flow: the building is pulling more water than the primary pumps supply, so warm return water mixes into the supply and raises the supply temp. Usually time to stage on another chiller and pump."
 }
 ],
+"m8": [
+{
+"id": "m8-c1",
+"q": "In order, what is the fill and boiler-water path at Tyson RVAF?",
+"a": "Water softeners → deaerator tank → boiler-room HPCR tank → the four boilers."
+},
+{
+"id": "m8-c2",
+"q": "What are the steam loads on this plant?",
+"a": "The hydrolyzer and three Tyson cookers."
+},
+{
+"id": "m8-c3",
+"q": "What controls level in each cooker HPCR tank?",
+"a": "A Fisher level controller and a Fisher actuated valve, piped back toward the boiler-room HPCR."
+},
+{
+"id": "m8-c4",
+"q": "What are the two positions of the three-way valve at each cooker?",
+"a": "Recirculate back to that cooker's HPCR tank, or open to the boiler-room circuit and send condensate to the boiler-room HPCR."
+},
+{
+"id": "m8-c5",
+"q": "Where does cooker low pressure condensate return?",
+"a": "To the boiler-room LPCR (low pressure condensate return) tank."
+},
+{
+"id": "m8-c6",
+"q": "How is the LPCR held near 40 psi, and where does the valve vent?",
+"a": "A back-pressure PRV (pressure regulating / back-pressure valve) holds upstream pressure at about 40 psi and vents to the roof."
+},
+{
+"id": "m8-c7",
+"q": "What moves condensate out of the LPCR tank?",
+"a": "A Fisher pneumatic level controller opens a Fisher actuated outlet valve, which feeds two pumps. One pump is always running. The pumps either recirculate or send condensate to the HPCR."
+},
+{
+"id": "m8-c8",
+"q": "How is water level controlled on the four boilers, and about what steam set point should you expect on a typical West Mechanical site?",
+"a": "Each of the four boilers has a Fisher level controller with an actuated fill valve. Typical boiler steam set points are around 115 psi; always read the actual gauge."
+}
+],
 "m13": [
 {
 "id": "m13-c1",

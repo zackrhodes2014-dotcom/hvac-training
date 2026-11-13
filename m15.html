@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 40 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: The blinking light</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Semiconductor Basics: Materials and Diodes</a></li>
       <li><a href="#s2">2. Semiconductor Basics: Transistors, Thermistors, and Switches</a></li>
       <li><a href="#s3">3. Control Circuits and Electronic Devices: Boards and Sensors</a></li>
@@ -80,14 +78,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Semiconductor Basics: Materials and Diodes</h2>
   <p class="lede">Not quite a conductor, not quite an insulator</p>
   <p><strong>Semiconductors</strong> such as silicon conduct electricity better than an insulator but worse than a metal. Their real power comes from <strong>doping</strong>, which means mixing in tiny amounts of other elements:</p>
@@ -99,7 +90,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Semiconductor Basics: Transistors, Thermistors, and Switches</h2>
   <p class="lede">Tiny parts that make decisions</p>
   <ul><li><strong>Transistor:</strong> a three-lead device where a small current or voltage controls a much larger one. It can act as an <strong>electronic switch</strong> (on/off with no moving parts) or an <strong>amplifier</strong>. Control boards use transistors to drive relays.</li><li><strong>Thermistor:</strong> a resistor whose value changes with temperature. The most common type in HVAC is <strong>NTC (negative temperature coefficient)</strong>: <em>as temperature rises, resistance drops</em>. Thermostats, outdoor sensors, and coil sensors use them.</li><li><strong>SCR and triac:</strong> solid-state switches that handle AC loads. Some thermostats and speed controls switch power with these instead of relay contacts.</li><li><strong>Photocell / flame sensors:</strong> devices that respond to light or flame and tell a board whether a burner is lit.</li></ul>
@@ -108,7 +99,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Control Circuits and Electronic Devices: Boards and Sensors</h2>
   <p class="lede">The brain of the unit</p>
   <p>Most modern equipment uses a <strong>printed circuit board (PCB)</strong> to run the sequence of operation. A typical gas furnace board:</p>
@@ -119,7 +110,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Control Circuits and Electronic Devices: Handling Electronics</h2>
   <p class="lede">Treat boards gently</p>
   <p>Electronic parts are sensitive:</p>
@@ -129,7 +120,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -143,14 +134,14 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Read a board, not a live one</h2>
   <ol><li>With Zach, look at a furnace or air handler that's powered down and locked out (or a spare board in the truck). Find and photograph the LED, the low-voltage fuse, the thermostat terminal strip (R, C, W, Y, G), and any relays.</li><li>Copy the fault-code chart from the door into your notes. Pick two codes and write what part you'd check first for each.</li><li>Using a spare thermistor sensor (unplugged), measure its resistance with a meter at room temperature. Then hold it in your hand for a minute and measure again. Did the reading go down?</li></ol>
   <div class="widget" id="w-action" data-gen="1"></div>
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 16 unlocked: Electric Motors</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

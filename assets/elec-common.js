@@ -1,4 +1,4 @@
-/* Shared helpers for the electrical modules (13-19): safety gate, unlock animation, widget builders. */
+/* Shared helpers for the generated modules (6-8, 13-19): unlock animation, widget builders. */
 var EW=(function(){
   "use strict";
   var $=H.$, store=H.store, num=H.num, fmt=H.fmt, each=H.each;
@@ -146,38 +146,14 @@ var EW=(function(){
     return wrap;
   }
 
-  /* ---------- Safety gate ---------- */
-  function safetyGate(){
-    var boxes=document.querySelectorAll("#safety .srule input"), st=$("safetyStatus");
-    var gated=document.querySelectorAll("main > section[data-gated]");
-    each(gated,function(s){
-      var n=document.createElement("div"); n.className="lock-note";
-      n.innerHTML='🔒 Locked until you tick every rule on the safety card. <a href="#safety">Go to the safety card ↑</a>';
-      s.insertBefore(n,s.children[1]||null);
-    });
-    function paint(){
-      var c=0; each(boxes,function(b){if(b.checked)c++;});
-      var all=c===boxes.length;
-      each(gated,function(s){s.classList.toggle("locked",!all);});
-      st.innerHTML=all?'<span class="ok">✅ All '+boxes.length+' rules ticked. The lessons below are unlocked.</span>':
-        '<span class="warn-t">Tick "I understand" on all '+boxes.length+' rules ('+c+'/'+boxes.length+' so far) to unlock Section 1.</span>';
-      $("safety").classList.toggle("all-ok",all);
-    }
-    each(boxes,function(b){
-      var k=b.getAttribute("data-rule"); if(store.get("safety:"+k)==="1") b.checked=true;
-      var lab=document.createElement("span"); lab.className="iu"; lab.textContent="I understand"; b.parentNode.appendChild(lab);
-      b.addEventListener("change",function(){store.set("safety:"+k,b.checked?"1":"0"); paint();});
-    });
-    paint();
-  }
   /* ---------- Unlock message ---------- */
   function unlockAnim(){
     var nx=$("next"), un=$("unlock"); if(!nx||!un) return;
     function openLock(){un.classList.add("open"); nx.classList.add("unlocked");}
     if(H.reduceMotion||!("IntersectionObserver" in window)) openLock();
-    else new IntersectionObserver(function(en,obs){ if(en[0].isIntersecting&&!nx.classList.contains("locked")){openLock();obs.disconnect();} },{threshold:0.4}).observe(nx);
+    else new IntersectionObserver(function(en,obs){ if(en[0].isIntersecting){openLock();obs.disconnect();} },{threshold:0.4}).observe(nx);
   }
-  safetyGate(); unlockAnim();
+  unlockAnim();
 
   return {$:$,num:num,fmt:fmt,each:each,store:store,esc:esc,slot:slot,fld:fld,txt:txt,area:area,sel:sel,chk:chk,keep:keep,v:v,svg:svg,
     setBand:setBand,chooser:chooser,sorter:sorter,orderPuzzle:orderPuzzle,checklist:checklist,photoSlots:photoSlots};

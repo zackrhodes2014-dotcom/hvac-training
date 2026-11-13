@@ -13,6 +13,7 @@
     {id:"m5", num:5, title:"Gases", group:"ref", file:"m5.html", sections:6, action:true, oldPrefix:"hvac5:"},
     {id:"m6", num:6, title:"Boiler Room Fundamentals", group:"mech", file:"m6.html", sections:9, action:true},
     {id:"m7", num:7, title:"Chiller Fundamentals", group:"mech", file:"m7.html", sections:9, action:true},
+    {id:"m8", num:8, title:"West Mechanical Field Notes", group:"mech", file:"m8.html", sections:13, action:true},
     {id:"m13", num:13, title:"Basic Electricity", group:"elec", file:"m13.html", sections:6, action:true},
     {id:"m14", num:14, title:"Electrical Power", group:"elec", file:"m14.html", sections:3, action:true},
     {id:"m15", num:15, title:"Basic Electronics", group:"elec", file:"m15.html", sections:4, action:true},
@@ -56,39 +57,51 @@
       var legacy=localStorage.getItem(LEGACY_NS);
       if(legacy!=null){ if(localStorage.getItem(keyFor("ian"))==null) localStorage.setItem(keyFor("ian"),legacy); localStorage.removeItem(LEGACY_NS); }
     }catch(e){}
-    /* 2) old standalone-app keys (hvac1:, hvac4:, hvac5:) go into Ian's profile only, once */
-    var o=read("ian"); if(o.migrated) return;
-    var imported=[];
-    MODULES.forEach(function(m){
-      if(!m.oldPrefix) return;
-      var keys=[];
-      try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i); if(k&&k.indexOf(m.oldPrefix)===0) keys.push(k);}}catch(e){}
-      if(!keys.length) return;
-      var dst=o.modules[m.id]||(o.modules[m.id]={});
-      var copied=0;
-      keys.forEach(function(k){
-        var sub=k.slice(m.oldPrefix.length);
-        if(sub==="probe"||sub.indexOf("dismiss:")===0) return;
-        if(!(sub in dst)){ try{dst[sub]=localStorage.getItem(k);copied++;}catch(e){} }
-      });
-      if(!copied) return;
-      /* seed study stats from old quiz results */
-      try{
-        var P=JSON.parse(dst["progress:v1"]||"null");
-        if(P&&P.results){
-          for(var idx in P.results){
-            var cid=m.id+"-c"+(Number(idx)+1), r=P.results[idx];
-            var c=o.study.cards[cid]||(o.study.cards[cid]={seen:1,res:null,correct:0});
-            c.seen=1; c.res=r; if(r==="got") c.correct=(c.correct||0)+1;
-          }
-          for(var s in (P.seen||{})){var id2=m.id+"-c"+(Number(s)+1); if(!o.study.cards[id2]) o.study.cards[id2]={seen:1,res:null,correct:0};}
+    /* 2) standalone-app keys (hvac1:, hvac4:, hvac5:), once per profile.
+          Pre-profile keys "hvacN:<key>" go to Ian only. The standalone apps later added their own
+          per-profile keys "hvacN:<key>:profile:<id>"; those go to the matching profile here. */
+    ["ian","landon","admin"].forEach(function(pid){
+      var o=read(pid); if(o.migrated) return;
+      var imported=[];
+      MODULES.forEach(function(m){
+        if(!m.oldPrefix) return;
+        var plain={}, prof={};
+        try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i); if(!k||k.indexOf(m.oldPrefix)!==0) continue;
+          var sub=k.slice(m.oldPrefix.length), mm=sub.match(/^(.*):profile:(ian|landon|admin)$/);
+          if(mm){ if(mm[2]===pid) prof[mm[1]]=localStorage.getItem(k); }
+          else plain[sub]=localStorage.getItem(k);}}catch(e){}
+        var src={}, k2;
+        if(pid==="ian") for(k2 in plain) src[k2]=plain[k2];
+        for(k2 in prof) src[k2]=prof[k2];               /* the profile-specific copy wins */
+        var dst=o.modules[m.id]||{}, copied=0;
+        for(k2 in src){
+          if(k2==="probe"||k2.indexOf("dismiss:")===0||k2.indexOf("migrated:")===0||k2.indexOf("profile")===0) continue;
+          if(!(k2 in dst)){dst[k2]=src[k2];copied++;}
         }
-      }catch(e){}
-      imported.push(m.id);
+        if(!copied) return;
+        o.modules[m.id]=dst;
+        try{
+          var P=JSON.parse(dst["progress:v1"]||"null");
+          if(P&&P.results){
+            for(var idx in P.results){
+              var cid=m.id+"-c"+(Number(idx)+1), r=P.results[idx];
+              var c=o.study.cards[cid]||(o.study.cards[cid]={seen:1,res:null,correct:0});
+              c.seen=1; c.res=r; if(r==="got") c.correct=(c.correct||0)+1;
+            }
+            for(var s2 in (P.seen||{})){var id2=m.id+"-c"+(Number(s2)+1); if(!o.study.cards[id2]) o.study.cards[id2]={seen:1,res:null,correct:0};}
+          }
+        }catch(e){}
+        imported.push(m.id);
+      });
+      o.migrated=true; o.migratedFrom=imported; write(o,pid);
     });
-    o.migrated=true; o.migratedFrom=imported; write(o,"ian");
   }
   migrate();
+  /* The safety-card unlock was removed: drop any stored safety ticks ("safety:<n>") from every profile. */
+  (function purgeSafety(){ if(!canStore) return;
+    ["ian","landon","admin"].forEach(function(pid){ var raw=lsGet(keyFor(pid)); if(!raw||raw.indexOf('"safety:')<0) return;
+      var o=read(pid), ch=false; for(var mid in o.modules){ for(var k in o.modules[mid]){ if(k.indexOf("safety:")===0){delete o.modules[mid][k]; ch=true;} } } if(ch) write(o,pid); });
+  })();
 
   /* ---------- Per-module key/value store (drop-in for the old store objects) ---------- */
   function store(mid){

@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 70 min + hands-on activity</span>
     <span class="chip">🏭 Boilers &amp; Chillers</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: The hospital that got warm</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. What a Chiller Does</a></li>
       <li><a href="#s2">2. Chiller vs. Split System</a></li>
       <li><a href="#s3">3. Chiller Plant Components</a></li>
@@ -54,7 +52,7 @@
       <li><a href="#s9">9. Troubleshooting Basics</a></li>
       <li><a href="#quiz">Flip-Card Quiz</a></li>
       <li><a href="#action">Action Item: Chiller plant walkthrough with Zach</a></li>
-      <li><a href="#next">Module 13 unlocked: Basic Electricity</a></li>
+      <li><a href="#next">Module 8 unlocked: West Mechanical Field Notes</a></li>
     </ol>
   </details>
 </nav>
@@ -85,14 +83,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>A chiller plant mixes big motors, high voltage, pressurized refrigerant, and treated water. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works in a mechanical room only with Zach right there, never alone, and touches nothing unless Zach says so.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Rotating equipment:</strong> Pumps, couplings, belts, tower fans, and compressors can start automatically at any time. Keep hands, loose clothing, and hair clear, and never reach past a guard.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>High voltage:</strong> Chiller starters and VFDs run at 460 V or higher and can hold a charge after power is off. Only Zach opens a starter or drive cabinet.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Lockout/tagout:</strong> Before any work, the equipment is shut down, locked, tagged, and proven dead. Remember that the BAS can try to restart a machine remotely.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>Refrigerant:</strong> Connecting gauges, recovering, or charging refrigerant legally requires <strong>EPA Section 608 certification</strong>. Ian watches; he doesn't open refrigerant valves.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="5"><span><strong>Pressure and vacuum:</strong> Positive-pressure machines hold refrigerant well above atmospheric pressure. Low-pressure machines run partly <em>in a vacuum</em>, so a leak pulls air in. Both can injure you if a fitting is opened the wrong way.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="6"><span><strong>Confined mechanical rooms:</strong> A big refrigerant leak can displace oxygen near the floor without any smell. ASHRAE Standard 15 calls for refrigerant monitors and alarms in machine rooms. If the monitor alarms, <strong>leave first</strong>, then report it.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="7"><span><strong>Hot and cold surfaces:</strong> Discharge lines and oil heaters can burn; chilled water piping sweats and can be slippery underfoot.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="8"><span><strong>Water treatment chemicals:</strong> Biocides and inhibitors for towers and loops can burn skin and eyes. Don't touch chemical drums or feed pumps; read the SDS with Zach.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. What a Chiller Does</h2>
   <p class="lede">A machine that makes cold water</p>
   <p>A <strong>chiller</strong> is a refrigeration machine that cools <strong>water</strong> instead of air. That chilled water, typically around <strong>42–45°F</strong> leaving the chiller (typical, varies by design), is pumped through pipes to coils all over a building or process. Air blows across those coils and gets cooled. The water comes back warmer, typically about <strong>10°F warmer</strong> (a typical design <strong>delta T</strong>, written ΔT), and the chiller cools it again. It's a loop that never stops while the building needs cooling.</p>
@@ -106,7 +97,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Chiller vs. Split System</h2>
   <p class="lede">Two ways to move heat</p>
   <p>In a <strong>split system</strong>, refrigerant does the whole trip. It's piped through a <strong>line set</strong> from an outdoor condensing unit to an <strong>evaporator coil</strong> sitting right in the airstream inside the house. Cooling air directly with refrigerant like this is called <strong>DX (direct expansion)</strong>.</p>
@@ -118,7 +109,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Chiller Plant Components</h2>
   <p class="lede">More parts, bigger loops</p>
   <p>A chiller plant has up to three loops: the <strong>chilled water loop</strong> (chiller to building coils), the <strong>condenser water loop</strong> (chiller to cooling tower, on water-cooled machines), and the <strong>refrigerant circuit</strong> inside the chiller.</p>
@@ -128,7 +119,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Coupled vs. Decoupled Chilled Water Loops</h2>
   <p class="lede">One loop or two that share a bridge</p>
   <p>How the pumps are arranged decides how water flows through the chillers versus through the building. There are two classic setups, plus a modern alternative.</p>
@@ -150,7 +141,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Chiller Types</h2>
   <p class="lede">Sorted by how they reject heat and how they compress</p>
   <p><strong>By heat rejection:</strong></p>
@@ -164,7 +155,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s6" data-gated="1">
+<section id="s6">
   <h2>6. The Refrigerant Circuit Inside a Chiller</h2>
   <p class="lede">Same four parts, bigger package</p>
   <p>A chiller still runs the basic refrigeration cycle from Module 1:</p>
@@ -178,7 +169,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s7" data-gated="1">
+<section id="s7">
   <h2>7. Chiller Controls</h2>
   <p class="lede">The brain on the panel</p>
   <p>Every modern chiller has a <strong>microprocessor controller</strong> with a display. Common examples are Trane's UC800 with Tracer displays, Carrier's controls, York, and Daikin panels. The controller holds the <strong>leaving chilled water setpoint</strong> (for example, 44°F) and adjusts capacity to hit it.</p>
@@ -192,7 +183,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s7" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s8" data-gated="1">
+<section id="s8">
   <h2>8. Chiller Maintenance</h2>
   <p class="lede">Logs, tubes, oil, and water</p>
   <ul><li><strong>Daily logs:</strong> record evaporator and condenser pressures, water temps in and out, approaches, motor amps, and oil level and pressure. A log is how you catch a problem weeks before it trips.</li><li><strong>Condenser tube cleaning:</strong> usually yearly on water-cooled machines. The heads come off and each tube is <strong>brushed</strong>. Scale and slime act like insulation, so the refrigerant has to condense hotter, raising <strong>head pressure</strong> and power use.</li><li><strong>Eddy current testing:</strong> a probe run through the tubes finds thinning or pitting before a tube leaks.</li><li><strong>Oil analysis:</strong> a lab checks oil for wear metals, acid, and moisture.</li><li><strong>Refrigerant leak checks:</strong> required by regulation on larger systems and good practice anyway.</li><li><strong>Cooling tower maintenance and water treatment:</strong> clean basins, check fill and drift eliminators, and keep chemical treatment right. Warm tower water can grow <strong>Legionella</strong> bacteria, which causes a serious lung illness, so treatment and cleaning matter for public health.</li><li><strong>Strainer cleaning:</strong> clogged strainers cut flow and cause flow trips.</li><li><strong>Vibration analysis:</strong> catches bearing and alignment problems on compressors, pumps, and fans.</li><li><strong>Purge unit checks (low-pressure machines):</strong> track purge run time; more purging means more air is leaking in.</li></ul>
@@ -201,7 +192,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s8" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s9" data-gated="1">
+<section id="s9">
   <h2>9. Troubleshooting Basics</h2>
   <p class="lede">Let the numbers talk</p>
   <p><strong>High head pressure</strong> (high condenser pressure):</p>
@@ -216,7 +207,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s9" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/8</span>
@@ -230,7 +221,7 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Chiller plant walkthrough with Zach</h2>
   <p>With Zach leading, and touching nothing unless he says so:</p>
   <ol><li><strong>Trace the loops.</strong> Follow the chilled water piping from the chiller to the pumps and out toward the building. Then follow the condenser water piping to the cooling tower (or find the condenser fans on an air-cooled unit).</li><li><strong>Read the temps.</strong> From the gauges or the controller, write down entering and leaving chilled water temps. Compute ΔT.</li><li><strong>Read the controller.</strong> Have Zach show you the main screen. Copy the leaving water setpoint, percent load or amps, and evaporator and condenser pressures or saturated temps.</li><li><strong>Find the parts.</strong> Point out a chilled water pump, a condenser water pump, a strainer, an air separator, and the control valve on one AHU coil.</li><li><strong>Fill in the log sheet.</strong> Record your readings and calculate the approaches. Ask Zach whether they look normal.</li></ol>
@@ -238,14 +229,14 @@
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
-  <h2>Module 13 unlocked: Basic Electricity</h2>
+<section id="next" class="teaser">
+  <h2>Module 8 unlocked: West Mechanical Field Notes</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
   </div>
   
-  <p>Nice work, Ian. You know how a chiller plant moves heat out of a whole building. Every pump, tower fan, and compressor you just traced runs on electricity, so next you'll learn the volts, amps, and ohms behind them.</p>
-  <a class="start-next" id="startNext" href="m13.html">Start Module 13 →</a>
+  <p>Nice work, Ian. You know how a chiller plant moves heat out of a whole building. Next, Zach's own field notes take you into a real boiler plant: the Tyson RVAF steam and condensate loop. Basic Electricity (Module 13) comes right after.</p>
+  <a class="start-next" id="startNext" href="m8.html">Start Module 8 →</a>
 </section>
 
 </main>

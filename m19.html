@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 50 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: Hum, click, silence</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Troubleshooting Electric Motors</a></li>
       <li><a href="#s2">2. Servicing Hermetic Compressor Motors</a></li>
       <li><a href="#s3">3. Servicing Fan Motors</a></li>
@@ -81,15 +79,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <div class="warnbox"><p><strong>Extra caution for this module:</strong> Never energize a compressor with its terminal cover off, and never stand in front of the terminals while a compressor is under pressure. A failed terminal can blow out and spray hot oil and refrigerant, which can catch fire.</p></div>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Troubleshooting Electric Motors</h2>
   <p class="lede">Electrical or mechanical?</p>
   <p>Motor problems are <strong>electrical</strong> (windings, capacitor, power, controls) or <strong>mechanical</strong> (bearings, blade, belt). Common symptoms:</p>
@@ -101,7 +91,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Servicing Hermetic Compressor Motors</h2>
   <p class="lede">Reading C, S, and R</p>
   <p>A single-phase compressor has two windings joined at <strong>Common</strong>. With power locked out and wires removed, Zach measures each terminal pair:</p>
@@ -113,7 +103,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Servicing Fan Motors</h2>
   <p class="lede">Capacitors, bearings, and rotation</p>
   <p>Most fan motors in residential equipment are <strong>PSC</strong> or <strong>ECM</strong>.</p>
@@ -126,7 +116,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Servicing External Motors</h2>
   <p class="lede">Belts, bearings, and three-phase rotation</p>
   <p><strong>External (open) motors</strong> sit outside the equipment they drive, through a belt or coupling. Examples are belt-drive blowers, pumps, and open-drive compressors.</p>
@@ -135,7 +125,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Servicing Motor Control Systems</h2>
   <p class="lede">Contactors, relays, and overloads</p>
   <ul><li><strong>Contactors:</strong> look for pitted, burned, or welded contacts, and ants jamming them. With power locked out, an open coil reading means bad. Match coil voltage, amp rating, and poles when replacing.</li><li><strong>Start components:</strong> relays and PTC starters can stick. A stuck start relay leaves the start capacitor in circuit and destroys it.</li><li><strong>Overloads:</strong> an open overload is usually a <em>symptom</em>. Find why the motor got hot.</li><li><strong>Time delays and boards:</strong> confirm the delay is timing out, not failing.</li><li><strong>Connections:</strong> tighten loose terminals and replace any discolored or melted wire ends. Heat damage spreads.</li></ul>
@@ -144,7 +134,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -158,7 +148,7 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Inspection ride-along</h2>
   <p>On Zach's next motor or capacitor service call:</p>
   <ol><li>Copy the capacitor label (µF, tolerance, voltage) and calculate the acceptable range. Compare it to Zach's reading after he safely discharges and tests it.</li><li>On the locked-out unit, inspect the contactor contacts with a flashlight and describe them (clean, pitted, burned).</li><li>Copy the compressor terminal readings Zach takes (C–R, C–S, R–S) and check whether C–R + C–S equals R–S.</li><li>Spin a locked-out fan motor's blade by hand and note whether it turns freely.</li></ol>
@@ -166,7 +156,7 @@
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Electrical series complete!</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

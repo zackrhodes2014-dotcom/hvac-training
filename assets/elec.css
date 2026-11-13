@@ -1,22 +1,6 @@
 /* Extra styles for electrical modules 13-19 */
 :root{--amber:#F4A261}
-.safety-chip{color:#1b1206!important;background:var(--amber)!important;border-color:var(--amber)!important;font-weight:800;text-decoration:none}
-.safety-card{border:3px solid var(--amber)!important;background:#2a2015!important;box-shadow:0 0 0 1px #000 inset}
-.safety-card h2{color:#ffd8b0}
-.safety-list{list-style:none;padding:0;margin:10px 0}
-.safety-list li{margin:8px 0}
-.srule{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;background:#1f1810;border:1px solid #6b4a2a;border-radius:10px;padding:10px 12px;cursor:pointer}
-.srule input{width:24px;height:24px;flex:none;accent-color:var(--amber);margin-top:2px}
-.srule span:not(.iu){flex:1;min-width:0}
-.srule .iu{flex-basis:100%;font-size:.8rem;font-weight:800;color:var(--amber);padding-left:34px}
-.srule:has(input:checked){border-color:var(--accent);background:#132723}
-.safety-status{font-weight:700;margin:10px 0 0}
 .warn-t{color:var(--amber)}
-.lock-note{display:none;margin:8px 0;padding:12px;border-radius:10px;border:1px dashed var(--amber);color:#ffd8b0;background:#241b12}
-.lock-note a{color:var(--amber)}
-section.locked .lock-note{display:block}
-section.locked > *:not(h2):not(.quiz-top):not(.lock-note){display:none!important}
-section.locked .quiz-top .counter{display:none}
 .badge-done{display:inline-block;margin:6px 0;padding:6px 14px;border-radius:999px;background:var(--accent);color:#05211e;font-weight:800}
 /* widget building blocks */
 .chooser .ch-count{font-size:.85rem;color:var(--muted);margin:0 0 6px}

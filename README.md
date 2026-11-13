@@ -5,7 +5,7 @@ A single offline-capable training app for Ian, built up from the fundamentals.
 **Live:** https://zackrhodes2014-dotcom.github.io/hvac-training/
 
 - **Refrigeration Fundamentals:** M1 Foundations of Refrigeration and Air Conditioning, M4 Energy and Matter, M5 Gases
-- **Boilers & Chillers:** M6 Boiler Room Fundamentals, M7 Chiller Fundamentals
+- **Boilers & Chillers:** M6 Boiler Room Fundamentals, M7 Chiller Fundamentals, M8 West Mechanical Field Notes (Tyson RVAF steam and condensate loop; Tyson Feed Mill, Hills, US Smokeless Eagle placeholders)
 - **Electrical:** M13 Basic Electricity, M14 Electrical Power, M15 Basic Electronics, M16 Electric Motors, M17 Electrical Control Systems, M18 Electrical Troubleshooting, M19 Servicing Electric Motors and Controls
 - **Flip Card Study:** shuffle cards from any mix of modules (`study.html`)
 

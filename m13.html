@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 50 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: The fan that wouldn't spin</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Fundamental Principles of Electricity</a></li>
       <li><a href="#s2">2. Types of Electricity and Electrical Materials</a></li>
       <li><a href="#s3">3. Circuit Fundamentals</a></li>
@@ -82,14 +80,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Fundamental Principles of Electricity</h2>
   <p class="lede">Electrons on the move</p>
   <p>Atoms have a nucleus with electrons around it. In metals like copper, the outer electrons are loosely held and can hop from atom to atom. A steady flow of them is <strong>electric current</strong>.</p>
@@ -101,7 +92,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Types of Electricity and Electrical Materials</h2>
   <p class="lede">Static, DC, and AC</p>
   <ul><li><strong>Static electricity</strong> is built-up charge that stays put until it jumps, like a doorknob shock. It can damage circuit boards.</li><li><strong>Direct current (DC)</strong> flows one direction only. Batteries make DC.</li><li><strong>Alternating current (AC)</strong> reverses direction over and over. In the U.S. it does this 60 times a second, called <strong>60 hertz (Hz)</strong>. Homes and HVAC equipment run on AC.</li></ul>
@@ -111,7 +102,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Circuit Fundamentals</h2>
   <p class="lede">A complete loop</p>
   <p>A <strong>circuit</strong> needs a power source, a path (wires), and a <strong>load</strong> (a motor, heater, or coil). A <strong>switch</strong> opens or closes the path.</p>
@@ -123,7 +114,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Magnetism</h2>
   <p class="lede">Electricity and magnets are partners</p>
   <p>Magnets have a <strong>north</strong> and <strong>south pole</strong>. Like poles repel and opposites attract. Around each is an invisible <strong>magnetic field</strong>.</p>
@@ -133,7 +124,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Electrical Generators</h2>
   <p class="lede">Making electricity by spinning</p>
   <p>A <strong>generator</strong> spins a wire loop in a magnetic field (or magnets past coils), inducing voltage. Each half-turn the wire passes the opposite pole, so voltage flips direction, making the <strong>sine wave</strong> of AC.</p>
@@ -143,7 +134,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s6" data-gated="1">
+<section id="s6">
   <h2>6. Transformer Basics</h2>
   <p class="lede">Changing voltage up or down</p>
   <p>A <strong>transformer</strong> has two coils on an iron core. AC in the <strong>primary</strong> induces voltage in the <strong>secondary</strong>, changed by the <strong>turns ratio</strong>:</p>
@@ -154,7 +145,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -168,7 +159,7 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Meter basics, the safe way</h2>
   <p>With Zach beside you:</p>
   <ol><li>Set a digital multimeter to DC volts and measure a fresh 9 V battery. Write down the reading. (A new one usually reads a little over 9 V.)</li><li>Set the meter to ohms. Touch the leads together first (it should read close to 0 Ω), then measure an unplugged incandescent bulb or a loose resistor.</li><li>On a furnace Zach has locked out, find the control transformer. Copy its primary volts, secondary volts, and VA. Calculate max secondary amps (VA ÷ secondary volts).</li></ol>
@@ -176,7 +167,7 @@
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 14 unlocked: Electrical Power</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

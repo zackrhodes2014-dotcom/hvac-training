@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 55 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: Who told it to turn on?</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. Electrical Control Devices</a></li>
       <li><a href="#s2">2. Control System Fundamentals</a></li>
       <li><a href="#s3">3. Thermostats</a></li>
@@ -82,14 +80,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. Electrical Control Devices</h2>
   <p class="lede">Switches that flip other switches</p>
   <ul><li><strong>Switch:</strong> opens or closes a circuit, manually (a disconnect) or automatically (pressure, temperature).</li><li><strong>Normally open (NO)</strong> contacts rest open; <strong>normally closed (NC)</strong> contacts rest closed. "Normally" means coil unpowered or sensor not tripped.</li><li><strong>Relay:</strong> a coil (often 24 V) that moves light-duty contacts, e.g., for a fan motor.</li><li><strong>Contactor:</strong> a heavy-duty relay. Its 24 V coil pulls in contacts that switch 240 V to a compressor.</li><li><strong>Solenoid:</strong> a coil that moves a plunger to open or close a valve.</li><li><strong>Pressure switches:</strong> open on high or low pressure, or loss of draft.</li><li><strong>Sequencers / time delays:</strong> switch loads after a delay, such as staging heat strips.</li></ul>
@@ -97,7 +88,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. Control System Fundamentals</h2>
   <p class="lede">Reading a ladder diagram</p>
   <p>Most systems use two voltage levels:</p>
@@ -109,7 +100,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Thermostats</h2>
   <p class="lede">The system's boss</p>
   <p>A <strong>thermostat</strong> senses room temperature and closes circuits to call for heating, cooling, or fan. Common terminal letters (wire colors are conventions, not guarantees):</p>
@@ -119,7 +110,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Motor Controls</h2>
   <p class="lede">Starting and stopping the big stuff</p>
   <ul><li><strong>Contactors</strong> start and stop compressors and condenser fans. Worn contacts get <strong>pitted</strong>, causing heat, voltage drop, and chatter.</li><li><strong>Fan relays</strong> switch blower speeds.</li><li><strong>Starting relays</strong> help single-phase compressors start by putting a <strong>start capacitor</strong> in the circuit briefly:<ul><li><strong>Potential (voltage) relay:</strong> drops out the start circuit when the voltage across the start winding rises as the motor speeds up.</li><li><strong>Current relay:</strong> pulls in on high startup current and drops out as current falls.</li></ul></li><li><strong>PTC start devices:</strong> conduct when cold, then heat up and block the start circuit within a second or two.</li><li><strong>Hard-start kits:</strong> add a start capacitor and relay to a PSC compressor that struggles to start.</li><li><strong>Time delays:</strong> hold the compressor off a few minutes after shutdown (anti-short-cycle).</li></ul>
@@ -127,7 +118,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Motor Protection Devices</h2>
   <p class="lede">Keeping motors from cooking</p>
   <ul><li><strong>Fuses and breakers</strong> protect the <em>wiring</em>.</li><li><strong>Overloads</strong> protect the <em>motor</em>, opening on excess current, heat, or both.<ul><li><strong>Internal overloads</strong> sit inside many compressors and fan motors. One can stay open an hour or more until the windings cool.</li><li><strong>External (line-break) overloads</strong> sit outside the motor and break the power directly.</li><li><strong>Pilot-duty overloads</strong> open the control circuit, which drops out the contactor.</li></ul></li><li><strong>High- and low-pressure switches</strong> protect the compressor from unsafe pressures.</li><li><strong>Lockout relays / boards</strong> stop the unit after repeated safety trips.</li><li><strong>Phase monitors</strong> protect three-phase motors from lost or reversed phases and unbalance.</li></ul>
@@ -135,7 +126,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s6" data-gated="1">
+<section id="s6">
   <h2>6. Direct Digital Control (DDC)</h2>
   <p class="lede">Controls on a network</p>
   <p>Big buildings use <strong>DDC</strong>: <strong>controllers</strong> that read sensors and run equipment by program. Each point is one of four types:</p>
@@ -145,7 +136,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -159,14 +150,14 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Trace it on paper</h2>
   <ol><li>Get a wiring diagram from a real unit (or photograph one inside a powered-down unit's door).</li><li>On paper, redraw the cooling call as a ladder: R, thermostat, Y, safety switches, contactor coil, back to C. Label each switch NO or NC.</li><li>On the locked-out unit, point out the transformer, contactor, capacitor (look only), and pressure switch while Zach watches.</li><li>Add up the 24 V load VA if the labels list them.</li></ol>
   <div class="widget" id="w-action" data-gen="1"></div>
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 18 unlocked: Electrical Troubleshooting Fundamentals</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>

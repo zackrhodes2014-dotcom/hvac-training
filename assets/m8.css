@@ -1,0 +1,47 @@
+/* Module 8: customer tabs, placeholders, plant flow diagram */
+.part-head > h2{font-size:1.5rem}
+.ctabs{display:flex;gap:6px;overflow-x:auto;margin:14px -4px 0;padding:4px;scrollbar-width:none;position:sticky;top:52px;z-index:20;background:var(--panel)}
+.ctabs::-webkit-scrollbar{display:none}
+.ctabs button{margin:0;flex:0 0 auto;min-height:44px;padding:6px 14px;border-radius:12px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-weight:700;font-size:.9rem;line-height:1.15;text-align:left}
+.ctabs button small{display:block;font-weight:600;font-size:.7rem;color:var(--muted)}
+.ctabs button[aria-selected=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+.ctabs button[aria-selected=true] small{color:#0b3b36}
+.cpanel{margin-top:10px}
+.cpanel > section.cust-sec{margin:14px 0;padding:16px 14px;background:#131c26}
+.cust-intro{color:var(--muted);font-size:.95rem}
+.cpanel.placeholder h2{margin-top:6px}
+.placeholder-banner{border:2px dashed #7d8995;border-radius:12px;padding:10px 14px;background:#151d26;color:#c8d0d8}
+.ph-sub{border:2px dashed #55606b;border-radius:12px;margin:10px 0;background:#121a22}
+.ph-sub > summary{cursor:pointer;padding:12px 14px;font-weight:700;min-height:44px;list-style-position:inside}
+.ph-sub .callout{margin:0 10px 12px}
+.toc li.toc-part{margin-top:6px;font-weight:800}
+.flowfig{margin:14px 0}
+.flowfig figcaption{font-size:.82rem;color:var(--muted);margin-top:6px}
+.flow svg{display:block;width:100%;height:auto}
+.flow .node{cursor:pointer}
+.flow .node rect{transition:stroke .2s,fill .2s}
+.flow .node.sel rect{stroke:#fff;stroke-width:2.5}
+.flow .node:focus{outline:none}.flow .node:focus-visible rect{stroke:#fff;stroke-width:3}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.78rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:4px}
+.infocard{background:var(--panel2);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:10px;padding:10px 12px;margin-top:10px;min-height:48px}
+.infocard a{font-weight:700}
+.stops{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.stops button{margin:0;min-height:56px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-size:.92rem}
+.stops button.done{background:#173a38;border-color:var(--accent)}
+.stops button.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.vflip{perspective:800px;margin-top:10px}
+.gauge-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
+.cookers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.cookers .ck{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center;font-size:.82rem}
+.cookers .ck button{margin:6px 0 0;min-height:40px;padding:4px 6px;font-size:.78rem;width:100%}
+.wd-row{display:grid;grid-template-columns:1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--border)}
+.wd-row.next{background:rgba(46,196,182,.08);border-radius:8px;padding:10px 8px}
+.wd-row .wd-l{font-weight:700}
+.wd-row input[type=text]{width:100%}
+.mapthumb{position:sticky;top:56px;z-index:5;background:#0f1114;border:1px solid var(--border);border-radius:10px;padding:6px;margin:8px 0}
+.mapthumb svg{display:block;width:100%;height:auto}
+.burst{color:var(--amber,#F4A261);font-weight:800}
+@media(prefers-reduced-motion:reduce){.stops button.shake{animation:none}.flow .node rect{transition:none}}
+.hk-stops a{color:var(--accent)}.hk-stops li.ok{color:var(--accent)}

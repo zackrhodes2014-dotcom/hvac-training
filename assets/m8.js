@@ -1,0 +1,411 @@
+/* Module 8 widgets: West Mechanical Field Notes (Tyson RVAF steam and condensate loop).
+   Every label and number here comes from the Module 8 markdown; anything illustrative is marked as such. */
+(function(){
+  "use strict";
+  var $=EW.$, v=EW.v, fmt=EW.fmt, S=EW.slot, each=EW.each, store=EW.store;
+  var RM=H.reduceMotion&&H.reduceMotion();
+  function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+  /* Subsection ids: s1-s5 = Part A (A1-A5); s6-s13 = Tyson RVAF 1-8 */
+  var RV={map:"s6",fill:"s7",boilers:"s8",loads:"s9",cooker:"s10",lpcr:"s11",pumps:"s12",walk:"s13"};
+
+  /* ---------- Customer tabs (Part B) ---------- */
+  var tabs=document.querySelectorAll(".ctabs [data-tab]");
+  function showTab(t,focus){
+    each(tabs,function(b){var on=b.getAttribute("data-tab")===t; b.setAttribute("aria-selected",String(on)); b.tabIndex=on?0:-1; if(on&&focus)b.focus();});
+    each(document.querySelectorAll(".cpanel"),function(p){p.hidden=p.id!=="cust-"+t;});
+    store.set("ui:tab",t);
+  }
+  each(tabs,function(b,i){
+    b.addEventListener("click",function(){showTab(b.getAttribute("data-tab"));});
+    b.addEventListener("keydown",function(e){var k=e.key, n=tabs.length, j=-1; var idx=Array.prototype.indexOf.call(tabs,b);
+      if(k==="ArrowRight")j=(idx+1)%n; else if(k==="ArrowLeft")j=(idx-1+n)%n; if(j>=0){e.preventDefault();showTab(tabs[j].getAttribute("data-tab"),true);}});
+  });
+  showTab(store.get("ui:tab")||"rvaf");
+  /* Make in-page links (contents, hook stops, resume) work even when the target sits in a hidden tab */
+  function reveal(id){var el=document.getElementById(id); if(!el) return false; var p=el.closest&&el.closest(".cpanel");
+    if(p&&p.hidden){showTab(p.id.replace("cust-",""));} return true;}
+  window.M8reveal=reveal;
+  document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(!a) return;
+    var id=a.getAttribute("href").slice(1); if(id&&reveal(id)){var el=document.getElementById(id); if(el){e.preventDefault(); el.scrollIntoView({behavior:RM?"auto":"smooth",block:"start"}); history.replaceState(null,"","#"+id);}}},true);
+  if(location.hash) reveal(location.hash.slice(1));
+  window.addEventListener("hashchange",function(){reveal(location.hash.slice(1));});
+  var rb=$("resumeBtn"); if(rb) rb.addEventListener("click",function(){var P=HVAC.progress("m8"); if(P&&P.last) reveal(P.last);},true);
+
+  /* ---------- Hook: follow the pipe ---------- */
+  var HK=[["Cooker HPCR tank","#"+RV.cooker,[30,60]],["Three-way valve","#"+RV.cooker,[90,60]],["Boiler-room HPCR","#"+RV.fill,[215,60]],["LPCR (~40 psi, vent to roof)","#"+RV.lpcr,[215,130]],["Deaerator","#"+RV.fill,[290,60]],["Four boilers","#"+RV.boilers,[275,150]]];
+  S("w-hook","Follow the pipe",
+    '<div class="svgbox"><svg id="hkSvg" viewBox="0 0 340 190" role="img" aria-label="Plant corridor from a cooker to the boiler room"></svg></div>'+
+    '<button type="button" id="hkGo">🔦 Follow the pipe</button><ol class="hk-stops" id="hkStops"></ol>');
+  var hkN=-1;
+  function hkDraw(){
+    var g='<rect x="150" y="20" width="185" height="165" rx="8" fill="#151d26" stroke="#59616c"/><text x="242" y="34" fill="#9AA0A6" font-size="9" text-anchor="middle">BOILER ROOM</text>';
+    g+='<rect x="8" y="30" width="60" height="70" rx="8" fill="#1a2430" stroke="#59616c"/><text x="38" y="112" fill="#9AA0A6" font-size="9" text-anchor="middle">COOKER</text><text x="110" y="112" fill="#9AA0A6" font-size="9" text-anchor="middle">corridor</text>';
+    var lit=function(i){return hkN>=i;};
+    g+='<path d="M38 60 H90 M90 60 H200" stroke="'+(lit(1)?"#2EC4B6":"#26323f")+'" stroke-width="5" fill="none"/>';
+    g+='<path d="M90 60 V40 H38" stroke="#26323f" stroke-width="3" fill="none" stroke-dasharray="4 3"/>';
+    g+='<line x1="230" y1="60" x2="270" y2="60" stroke="'+(lit(4)?"#cfe8ff":"#26323f")+'" stroke-width="4"/><line x1="230" y1="75" x2="230" y2="115" stroke="'+(lit(3)?"#5ab4ff":"#26323f")+'" stroke-width="4"/>';
+    var box=function(i,x,y,w,h,lab){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="5" fill="'+(lit(i)?"#173a38":"#1e2b38")+'" stroke="'+(lit(i)?"#2EC4B6":"#59616c")+'" stroke-width="'+(hkN===i?3:1)+'"/><text x="'+(x+w/2)+'" y="'+(y+h/2+3)+'" fill="#EDEAE4" font-size="8" text-anchor="middle">'+lab+'</text>';};
+    g+=box(0,16,50,44,22,"HPCR")+'<polygon points="82,52 98,52 90,66" fill="'+(lit(1)?"#2EC4B6":"#59616c")+'"/><polygon points="82,68 98,68 90,54" fill="'+(lit(1)?"#2EC4B6":"#59616c")+'"/>';
+    g+=box(2,200,48,44,24,"HPCR")+box(3,195,118,70,26,"LPCR ~40 psi")+box(4,270,48,56,24,"Deaerator");
+    for(var b=0;b<4;b++) g+=box(5,268+(b%2)*32,150+Math.floor(b/2)*0,28,22,"B"+(b+1)).replace('y="150"','y="'+(150-(b>1?28:0))+'"').replace('y="164"','y="'+(164-(b>1?28:0))+'"');
+    $("hkSvg").innerHTML=g;
+    $("hkStops").innerHTML=HK.map(function(s,i){return '<li'+(hkN>=i?' class="ok"':'')+'>'+(hkN>=i?'✓ ':'')+'<a href="'+s[1]+'">'+s[0]+'</a></li>';}).join("");
+  }
+  $("hkGo").addEventListener("click",function(){hkN=-1; var t=setInterval(function(){hkN++; hkDraw(); if(hkN>=HK.length-1)clearInterval(t);},RM?0:600);});
+  hkDraw();
+
+  /* ---------- Term chips (Part A) ---------- */
+  var TERMS=[["HPCR","High pressure condensate return: the path (and usually the tank) that collects condensate still at higher pressure and sends it back toward the boiler-feed side."],
+    ["LPCR","Low pressure condensate return: the path (and usually the tank) that collects lower-pressure condensate."],
+    ["Condensate","Steam that has given up its heat in a process load and turned back into water."],
+    ["Deaerator","Heats water with steam, close to boiling, so dissolved oxygen and carbon dioxide come out a vent."],
+    ["Softener","Ion exchange: resin beads take the hardness (calcium, magnesium) and give off sodium, which doesn't form scale."],
+    ["Pressure reducing valve","Controls pressure downstream: drops a higher supply pressure to a lower one the equipment can use."],
+    ["Back-pressure valve","Controls pressure upstream: holds pressure in the tank and piping behind it, opening to relieve if pressure climbs above set point."],
+    ["Three-way valve","At each Tyson RVAF cooker: recirculate back to that cooker's HPCR tank, or send to the boiler-room HPCR."],
+    ["Fisher level controller","Watches the level in a boiler or tank and tells a valve to open or close."],
+    ["Actuated valve","A valve with an actuator, the air-powered motor on top that strokes it open or closed. The muscle."],
+    ["Pneumatic","Works on instrument air, not an electrical signal."],
+    ["Flash","Hot condensate dropping to a lower pressure partly boils into steam. Wastes heat and can cause water hammer."],
+    ["Hydrolyzer","A steam load at Tyson RVAF. Its return path isn't described yet: walk it with Zach."]];
+  S("w-terms","Term chips: tap for a definition",'<div class="chips" id="trChips">'+TERMS.map(function(t,i){return '<button data-v="'+i+'">'+t[0]+'</button>';}).join("")+'</div><div class="infocard" id="trOut" aria-live="polite">Tap a term.</div>');
+  H.chipGroup($("trChips"),function(i){var t=TERMS[+i]; $("trOut").innerHTML="<b>"+t[0]+":</b> "+t[1];});
+
+  /* ---------- Path explorer (A1 and RVAF 2) ---------- */
+  function pathExplorer(id,stops,caption){
+    var box=S(id,"Four-stop path explorer",'<p class="lbl">Tap the stops in order.</p><div class="stops" id="'+id+'St">'+stops.map(function(s,i){return '<button type="button" data-i="'+i+'">'+(i+1)+'. '+s[0]+'</button>';}).join("")+'</div><div class="infocard" id="'+id+'Out" aria-live="polite">Start with stop 1.</div>'+(caption?'<p class="wnote">'+caption+'</p>':'')+'<button type="button" class="secondary" id="'+id+'Re">↺ Start over</button>');
+    var at=0;
+    each(box.querySelectorAll(".stops button"),function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-i");
+      if(i<at){ $(id+"Out").innerHTML="<b>"+stops[i][0]+":</b> "+stops[i][1]+"<br><i>Why:</i> "+stops[i][2]; return; }
+      if(i!==at){b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); $(id+"Out").innerHTML='<span class="no">Not yet. Next stop is '+(at+1)+'. '+stops[at][0]+'. Don\'t skip a stop in your head.</span>'; return;}
+      b.classList.add("done"); at++; $(id+"Out").innerHTML="<b>"+stops[i][0]+":</b> "+stops[i][1]+"<br><i>Why this stop exists:</i> "+stops[i][2]+(at===stops.length?'<br><span class="ok">✓ Path complete.</span>':'');});});
+    $(id+"Re").addEventListener("click",function(){at=0; each(box.querySelectorAll(".stops button"),function(b){b.classList.remove("done");}); $(id+"Out").textContent="Start with stop 1.";});
+  }
+  pathExplorer("w-s1",[["Softeners","Removes hardness (calcium and magnesium).","So minerals don't bake onto the tubes as scale."],
+    ["Deaerator","Removes dissolved gases (oxygen and carbon dioxide) out a vent.","Oxygen pits steel; CO₂ forms carbonic acid in condensate lines."],
+    ["HPCR / feed tank","Adds returned hot condensate to the deaerated feedwater.","Returned condensate is already hot, softened, and treated: it saves fuel, water, salt, and chemicals."],
+    ["Boilers","Steam leaves the boilers for the process loads.","This is where the water finally does its job."]],"The exact tank names (HPCR, feed tank, or something else) are confirmed in each customer section.");
+  pathExplorer("w-s7",[["Softeners","Removes hardness.","On rounds: is it actually making soft water, not just full of salt?"],
+    ["Deaerator","Removes dissolved gases.","Read the DA gauge and thermometer on site; don't assume a textbook number."],
+    ["Boiler-room HPCR","Deaerated water meets high pressure condensate coming home from the cookers.","Where cooker HP condensate rejoins the boiler-feed path."],
+    ["The four boilers","Fed from the boiler-room HPCR; steam leaves for the hydrolyzer and three cookers.","Each holds its own water line with a Fisher level controller."]],"Tyson RVAF order: softeners → deaerator → boiler-room HPCR → the four boilers.");
+
+  /* ---------- A2: HPCR vs LPCR ---------- */
+  S("w-s2","Two return tanks",
+    '<div class="svgbox"><svg id="tkSvg" viewBox="0 0 320 150" role="img" aria-label="HPCR and LPCR returning toward a boiler-feed tank"></svg></div>'+
+    '<div class="chips" id="tkC"><button data-v="hp">HPCR</button><button data-v="lp">LPCR</button><button data-v="one">Why not one tank?</button></div><div class="infocard" id="tkOut" aria-live="polite">Tap HPCR or LPCR.</div>');
+  function tk(mode){
+    var g='<rect x="230" y="50" width="80" height="50" rx="6" fill="#1e2b38" stroke="#9AA0A6"/><text x="270" y="72" fill="#EDEAE4" font-size="9" text-anchor="middle">Boiler-feed</text><text x="270" y="84" fill="#EDEAE4" font-size="9" text-anchor="middle">tank</text>';
+    var hp=mode==="hp"||mode==="one", lp=mode==="lp"||mode==="one";
+    g+='<rect x="20" y="15" width="70" height="40" rx="6" fill="#173a38" stroke="#2EC4B6"/><text x="55" y="39" fill="#EDEAE4" font-size="11" text-anchor="middle">HPCR</text>';
+    g+='<rect x="20" y="95" width="70" height="40" rx="6" fill="#16283a" stroke="#5ab4ff"/><text x="55" y="119" fill="#EDEAE4" font-size="11" text-anchor="middle">LPCR</text>';
+    if(mode==="one"){
+      g+='<path d="M90 35 H160 V75" stroke="#2EC4B6" stroke-width="5" fill="none"/><path d="M90 115 H160 V75" stroke="#5ab4ff" stroke-width="5" fill="none"/><circle cx="160" cy="75" r="10" fill="#ff6b5b"/><text x="160" y="79" fill="#fff" font-size="11" text-anchor="middle" font-weight="800">!</text><path d="M170 75 H230" stroke="#59616c" stroke-width="3" stroke-dasharray="4 3"/>';
+    } else {
+      g+='<path d="M90 35 H190 V65 H230" stroke="'+(hp?"#2EC4B6":"#26323f")+'" stroke-width="5" fill="none"/><polygon points="222,59 232,65 222,71" fill="'+(hp?"#2EC4B6":"#26323f")+'"/>';
+      g+='<path d="M90 115 H190 V85 H230" stroke="'+(lp?"#5ab4ff":"#26323f")+'" stroke-width="5" fill="none"/><polygon points="222,79 232,85 222,91" fill="'+(lp?"#5ab4ff":"#26323f")+'"/>';
+    }
+    $("tkSvg").innerHTML=g;
+    $("tkOut").innerHTML={hp:"<b>HPCR:</b> collects condensate still at higher pressure and sends it back toward the boiler-feed side (teal).",lp:"<b>LPCR:</b> collects lower-pressure condensate (blue), so it has a place to go without fighting the higher-pressure system.",one:'<span class="no"><b>Teed together with no plan:</b> the two returns are not at the same pressure, so the higher-pressure line fights the lower one at the tee.</span> That is why there are two return systems. Not every site splits returns this way: it\'s a walkdown question for each plant.'}[mode]||"Tap HPCR or LPCR.";
+  }
+  H.chipGroup($("tkC"),tk); tk("");
+
+  /* ---------- A3: Fisher pneumatic level controller trainer ---------- */
+  S("w-s3","Level controller + actuated valve trainer",
+    '<div class="chips" id="lcMode"><button data-v="feed">Boiler / feed (opens on falling level)</button><button data-v="out">Condensate tank outlet (opens on rising level)</button></div>'+
+    '<div class="svgbox"><svg id="lcSvg" viewBox="0 0 320 170" role="img" aria-label="Gauge glass, pneumatic controller and actuated valve"></svg></div>'+
+    '<label class="lbl" for="lcL">Drag the level: <b id="lcLv">50</b>%</label><input type="range" id="lcL" min="0" max="100" value="50">'+
+    '<div id="lcFeedBox"><div class="grid2">'+EW.fld("lcBp","Boiler steam pressure (psi)",115)+'</div><label class="lbl" for="lcFp">Feed pressure: <b id="lcFpv">125</b> psi</label><input type="range" id="lcFp" min="80" max="150" value="125"></div>'+
+    '<div class="gauge-row"><div class="ro"><span class="k">Air signal</span><span class="v" id="lcAir">–</span></div><div class="ro"><span class="k">Valve</span><span class="v" id="lcV">–</span></div></div>'+
+    '<p class="status" id="lcOut" aria-live="polite"></p><p class="wnote">~115 psi is only a typical West Mechanical example. The air-signal bar is a picture of "more air / less air", not a real calibration.</p>');
+  var lcMode="feed", lcL=50, SP=50;
+  function lcTick(){
+    var bp=v("lcBp"), fp=+$("lcFp").value; $("lcFpv").textContent=fp;
+    var open=lcMode==="feed"?clamp((SP-lcL)/25,0,1):clamp((lcL-SP)/25,0,1);
+    if(lcMode==="feed"){ var flow=open>0&&fp>bp?open*1.2:0; lcL=clamp(lcL-0.3+flow,0,100); }
+    else { lcL=clamp(lcL+0.3-open*1.2,0,100); }
+    $("lcL").value=Math.round(lcL); $("lcLv").textContent=Math.round(lcL);
+    $("lcAir").textContent=Math.round(open*100)+"%"; $("lcV").textContent=open<0.02?"Closed":open>0.98?"Open":"Open "+Math.round(open*100)+"%";
+    var msg;
+    if(lcMode==="feed"){ if(open>0.02&&fp<=bp) msg='<span class="no">⚠️ No flow into boiler: the valve is open but feed pressure ('+fp+' psi) is not above boiler pressure ('+bp+' psi). The level keeps falling.</span>';
+      else msg=open>0.02?'<span class="ok">Level low: the controller sends air, the feed valve opens, water goes in.</span>':'Level in band: the feed valve is closed. Steam leaving slowly pulls the level down.'; }
+    else msg=open>0.02?'<span class="ok">Level high: the outlet valve opens and condensate leaves.</span>':'Level in band: the outlet valve stays closed while condensate comes in.';
+    $("lcOut").innerHTML=msg;
+    var y=150-lcL*1.3, vy=40+(1-open)*0;
+    var g='<rect x="30" y="15" width="34" height="140" rx="6" fill="#0f1114" stroke="#9AA0A6" stroke-width="2"/><rect x="32" y="'+y+'" width="30" height="'+(153-y)+'" fill="#5ab4ff" opacity=".55"/><line x1="24" y1="'+(150-SP*1.3)+'" x2="70" y2="'+(150-SP*1.3)+'" stroke="#2EC4B6" stroke-dasharray="4 3"/><text x="47" y="166" fill="#9AA0A6" font-size="9" text-anchor="middle">gauge glass</text>';
+    g+='<rect x="100" y="20" width="70" height="44" rx="6" fill="#262b33" stroke="#9AA0A6"/><text x="135" y="36" fill="#EDEAE4" font-size="9" text-anchor="middle">Fisher</text><text x="135" y="48" fill="#EDEAE4" font-size="9" text-anchor="middle">controller</text>';
+    g+='<rect x="104" y="54" width="62" height="5" fill="#1e2b38"/><rect x="104" y="54" width="'+(62*open)+'" height="5" fill="#2EC4B6"/>';
+    g+='<path d="M170 42 H230 V80" stroke="#cfe8ff" stroke-width="2" stroke-dasharray="3 3" fill="none"/><text x="200" y="36" fill="#9AA0A6" font-size="8" text-anchor="middle">air signal</text>';
+    g+='<path d="M210 80 H250 L245 95 H215 Z" fill="#262b33" stroke="#9AA0A6"/><line x1="230" y1="95" x2="230" y2="'+(110+open*12)+'" stroke="#EDEAE4" stroke-width="3"/>';
+    g+='<path d="M180 128 H210 L230 '+(118+open*0)+' L250 128 H290" stroke="'+(open>0.02?"#5ab4ff":"#26323f")+'" stroke-width="6" fill="none"/><text x="240" y="150" fill="#9AA0A6" font-size="9" text-anchor="middle">'+(lcMode==="feed"?"feed in → boiler":"condensate out →")+'</text>';
+    g+='<path d="M64 128 H180" stroke="#26323f" stroke-width="4"/>';
+    $("lcSvg").innerHTML=g;
+  }
+  H.chipGroup($("lcMode"),function(m){lcMode=m; $("lcFeedBox").hidden=m!=="feed"; lcL=m==="feed"?40:62;}).pick("feed");
+  $("lcL").addEventListener("input",function(){lcL=+this.value;});
+  setInterval(lcTick,200); lcTick();
+
+  /* ---------- A4: reducing valve vs back-pressure valve ---------- */
+  S("w-s4","Reducing valve vs. back-pressure valve",
+    '<div class="grid2"><div><p class="lbl"><b>Pressure reducing valve</b></p><div class="svgbox"><svg id="rvSvg" viewBox="0 0 160 120" role="img" aria-label="Pressure reducing valve"></svg></div>'+
+    '<label class="lbl" for="rvUp">Supply (upstream): <b id="rvUpv">100</b> psi</label><input type="range" id="rvUp" min="0" max="150" value="100">'+
+    '<label class="lbl" for="rvSp">Set point (example): <b id="rvSpv">15</b> psi</label><input type="range" id="rvSp" min="5" max="60" value="15"></div>'+
+    '<div><p class="lbl"><b>Back-pressure valve</b></p><div class="svgbox"><svg id="bpSvg" viewBox="0 0 160 120" role="img" aria-label="Back-pressure valve"></svg></div>'+
+    '<label class="lbl" for="bpT">Tank pressure: <b id="bpTv">30</b> psi</label><input type="range" id="bpT" min="0" max="70" value="30">'+
+    '<label class="lbl" for="bpSp">Set point (example): <b id="bpSpv">40</b> psi</label><input type="range" id="bpSp" min="10" max="60" value="40"></div></div>'+
+    '<div class="row"><button type="button" class="secondary" id="vfBtn">🔄 Flip the labels</button></div><p class="status" id="vfOut" aria-live="polite"></p>');
+  var vflip=false;
+  function valves(){
+    var up=+$("rvUp").value, sp=+$("rvSp").value, t=+$("bpT").value, bsp=+$("bpSp").value;
+    $("rvUpv").textContent=up; $("rvSpv").textContent=sp; $("bpTv").textContent=t; $("bpSpv").textContent=bsp;
+    var down=Math.min(up,sp), relieving=t>bsp;
+    $("rvSvg").innerHTML='<path d="M5 60 H65" stroke="#ff9f43" stroke-width="6"/><path d="M95 60 H155" stroke="#cfe8ff" stroke-width="6"/><path d="M65 45 L95 75 M65 75 L95 45" stroke="#9AA0A6" stroke-width="3"/><circle cx="80" cy="60" r="16" fill="none" stroke="#9AA0A6" stroke-width="2"/>'+
+      '<text x="35" y="40" fill="#ff9f43" font-size="11" text-anchor="middle">'+up+' psi</text><text x="125" y="40" fill="#cfe8ff" font-size="11" text-anchor="middle" font-weight="800">'+down+' psi</text>'+
+      '<text x="80" y="108" fill="#2EC4B6" font-size="10" text-anchor="middle">'+(vflip?"controls DOWNSTREAM":"tap Flip the labels")+'</text>';
+    $("bpSvg").innerHTML='<rect x="5" y="35" width="55" height="55" rx="8" fill="#16283a" stroke="#5ab4ff"/><text x="32" y="66" fill="#EDEAE4" font-size="11" text-anchor="middle">'+t+'</text><text x="32" y="80" fill="#9AA0A6" font-size="8" text-anchor="middle">psi tank</text>'+
+      '<path d="M60 60 H80" stroke="#5ab4ff" stroke-width="5"/><circle cx="92" cy="60" r="12" fill="none" stroke="'+(relieving?"#F4A261":"#9AA0A6")+'" stroke-width="2"/><path d="M104 60 H125 V10" stroke="'+(relieving?"#F4A261":"#26323f")+'" stroke-width="5" fill="none"'+(relieving&&!RM?' class="blink"':'')+'/>'+
+      '<text x="140" y="20" fill="'+(relieving?"#F4A261":"#59616c")+'" font-size="9" text-anchor="middle">relief</text>'+
+      '<text x="80" y="108" fill="#2EC4B6" font-size="10" text-anchor="middle">'+(vflip?"holds UPSTREAM":"tap Flip the labels")+'</text>';
+    $("vfOut").innerHTML=(relieving?'<span class="warn-t">Back-pressure valve: tank is above its set point, so it opens and relieves.</span>':'Back-pressure valve: at or under set point, so it stays closed (or only cracks) and the relief path is quiet.')+' Reducing valve: downstream holds '+down+' psi'+(up<sp?' (supply is below set point, so it can\'t make more)':'')+'.';
+  }
+  ["rvUp","rvSp","bpT","bpSp"].forEach(function(id){$(id).addEventListener("input",valves);});
+  $("vfBtn").addEventListener("click",function(){vflip=!vflip; valves();}); valves();
+
+  /* ---------- Two-pump trainer (A5) and LPCR pumping trainer (RVAF 7) ---------- */
+  function pumpTrainer(id,opts){
+    var p=id;
+    S(id,opts.title,
+      (opts.level?'<label class="lbl" for="'+p+'L">Drag the LPCR tank level: <b id="'+p+'Lv">50</b>%</label><input type="range" id="'+p+'L" min="0" max="100" value="50">':'')+
+      '<div class="svgbox"><svg id="'+p+'Svg" viewBox="0 0 320 170" role="img" aria-label="Two pumps, running and standby"></svg></div>'+
+      '<div class="chips" id="'+p+'Dis"><button data-v="recirc">Recirculate</button><button data-v="send">'+opts.sendLabel+'</button></div>'+
+      '<div class="row"><button type="button" class="secondary" id="'+p+'Swap">⇄ Swap running / standby</button><button type="button" class="secondary danger" id="'+p+'Stop">⛔ Running pump stops</button></div>'+
+      '<p class="status" id="'+p+'Out" aria-live="polite"></p>'+(opts.note?'<p class="wnote">'+opts.note+'</p>':''));
+    var run=0, stopped=false, dis="send", L=50, t=0;
+    function draw(){ t++;
+      var open=opts.level?clamp((L-40)/30,0,1):1, moving=!stopped&&open>0.02;
+      if(opts.level){ L=clamp(L+0.35-(moving?open*0.9:0),0,100); $(p+"L").value=Math.round(L); $(p+"Lv").textContent=Math.round(L); }
+      var g='<rect x="10" y="30" width="60" height="100" rx="8" fill="#16283a" stroke="#5ab4ff"/><rect x="12" y="'+(128-(opts.level?L:60)*0.96)+'" width="56" height="'+((opts.level?L:60)*0.96)+'" fill="#5ab4ff" opacity=".4"/><text x="40" y="148" fill="#EDEAE4" font-size="10" text-anchor="middle">'+(opts.level?"LPCR":"Tank")+'</text>';
+      if(opts.level){ g+='<rect x="76" y="10" width="54" height="26" rx="4" fill="#262b33" stroke="#9AA0A6"/><text x="103" y="21" fill="#EDEAE4" font-size="7" text-anchor="middle">Fisher pneumatic</text><text x="103" y="31" fill="#2EC4B6" font-size="8" text-anchor="middle">air '+Math.round(open*100)+'%</text>'+
+        '<path d="M98 80 H118 L114 90 H102 Z" fill="#262b33" stroke="#9AA0A6"/><line x1="108" y1="36" x2="108" y2="80" stroke="#cfe8ff" stroke-dasharray="3 3"/><text x="108" y="104" fill="#9AA0A6" font-size="7" text-anchor="middle">outlet '+(open<0.02?"closed":Math.round(open*100)+"%")+'</text>'; }
+      var fc=moving?"#5ab4ff":"#26323f", dash='stroke-dasharray="8 5" stroke-dashoffset="'+(RM?0:-(t*2)%13)+'"';
+      g+='<path d="M70 115 H150 M150 115 V75 H170 M150 115 V140 H170" stroke="'+(moving?"#5ab4ff":"#26323f")+'" stroke-width="5" fill="none"/>';
+      [0,1].forEach(function(k){var y=k?140:75, isRun=run===k, col=isRun?(stopped?"#ff6b5b":"#2EC4B6"):"#59616c";
+        g+='<circle cx="185" cy="'+y+'" r="14" fill="#1e2b38" stroke="'+col+'" stroke-width="3"/>'+(isRun&&!stopped&&!RM?'<g transform="translate(185 '+y+') rotate('+((t*20)%360)+')"><line x1="-8" y1="0" x2="8" y2="0" stroke="#2EC4B6" stroke-width="2"/><line x1="0" y1="-8" x2="0" y2="8" stroke="#2EC4B6" stroke-width="2"/></g>':'')+
+          '<text x="185" y="'+(y-19)+'" fill="'+col+'" font-size="8" text-anchor="middle">Pump '+(k?"B":"A")+': '+(isRun?(stopped?"STOPPED":"running"):"standby")+'</text>';});
+      var py=run?140:75;
+      if(dis==="send") g+='<path d="M199 '+py+' H260 V30 H310" stroke="'+fc+'" stroke-width="5" fill="none" '+dash+'/><text x="285" y="22" fill="'+(moving?"#cfe8ff":"#59616c")+'" font-size="9" text-anchor="middle">'+opts.sendShort+' →</text>';
+      else g+='<path d="M199 '+py+' H240 V8 H40 V30" stroke="'+fc+'" stroke-width="5" fill="none" '+dash+'/><text x="150" y="20" fill="'+(moving?"#cfe8ff":"#59616c")+'" font-size="9" text-anchor="middle">recirculate back to the tank</text>';
+      $(p+"Svg").innerHTML=g;
+      var msg;
+      if(stopped) msg='<span class="no">The running pump stopped. Nothing is moving the water, so the tank fills and condensate has nowhere useful to go.</span> That is why the second pump exists. No automatic start sequence has been described here, so: get Zach. The swap button shows the standby pump taking over, as Zach directs.';
+      else if(opts.level&&open<0.02) msg="Level below the band: the Fisher controller keeps the outlet valve closed. One pump still runs, so the path is already alive.";
+      else msg='<span class="ok">Pump '+(run?"B":"A")+' running, Pump '+(run?"A":"B")+' on standby. Discharge: '+(dis==="send"?opts.sendLabel:"Recirculate")+'.</span>';
+      $(p+"Out").innerHTML=msg;
+    }
+    H.chipGroup($(p+"Dis"),function(d){dis=d;}).pick("send");
+    $(p+"Swap").addEventListener("click",function(){run=1-run; stopped=false;});
+    $(p+"Stop").addEventListener("click",function(){stopped=true;});
+    if(opts.level) $(p+"L").addEventListener("input",function(){L=+this.value;});
+    setInterval(draw,150); draw();
+  }
+  pumpTrainer("w-s5",{title:"Two-pump trainer",sendLabel:"Send onward",sendShort:"onward",note:"A general idea. How lead/lag and the discharge are chosen are site details: don't assume an automatic changeover until Zach shows you one."});
+  pumpTrainer("w-s12",{title:"LPCR pumping trainer",level:true,sendLabel:"Send to HPCR",sendShort:"boiler-room HPCR",note:"Tyson RVAF: a Fisher pneumatic level controller opens the actuated outlet valve as the LPCR fills; the valve feeds two pumps; one pump is always running; the pumps recirculate or send to the HPCR. Level numbers here are illustrative."});
+
+  /* ---------- RVAF 1: plant flow diagram, rendered from the Mermaid source in the markdown ---------- */
+  var src=($("mermaidSrc")||{}).textContent||"";
+  var NODES={}, EDGES=[];
+  src.split("\n").forEach(function(line){
+    var re=/(\w+)(?:\[([^\]]+)\])?/g, l=line.trim(); if(!l||/^flowchart/.test(l)) return;
+    var m=l.match(/^(\w+)(?:\[([^\]]+)\])?\s*-->\s*(?:\|"?([^|"]+)"?\|\s*)?(\w+)(?:\[([^\]]+)\])?$/); if(!m) return;
+    if(m[2]||!NODES[m[1]]) NODES[m[1]]=m[2]||NODES[m[1]]||m[1];
+    if(m[5]||!NODES[m[4]]) NODES[m[4]]=m[5]||NODES[m[4]]||m[4];
+    EDGES.push({a:m[1],b:m[4],label:m[3]||""});
+  });
+  var POS={Fill:[180,18,120],Softeners:[180,64,120],DA:[180,110,120],BRHPCR:[180,156,130],Boilers:[180,202,120],Steam:[180,248,140],
+    Hydro:[56,312,76],C1:[140,312,76],C2:[224,312,76],C3:[308,312,76],C1HP:[140,372,76],C2HP:[224,372,76],C3HP:[308,372,76],LPCR:[110,452,120],Roof:[290,452,90]};
+  var NH=28;
+  var KIND={fill:["Fill>Softeners","Softeners>DA","DA>BRHPCR","BRHPCR>Boilers"],steam:["Boilers>Steam","Steam>Hydro","Steam>C1","Steam>C2","Steam>C3"],
+    hp:["C1>C1HP","C2>C2HP","C3>C3HP","C1HP>BRHPCR","C2HP>BRHPCR","C3HP>BRHPCR"],lp:["C1>LPCR","C2>LPCR","C3>LPCR","LPCR>BRHPCR"],vent:["LPCR>Roof"]};
+  var COL={fill:"#cfe8ff",steam:"#ff9f43",hp:"#2EC4B6",lp:"#5ab4ff",vent:"#F4A261"};
+  function kindOf(k){for(var c in KIND) if(KIND[c].indexOf(k)>=0) return c; return "fill";}
+  function bot(n){var p=POS[n];return [p[0],p[1]+NH/2];} function topp(n){var p=POS[n];return [p[0],p[1]-NH/2];}
+  function route(a,b){var k=a+">"+b, A=POS[a], B=POS[b];
+    if(/^C\dHP>BRHPCR$/.test(k)) return "M"+A[0]+" "+(A[1]+NH/2)+" V398 H352 V"+B[1]+" H"+(B[0]+B[2]/2);
+    if(/^C\d>LPCR$/.test(k)) return "M"+(A[0]-A[2]/2)+" "+A[1]+" H"+(A[0]-A[2]/2-5)+" V424 H"+B[0]+" V"+(B[1]-NH/2);
+    if(k==="LPCR>BRHPCR") return "M"+(B[0]-0)+" "+0+"";
+    if(k==="LPCR>Roof") return "M"+(A[0]+A[2]/2)+" "+A[1]+" H"+(B[0]-B[2]/2);
+    if(/^Steam>/.test(k)) return "M"+A[0]+" "+(A[1]+NH/2)+" V280 H"+B[0]+" V"+(B[1]-NH/2);
+    return "M"+A[0]+" "+(A[1]+NH/2)+" V"+(B[1]-NH/2);
+  }
+  function route2(a,b){var k=a+">"+b; if(k==="LPCR>BRHPCR"){var A=POS.LPCR,B=POS.BRHPCR; return "M"+(A[0]-A[2]/2)+" "+A[1]+" H8 V"+B[1]+" H"+(B[0]-B[2]/2);} return route(a,b);}
+  var INFO={Fill:["Fill / makeup water comes in and goes to the softeners first.",RV.fill],Softeners:["Ion exchange takes out hardness so it doesn't bake onto the tubes as scale.",RV.fill],
+    DA:["Heats the water with steam so dissolved oxygen and CO₂ come out a vent. Read the gauge on site.",RV.fill],BRHPCR:["Feeds the four boilers. Deaerated water and high pressure condensate from the cookers meet here.",RV.fill],
+    Boilers:["Four boilers, each with a Fisher level controller and actuated fill valve. Typical set point around 115 psi: read the gauge.",RV.boilers],Steam:["Steam goes out to the hydrolyzer and the three Tyson cookers.",RV.loads],
+    Hydro:["The hydrolyzer is a steam load. Its return path hasn't been described: walk this one with Zach.",RV.loads],
+    LPCR:["Cooker LP condensate comes home here. Held near 40 psi by a back-pressure PRV; a Fisher pneumatic level controller and two pumps move it out.",RV.lpcr],
+    Roof:["The back-pressure PRV vents to the roof to hold the LPCR near 40 psi. Burn hazard: stay clear of vent outlets.",RV.lpcr],
+    TW:["Three-way valve at each cooker: Recirculate back to that cooker's HPCR, or Send to the boiler-room HPCR.",RV.cooker],
+    PUMPS:["Fisher outlet valve and two LPCR pumps: one is always running; they recirculate or send condensate to the HPCR.",RV.pumps]};
+  [1,2,3].forEach(function(n){INFO["C"+n]=["Tyson cooker "+n+": high pressure condensate goes to its own HPCR tank; LP condensate returns to the boiler-room LPCR.",RV.loads];
+    INFO["C"+n+"HP"]=["Cooker "+n+" HPCR tank: Fisher level controller + actuated valve; the three-way valve recirculates or sends to the boiler-room HPCR.",RV.cooker];});
+  if($("w-flow")){
+    S("w-flow","Tyson RVAF plant map (tap any block)",
+      '<div class="svgbox flow"><svg id="flSvg" viewBox="0 0 360 492" role="img" aria-label="Tyson RVAF flow: fill water, steam to loads, condensate returns"></svg></div>'+
+      '<div class="legend"><span><i style="background:#cfe8ff"></i>fill water</span><span><i style="background:#ff9f43"></i>steam</span><span><i style="background:#2EC4B6"></i>HP condensate</span><span><i style="background:#5ab4ff"></i>LP condensate</span><span><i style="background:#F4A261"></i>vent</span></div>'+
+      '<div class="infocard" id="flInfo" aria-live="polite">Tap a block to see what it is.</div>'+
+      '<p class="lbl" style="margin-top:10px">Cooker three-way valves:</p><div class="chips" id="flTW"><button data-v="send">Send to boiler room</button><button data-v="recirc">Recirculate</button></div>'+
+      '<p class="lbl">LPCR pumps:</p><div class="chips" id="flLP"><button data-v="send">Send to HPCR</button><button data-v="recirc">Recirculate</button></div>'+
+      '<button type="button" id="flTrace">▶ Trace the loop</button>');
+    var sel=null, tw="send", lp="send", lit=null;
+    function flDraw(){
+      var g='<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9AA0A6"/></marker></defs>';
+      EDGES.forEach(function(e){var k=e.a+">"+e.b, c=kindOf(k), d=route2(e.a,e.b);
+        var off=(/^C\dHP>BRHPCR$/.test(k)&&tw==="recirc")||(k==="LPCR>BRHPCR"&&lp==="recirc");
+        var on=lit===null||lit.indexOf(k)>=0;
+        g+='<path d="'+d+'" fill="none" stroke="'+(off?"#26323f":COL[c])+'" stroke-width="'+(on&&!off?3.5:2)+'" opacity="'+(on?1:.25)+'" marker-end="url(#ah)"'+(off?' stroke-dasharray="4 4"':'')+'/>';});
+      if(tw==="recirc") [1,2,3].forEach(function(n){var p=POS["C"+n+"HP"]; g+='<path d="M'+(p[0]+p[2]/2)+' '+(p[1]-6)+' a10 10 0 1 1 0 12" fill="none" stroke="#2EC4B6" stroke-width="2.5" marker-end="url(#ah)"/>';});
+      if(lp==="recirc"){var q=POS.LPCR; g+='<path d="M'+(q[0]+20)+' '+(q[1]+NH/2)+' a12 9 0 1 0 -40 0" fill="none" stroke="#5ab4ff" stroke-width="2.5" marker-end="url(#ah)"/>';}
+      EDGES.forEach(function(e){if(!e.label) return; var k=e.a+">"+e.b;
+        if(k==="C1HP>BRHPCR") g+='<text x="346" y="250" fill="#2EC4B6" font-size="8" text-anchor="end" transform="rotate(-90 346 250)">Three-way: recirculate or send</text>';
+        if(k==="LPCR>Roof"){var lx=(POS.LPCR[0]+60+POS.Roof[0]-45)/2, parts=e.label.split(", "); g+='<text x="'+lx+'" y="'+(POS.Roof[1]+24)+'" fill="#F4A261" font-size="8" text-anchor="middle">'+parts[0]+(parts[1]?',':'')+'</text>'+(parts[1]?'<text x="'+lx+'" y="'+(POS.Roof[1]+34)+'" fill="#F4A261" font-size="8" text-anchor="middle">'+parts[1]+'</text>':'');}
+        if(k==="LPCR>BRHPCR") g+='<text x="16" y="250" fill="#5ab4ff" font-size="8" transform="rotate(-90 16 250)" text-anchor="middle">'+e.label+'</text>';});
+      Object.keys(NODES).forEach(function(n){var p=POS[n]; if(!p) return; var lab=NODES[n], w=p[2];
+        var words=lab.split(" "), l1=lab, l2=""; if(lab.length>(w/5.4)){var h=Math.ceil(words.length/2); l1=words.slice(0,h).join(" "); l2=words.slice(h).join(" ");}
+        g+='<g class="node'+(sel===n?" sel":"")+'" data-n="'+n+'" tabindex="0" role="button" aria-label="'+lab+'"><rect x="'+(p[0]-w/2)+'" y="'+(p[1]-NH/2)+'" width="'+w+'" height="'+NH+'" rx="6" fill="#1e2b38" stroke="#59616c"/>'+
+          '<text x="'+p[0]+'" y="'+(p[1]+(l2?-2:3))+'" fill="#EDEAE4" font-size="8.5" text-anchor="middle">'+l1+'</text>'+(l2?'<text x="'+p[0]+'" y="'+(p[1]+8)+'" fill="#EDEAE4" font-size="8.5" text-anchor="middle">'+l2+'</text>':'')+'</g>';});
+      g+='<g class="node'+(sel==="TW"?" sel":"")+'" data-n="TW" tabindex="0" role="button" aria-label="Three-way valve"><rect x="338" y="160" width="20" height="26" rx="4" fill="#173a38" stroke="#2EC4B6"/><text x="348" y="177" fill="#EDEAE4" font-size="9" text-anchor="middle">3W</text></g>';
+      g+='<g class="node'+(sel==="PUMPS"?" sel":"")+'" data-n="PUMPS" tabindex="0" role="button" aria-label="Two LPCR pumps"><circle cx="8" cy="400" r="8" fill="#16283a" stroke="#5ab4ff"/><circle cx="8" cy="380" r="8" fill="#16283a" stroke="#5ab4ff"/></g>';
+      $("flSvg").innerHTML=g;
+      each($("flSvg").querySelectorAll(".node"),function(nd){function go(){sel=nd.getAttribute("data-n"); var i=INFO[sel]; $("flInfo").innerHTML="<b>"+(NODES[sel]||(sel==="TW"?"Three-way valve":"Two LPCR pumps"))+":</b> "+i[0]+' <a href="#'+i[1]+'">Go to subsection →</a>'; flDraw();}
+        nd.addEventListener("click",go); nd.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});});
+    }
+    H.chipGroup($("flTW"),function(x){tw=x;flDraw();}).pick("send");
+    H.chipGroup($("flLP"),function(x){lp=x;flDraw();}).pick("send");
+    $("flTrace").addEventListener("click",function(){
+      var seq=KIND.fill.concat(KIND.steam,["C1>C1HP","C2>C2HP","C3>C3HP"],tw==="send"?["C1HP>BRHPCR","C2HP>BRHPCR","C3HP>BRHPCR"]:[],["C1>LPCR","C2>LPCR","C3>LPCR","LPCR>Roof"],lp==="send"?["LPCR>BRHPCR"]:[]);
+      if(RM){lit=null;flDraw();return;} lit=[]; var i=0; var t=setInterval(function(){lit.push(seq[i++]); flDraw(); if(i>=seq.length){clearInterval(t); setTimeout(function(){lit=null;flDraw();},1200);}},280);});
+    window.M8FLOW={nodes:NODES,edges:EDGES};
+  }
+
+  /* ---------- RVAF 3: four boilers ---------- */
+  S("w-s8","Four-boiler level trainer",
+    '<div class="chips" id="fbPick"><button data-v="0">Boiler 1</button><button data-v="1">Boiler 2</button><button data-v="2">Boiler 3</button><button data-v="3">Boiler 4</button><button data-v="all">Look at all four</button></div>'+
+    '<div class="svgbox"><svg id="fbSvg" viewBox="0 0 320 160" role="img" aria-label="Boiler gauge glass and Fisher feed valve"></svg></div>'+
+    '<label class="lbl" for="fbL">Drag the water level: <b id="fbLv">50</b>%</label><input type="range" id="fbL" min="0" max="100" value="50">'+
+    '<div class="grid2">'+EW.fld("fbBp","Steam pressure (psi)",115)+'</div><label class="lbl" for="fbFp">Feed pressure: <b id="fbFpv">125</b> psi</label><input type="range" id="fbFp" min="80" max="150" value="125">'+
+    '<p class="status" id="fbOut" aria-live="polite"></p><p class="wnote">~115 psi is a typical West Mechanical set point. Always read the gauge on the boiler in front of you.</p>');
+  var BL=[55,50,48,52], fbSel=0;
+  function fbTick(){var bp=v("fbBp"), fp=+$("fbFp").value; $("fbFpv").textContent=fp; var opens=[];
+    for(var i=0;i<4;i++){var o=clamp((50-BL[i])/20,0,1); opens.push(o); BL[i]=clamp(BL[i]-0.25+(o>0&&fp>bp?o*1.1:0),0,100);}
+    var g='';
+    if(fbSel==="all"){ for(i=0;i<4;i++){var x=15+i*78; g+='<rect x="'+x+'" y="15" width="64" height="120" rx="8" fill="#1a2430" stroke="#59616c"/><text x="'+(x+32)+'" y="30" fill="#EDEAE4" font-size="10" text-anchor="middle">Boiler '+(i+1)+'</text><rect x="'+(x+24)+'" y="40" width="16" height="70" fill="#0f1114" stroke="#9AA0A6"/><rect x="'+(x+25)+'" y="'+(110-BL[i]*0.7)+'" width="14" height="'+(BL[i]*0.7)+'" fill="#5ab4ff" opacity=".6"/><text x="'+(x+32)+'" y="126" fill="'+(opens[i]>0.02?"#2EC4B6":"#9AA0A6")+'" font-size="9" text-anchor="middle">valve '+(opens[i]<0.02?"closed":Math.round(opens[i]*100)+"%")+'</text>';}
+      $("fbOut").innerHTML="Each boiler's Fisher controller holds its own water line. Valve positions should make sense for the level you see.";
+    } else { var L=BL[fbSel], o2=opens[fbSel]; $("fbL").value=Math.round(L); $("fbLv").textContent=Math.round(L);
+      g+='<rect x="30" y="10" width="34" height="140" rx="6" fill="#0f1114" stroke="#9AA0A6" stroke-width="2"/><rect x="32" y="'+(148-L*1.36)+'" width="30" height="'+(L*1.36)+'" fill="#5ab4ff" opacity=".55"/><line x1="24" y1="80" x2="70" y2="80" stroke="#2EC4B6" stroke-dasharray="4 3"/>';
+      g+='<rect x="100" y="20" width="80" height="34" rx="6" fill="#262b33" stroke="#9AA0A6"/><text x="140" y="35" fill="#EDEAE4" font-size="9" text-anchor="middle">Fisher controller</text><text x="140" y="47" fill="#2EC4B6" font-size="9" text-anchor="middle">Boiler '+(fbSel+1)+'</text>';
+      g+='<circle cx="250" cy="45" r="26" fill="#0f1114" stroke="#9AA0A6"/><text x="250" y="44" fill="#ff9f43" font-size="12" text-anchor="middle" font-weight="800">'+bp+'</text><text x="250" y="57" fill="#9AA0A6" font-size="8" text-anchor="middle">steam psi</text>';
+      g+='<circle cx="250" cy="115" r="26" fill="#0f1114" stroke="'+(fp>bp?"#2EC4B6":"#ff6b5b")+'"/><text x="250" y="114" fill="#cfe8ff" font-size="12" text-anchor="middle" font-weight="800">'+fp+'</text><text x="250" y="127" fill="#9AA0A6" font-size="8" text-anchor="middle">feed psi</text>';
+      g+='<path d="M224 115 H150 L140 105 L130 115 H64" stroke="'+(o2>0.02&&fp>bp?"#5ab4ff":"#26323f")+'" stroke-width="5" fill="none"/><text x="140" y="140" fill="#9AA0A6" font-size="9" text-anchor="middle">actuated fill valve '+(o2<0.02?"closed":Math.round(o2*100)+"% open")+'</text>';
+      $("fbOut").innerHTML=o2>0.02&&fp<=bp?'<span class="no">⚠️ No flow into boiler: the valve is open but feed pressure is not above boiler pressure. The level keeps falling.</span>':o2>0.02?'<span class="ok">Level low: the Fisher controller opens the fill valve and the level recovers.</span>':"Level in band: fill valve closed; steam leaving pulls the level down slowly.";
+    }
+    $("fbL").disabled=fbSel==="all"; $("fbSvg").innerHTML=g;}
+  H.chipGroup($("fbPick"),function(x){fbSel=x==="all"?"all":+x;}).pick("0");
+  $("fbL").addEventListener("input",function(){if(fbSel!=="all") BL[fbSel]=+this.value;});
+  setInterval(fbTick,200); fbTick();
+
+  /* ---------- RVAF 4: loads map ---------- */
+  S("w-s9","Process floor loads map",
+    '<div class="svgbox"><svg id="ldSvg" viewBox="0 0 320 170" role="img" aria-label="Steam header feeding hydrolyzer and three cookers"></svg></div><div class="chips" id="ldC"><button data-v="H">Hydrolyzer</button><button data-v="1">Cooker 1</button><button data-v="2">Cooker 2</button><button data-v="3">Cooker 3</button></div><div class="infocard" id="ldOut" aria-live="polite">Tap a load.</div>');
+  var ld="";
+  function ldDraw(){var g='<path d="M10 20 H310" stroke="#ff9f43" stroke-width="6"/><text x="12" y="14" fill="#ff9f43" font-size="9">steam header (from the four boilers)</text>';
+    var xs=[45,125,205,285];
+    ["H","1","2","3"].forEach(function(k,i){var x=xs[i], on=ld===k;
+      g+='<line x1="'+x+'" y1="20" x2="'+x+'" y2="45" stroke="#ff9f43" stroke-width="3"/><rect x="'+(x-34)+'" y="45" width="68" height="34" rx="6" fill="'+(on?"#173a38":"#1e2b38")+'" stroke="'+(on?"#2EC4B6":"#59616c")+'"/><text x="'+x+'" y="66" fill="#EDEAE4" font-size="9" text-anchor="middle">'+(k==="H"?"Hydrolyzer":"Cooker "+k)+'</text>';
+      if(on&&k!=="H"){ g+='<path d="M'+(x+10)+' 79 V112" stroke="#2EC4B6" stroke-width="4" marker-end="url(#ldA)"/><rect x="'+(x-4)+'" y="114" width="48" height="22" rx="4" fill="#173a38" stroke="#2EC4B6"/><text x="'+(x+20)+'" y="128" fill="#EDEAE4" font-size="8" text-anchor="middle">C'+k+' HPCR</text>';
+        g+='<path d="M'+(x-10)+' 79 V150 H40" stroke="#5ab4ff" stroke-width="4" fill="none"/><text x="44" y="164" fill="#5ab4ff" font-size="9">→ boiler-room LPCR</text>'; }
+      if(on&&k==="H") g+='<text x="'+x+'" y="100" fill="#F4A261" font-size="9" text-anchor="middle">return path: ask Zach</text>';});
+    $("ldSvg").innerHTML='<defs><marker id="ldA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#2EC4B6"/></marker></defs>'+g;}
+  H.chipGroup($("ldC"),function(k){ld=k; ldDraw(); $("ldOut").innerHTML=k==="H"?'<b>Walk this one with Zach.</b> The hydrolyzer is a steam load, but its job, steam pressure, and condensate return path aren\'t described yet, so no piping story is made up here. See the <a href="#'+RV.loads+'">Zach\'s notes</a> in this subsection.':'<b>Cooker '+k+':</b> teal arrow = high pressure condensate into its own HPCR tank. Blue arrow = low pressure condensate back to the boiler-room LPCR.';});
+  ldDraw();
+
+  /* ---------- RVAF 5: cooker HPCR + three-way valve ---------- */
+  S("w-s10","Cooker three-way valve trainer",
+    '<div class="chips" id="ckView"><button data-v="one">One cooker</button><button data-v="all">Show all three cookers</button></div>'+
+    '<div class="svgbox"><svg id="ckSvg" viewBox="0 0 320 170" role="img" aria-label="Cooker HPCR tank, three-way valve, and boiler-room HPCR"></svg></div>'+
+    '<div class="cookers" id="ckBtns"></div><p class="status" id="ckOut" aria-live="polite"></p><p class="wnote">Levels here are illustrative. On the floor: look, name the two positions, and only change a valve if Zach is directing you.</p>');
+  var CK=[{tw:"send",L:55},{tw:"send",L:50},{tw:"recirc",L:45}], ckView="one", BR=50, tt=0;
+  function ckBtns(){var n=ckView==="all"?3:1, h='';
+    for(var i=0;i<n;i++) h+='<div class="ck"><b>Cooker '+(i+1)+'</b><button type="button" class="secondary" data-i="'+i+'">'+(CK[i].tw==="send"?"Send to boiler room":"Recirculate")+'</button></div>';
+    $("ckBtns").innerHTML=h; $("ckBtns").style.gridTemplateColumns=n===1?"1fr":"";
+    each($("ckBtns").querySelectorAll("button"),function(b){b.addEventListener("click",function(){var c=CK[+b.getAttribute("data-i")]; c.tw=c.tw==="send"?"recirc":"send"; ckBtns();});});}
+  function ckTick(){tt++; var n=ckView==="all"?3:1, sending=0, g='';
+    g+='<rect x="235" y="60" width="75" height="80" rx="8" fill="#1a2430" stroke="#2EC4B6"/><rect x="237" y="'+(138-BR*0.76)+'" width="71" height="'+(BR*0.76)+'" fill="#2EC4B6" opacity=".35"/><text x="272" y="56" fill="#EDEAE4" font-size="9" text-anchor="middle">Boiler-room HPCR</text><text x="272" y="104" fill="#EDEAE4" font-size="11" text-anchor="middle">'+Math.round(BR)+'%</text>';
+    for(var i=0;i<n;i++){var c=CK[i], y=n===1?70:15+i*52, open=clamp((c.L-45)/25,0,1);
+      c.L=clamp(c.L+0.5-(c.tw==="send"?open*1.0:0),0,100); if(c.tw==="send") sending+=open;
+      var hy=n===1?40:y, hh=n===1?90:40;
+      g+='<rect x="10" y="'+hy+'" width="50" height="'+hh+'" rx="6" fill="#173a38" stroke="#2EC4B6"/><rect x="12" y="'+(hy+hh-2-c.L/100*(hh-4))+'" width="46" height="'+(c.L/100*(hh-4))+'" fill="#2EC4B6" opacity=".4"/><text x="35" y="'+(hy-3)+'" fill="#EDEAE4" font-size="8" text-anchor="middle">C'+(i+1)+' HPCR '+Math.round(c.L)+'%</text>';
+      var vy=hy+hh/2; g+='<text x="80" y="'+(vy-8)+'" fill="#9AA0A6" font-size="7" text-anchor="middle">Fisher '+(open<0.02?"closed":Math.round(open*100)+"%")+'</text><path d="M60 '+vy+' H110" stroke="'+(open>0.02?"#2EC4B6":"#26323f")+'" stroke-width="4"/>';
+      g+='<polygon points="110,'+(vy-7)+' 124,'+(vy-7)+' 117,'+vy+'" fill="#9AA0A6"/><polygon points="110,'+(vy+7)+' 124,'+(vy+7)+' 117,'+vy+'" fill="#9AA0A6"/>';
+      var dash=' stroke-dasharray="8 5" stroke-dashoffset="'+(RM?0:-(tt*2)%13)+'"', live=open>0.02;
+      if(c.tw==="send") g+='<path d="M124 '+vy+' H200 V100 H235" stroke="'+(live?"#2EC4B6":"#26323f")+'" stroke-width="4" fill="none"'+dash+'/><text x="160" y="'+(vy-5)+'" fill="#2EC4B6" font-size="8" text-anchor="middle">send →</text>';
+      else g+='<path d="M117 '+(vy+7)+' V'+(hy+hh+6)+' H35 V'+(hy+hh)+'" stroke="'+(live?"#2EC4B6":"#26323f")+'" stroke-width="3" fill="none"'+dash+'/><text x="80" y="'+(hy+hh+16)+'" fill="#2EC4B6" font-size="8" text-anchor="middle">recirculate</text>';
+    }
+    BR=clamp(BR+sending*0.35-0.25,0,100);
+    $("ckSvg").innerHTML=g;
+    var c0=CK[0]; $("ckOut").innerHTML=ckView==="one"?(c0.tw==="send"?"<b>Send to the boiler room:</b> condensate goes down the corridor into the boiler-room HPCR, and that tank level ticks up.":"<b>Recirculate:</b> condensate loops back to that cooker's own HPCR tank. Nothing goes to the boiler room."):"Set each cooker's three-way valve on its own. The boiler-room HPCR only gains from cookers set to Send.";}
+  H.chipGroup($("ckView"),function(x){ckView=x; ckBtns();}).pick("one");
+  setInterval(ckTick,200); ckTick();
+
+  /* ---------- RVAF 6: LPCR pressure + back-pressure PRV ---------- */
+  S("w-s11","LPCR pressure trainer",
+    '<div class="callout safety"><strong>🔥 Roof vent = burn hazard.</strong> Stay clear of vent outlets, and don\'t treat a quiet vent line as cold or safe.</div>'+
+    '<div class="svgbox"><svg id="lpSvg" viewBox="0 0 320 170" role="img" aria-label="LPCR tank, back-pressure PRV and roof vent"></svg></div>'+
+    '<label class="lbl" for="lpIn">Incoming LP condensate: <b id="lpInv">medium</b></label><input type="range" id="lpIn" min="0" max="4" value="2">'+
+    '<div class="readouts"><div class="ro" id="lpRo"><span class="k">LPCR pressure</span><span class="v" id="lpP">–</span></div><div class="ro"><span class="k">Back-pressure PRV</span><span class="v" id="lpV" style="font-size:1rem">–</span></div></div>'+
+    '<div class="row"><button type="button" class="secondary" id="lpFlip">🔄 Reducing vs. back-pressure valve</button></div><div class="infocard" id="lpCard" hidden></div>'+
+    '<p class="wnote">Set point near 40 psi is from Zach\'s notes. How fast pressure moves here is illustrative only.</p>');
+  var LP=36, lpT=0;
+  function lpTick(){lpT++; var inn=+$("lpIn").value; $("lpInv").textContent=["none","low","medium","high","very high"][inn];
+    LP+=inn*0.35-0.5; var vent=LP>40; if(vent) LP=40+(LP-40)*0.6; LP=clamp(LP,0,60);
+    $("lpP").textContent=fmt(LP,1)+" psi"; $("lpV").textContent=vent?"OPEN: venting to roof":"Closed (quiet)"; EW.setBand($("lpRo"),Math.abs(LP-40)<1.5?"band-g":LP<40?null:"band-y");
+    var g='<rect x="20" y="60" width="90" height="90" rx="10" fill="#16283a" stroke="#5ab4ff"/><text x="65" y="100" fill="#EDEAE4" font-size="12" text-anchor="middle">LPCR</text><text x="65" y="118" fill="#5ab4ff" font-size="13" text-anchor="middle" font-weight="800">'+fmt(LP,1)+' psi</text>';
+    g+='<path d="M0 80 H20" stroke="#5ab4ff" stroke-width="'+(1+inn*1.5)+'"/><text x="4" y="74" fill="#9AA0A6" font-size="7">LP in</text>';
+    g+='<path d="M110 75 H170" stroke="#5ab4ff" stroke-width="4"/><circle cx="185" cy="75" r="15" fill="none" stroke="'+(vent?"#F4A261":"#9AA0A6")+'" stroke-width="3"/><text x="185" y="104" fill="#9AA0A6" font-size="8" text-anchor="middle">back-pressure PRV</text><text x="185" y="114" fill="#9AA0A6" font-size="8" text-anchor="middle">(~40 psi)</text>';
+    g+='<path d="M200 75 H260 V12" stroke="'+(vent?"#F4A261":"#26323f")+'" stroke-width="5" fill="none"/><rect x="230" y="2" width="80" height="8" fill="#59616c"/><text x="300" y="24" fill="#9AA0A6" font-size="8" text-anchor="end">ROOF</text>';
+    if(vent&&!RM) for(var k=0;k<3;k++){var yy=12-((lpT*3+k*9)%24); g+='<circle cx="'+(260+(k-1)*6)+'" cy="'+yy+'" r="4" fill="#cfe8ff" opacity=".5"/>';}
+    $("lpSvg").innerHTML=g;}
+  $("lpFlip").addEventListener("click",function(){var c=$("lpCard"); c.hidden=!c.hidden; c.innerHTML='<b>Pressure reducing valve:</b> controls <u>downstream</u>. Drops a higher supply to a lower pressure (Module 6 PRV station).<br><b>Back-pressure valve:</b> holds <u>upstream</u>. Keeps the LPCR near 40 psi; opens and relieves (to the roof here) when pressure tries to climb above set point.';});
+  setInterval(lpTick,200); lpTick();
+
+  /* ---------- RVAF 8 + Action: walkdown checklist ---------- */
+  var STOPS=[["sof","Softeners","In service? Salt bridged? Hardness (if Zach has you test)"],["da","Deaerator","Pressure and temperature on the gauges"],["hp","Boiler-room HPCR","Level; incoming lines from cookers and LPCR pumps"],
+    ["b1","Boiler 1","Water level / steam psi"],["b2","Boiler 2","Water level / steam psi"],["b3","Boiler 3","Water level / steam psi"],["b4","Boiler 4","Water level / steam psi"],
+    ["c1","Cooker 1","HPCR level; three-way position",1],["c2","Cooker 2","HPCR level; three-way position",1],["c3","Cooker 3","HPCR level; three-way position",1],
+    ["hy","Hydrolyzer","Pointed out with Zach",2],["lpp","LPCR pressure","Near 40 psi? Roof vent path unusual?"],["lpu","LPCR pumps","Which pump is running? Discharge?",3]];
+  function walkdown(id,p,doneTarget){
+    var h='<div class="mapthumb" aria-hidden="true"><svg id="'+p+'Map" viewBox="0 0 340 40"></svg></div>';
+    STOPS.forEach(function(s){h+='<div class="wd-row" id="'+p+'-row-'+s[0]+'"><span class="wd-l">'+s[1]+'</span>';
+      if(s[3]===2) h+=EW.chk(p+s[0],s[2]);
+      else { h+='<input type="text" id="'+p+s[0]+'" placeholder="'+s[2]+'" aria-label="'+s[1]+' reading">';
+        if(s[3]===1) h+='<div class="chips" data-chip="'+p+s[0]+'tw"><button data-v="recirc">Recirculate</button><button data-v="send">Send</button></div>';
+        if(s[3]===3) h+='<div class="chips" data-chip="'+p+s[0]+'run"><button data-v="A">Pump A running</button><button data-v="B">Pump B running</button></div><div class="chips" data-chip="'+p+s[0]+'dis"><button data-v="recirc">Recirculate</button><button data-v="send">Send to HPCR</button></div>'; }
+      h+='</div>';});
+    h+=EW.chk(p+"zach","Zach checked this")+'<label class="check-row"><input type="checkbox" id="'+p+'done"> Mark complete</label>';
+    var box=S(id,"Walkdown checklist",h);
+    var ids=STOPS.map(function(s){return p+s[0];}).concat([p+"zach"]);
+    each(box.querySelectorAll("[data-chip]"),function(c){var key=c.getAttribute("data-chip"), g=H.chipGroup(c,function(val){store.set("f:"+key,val); paint();}); var sv=store.get("f:"+key); if(sv) g.pick(sv);});
+    function filled(s){var e=$(p+s[0]); if(s[3]===2) return e.checked; var ok=!!(e.value||"").trim(); if(s[3]===1) ok=ok||!!store.get("f:"+p+s[0]+"tw"); if(s[3]===3) ok=ok||!!store.get("f:"+p+s[0]+"run"); return ok;}
+    function paint(){var next=-1; STOPS.forEach(function(s,i){var r=$(p+"-row-"+s[0]); var f=filled(s); r.classList.toggle("next",false); if(!f&&next<0) next=i;});
+      if(next>=0) $(p+"-row-"+STOPS[next][0]).classList.add("next");
+      var g=''; STOPS.forEach(function(s,i){var x=10+i*25.5, f=filled(s); g+='<circle cx="'+x+'" cy="16" r="'+(i===next?8:6)+'" fill="'+(f?"#2EC4B6":i===next?"#F4A261":"#26323f")+'"/>'+(i<STOPS.length-1?'<line x1="'+(x+7)+'" y1="16" x2="'+(x+18)+'" y2="16" stroke="#3a4552"/>':'');});
+      g+='<text x="170" y="36" fill="#9AA0A6" font-size="8" text-anchor="middle">'+(next>=0?"Next stop: "+STOPS[next][1]:"All stops logged ✓")+'</text>';
+      $(p+"Map").innerHTML=g;}
+    EW.keep(ids,paint);
+    var dn=$(p+"done"), target=doneTarget();
+    function syncFrom(){var t=doneTarget(); if(!t) return; dn.checked=t.tagName==="INPUT"?t.checked:t.getAttribute("aria-pressed")==="true";}
+    dn.addEventListener("change",function(){var t=doneTarget(); if(!t) return; var cur=t.tagName==="INPUT"?t.checked:t.getAttribute("aria-pressed")==="true"; if(cur!==dn.checked) t.click(); setTimeout(syncFrom,50);});
+    setTimeout(syncFrom,0); if(target) target.addEventListener("click",function(){setTimeout(syncFrom,50);}); if(target&&target.tagName==="INPUT") target.addEventListener("change",syncFrom);
+  }
+  walkdown("w-s13","wd",function(){return document.querySelector('.mark-done[data-sec="'+RV.walk+'"]');});
+  walkdown("w-action","aw",function(){return $("actionDone");});
+})();

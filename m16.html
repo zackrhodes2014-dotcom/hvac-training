@@ -33,7 +33,6 @@
     <span class="chip">📶 Level: Beginner</span>
     <span class="chip">⏱️ About 45 min + hands-on activity</span>
     <span class="chip">⚡ Electrical</span>
-    <a class="chip safety-chip" href="#safety">⚠️ Safety</a>
   </div>
 </header>
 
@@ -42,7 +41,6 @@
     <summary>📑 Jump to a section</summary>
     <ol>
       <li><a href="#hook">Hook: Two motors, one problem</a></li>
-      <li><a href="#safety">⚠️ Safety card</a></li>
       <li><a href="#s1">1. The Elementary Electric Motor</a></li>
       <li><a href="#s2">2. AC Induction Motors</a></li>
       <li><a href="#s3">3. Electronically Commutated Motors (ECMs)</a></li>
@@ -81,14 +79,7 @@
   <div class="widget" id="w-hook" data-gen="1"></div>
 </section>
 
-<section id="safety" class="safety-card">
-  <h2>⚠️ Read this before anything else</h2>
-  <p>Electricity can kill without warning, and you can't see, hear, or smell it. These rules aren't optional:</p>
-  <ul class="safety-list"><li><label class="srule"><input type="checkbox" data-rule="0"><span><strong>Supervision:</strong> Ian works on HVAC equipment only with Zach right there, never alone.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="1"><span><strong>Lockout/tagout:</strong> Shut off the disconnect <em>and</em> the breaker, then lock and tag them so nobody can turn power back on while you work.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="2"><span><strong>Live-dead-live:</strong> Check your meter on a known live source, test the circuit you shut off (it should read zero), then check the meter on the live source again to prove the meter didn't fail.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="3"><span><strong>Capacitors:</strong> Capacitors can hold a dangerous, even lethal, charge after power is off. Only a qualified person (Zach) discharges them, using the proper method.</span></label></li><li><label class="srule"><input type="checkbox" data-rule="4"><span><strong>No live work:</strong> Ian doesn't touch or test energized circuits. Watching Zach take a reading from a safe distance is fine.</span></label></li></ul>
-  <p class="safety-status" id="safetyStatus" aria-live="polite"></p>
-</section>
-
-<section id="s1" data-gated="1">
+<section id="s1">
   <h2>1. The Elementary Electric Motor</h2>
   <p class="lede">Magnets chasing magnets</p>
   <p>Every motor runs on one idea: <strong>magnetic poles push and pull.</strong> A motor has two main parts:</p>
@@ -98,7 +89,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s2" data-gated="1">
+<section id="s2">
   <h2>2. AC Induction Motors</h2>
   <p class="lede">A field that spins by itself</p>
   <p>In an <strong>induction motor</strong>, AC in the stator windings creates a <strong>rotating magnetic field</strong>. That field <em>induces</em> current in the rotor, which has no wires connected to it. The rotor then chases the spinning field.</p>
@@ -111,7 +102,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s3" data-gated="1">
+<section id="s3">
   <h2>3. Electronically Commutated Motors (ECMs)</h2>
   <p class="lede">A motor with a computer on its back</p>
   <p>An <strong>ECM</strong> is a brushless DC motor with a <strong>permanent-magnet rotor</strong> and a built-in electronic control module. The module rectifies AC to DC and switches the stator windings electronically. It acts like a commutator with no brushes.</p>
@@ -122,7 +113,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s4" data-gated="1">
+<section id="s4">
   <h2>4. Standard Motor Data</h2>
   <p class="lede">Reading the nameplate</p>
   <p>Every motor's <strong>nameplate</strong> tells you what it is and how to replace it:</p>
@@ -131,7 +122,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="s5" data-gated="1">
+<section id="s5">
   <h2>5. Motor Applications in HVACR Systems</h2>
   <p class="lede">Where motors work</p>
   <ul><li><strong>Compressors:</strong> <strong>hermetic</strong> (motor and compressor welded in a shell, cooled by refrigerant), <strong>semi-hermetic</strong> (bolted shell that can be opened), or <strong>open</strong> (motor outside, connected by a shaft or belt).</li><li><strong>Condenser fans:</strong> usually PSC or ECM, direct-drive, and often totally enclosed to handle weather.</li><li><strong>Indoor blowers:</strong> PSC (multi-speed taps) or ECM. Direct-drive in homes; belt-drive in many commercial units.</li><li><strong>Pumps:</strong> circulators for boilers and chilled water, and condensate pumps.</li><li><strong>Damper and valve actuators:</strong> small motors that position air dampers and water valves.</li><li><strong>Inducer (draft) motors:</strong> push combustion gases out of furnaces.</li></ul>
@@ -140,7 +131,7 @@
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
 </section>
 
-<section id="quiz" data-gated="1">
+<section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
     <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/5</span>
@@ -154,7 +145,7 @@
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
 
-<section id="action" data-gated="1">
+<section id="action">
   <h2>🛠️ Action Item: Nameplate hunt</h2>
   <p>With Zach, on equipment that's shut off and locked out (or using motors on the truck shelf):</p>
   <ol><li>Find three motors (for example a condenser fan, a blower, and an inducer). For each, write down the volts, phase, hp, rpm, FLA, rotation, and motor type (PSC, ECM, or shaded-pole).</li><li>For each one, calculate the likely number of poles. Find the synchronous speed just above the nameplate rpm (3,600, 1,800, 1,200, or 900), then poles = 7,200 ÷ that speed.</li><li>Ask Zach which one has a capacitor, and copy its µF and voltage rating from the label. <em>Don't touch the capacitor terminals.</em></li></ol>
@@ -162,7 +153,7 @@
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
 
-<section id="next" class="teaser" data-gated="1">
+<section id="next" class="teaser">
   <h2>Module 17 unlocked: Electrical Control Systems</h2>
   <div class="unlock anim" id="unlock" aria-hidden="true">
     <svg viewBox="0 0 120 120" width="120" height="120"><g class="burst" stroke="#2EC4B6" stroke-width="4" stroke-linecap="round"><line x1="60" y1="8" x2="60" y2="22"/><line x1="60" y1="98" x2="60" y2="112"/><line x1="8" y1="60" x2="22" y2="60"/><line x1="98" y1="60" x2="112" y2="60"/><line x1="23" y1="23" x2="33" y2="33"/><line x1="87" y1="87" x2="97" y2="97"/><line x1="97" y1="23" x2="87" y2="33"/><line x1="23" y1="97" x2="33" y2="87"/></g><path class="shackle" d="M44 58 V44 a16 16 0 0 1 32 0 V58" fill="none" stroke="#EDEAE4" stroke-width="7" stroke-linecap="round"/><rect x="36" y="56" width="48" height="38" rx="7" fill="#2EC4B6"/><circle cx="60" cy="73" r="5" fill="#05211e"/></svg>
