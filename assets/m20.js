@@ -1,4 +1,4 @@
-/* Module 6 widgets: Boiler Room Fundamentals */
+/* Module 20 widgets: Boiler Room Fundamentals */
 (function(){
   "use strict";
   var $=EW.$, v=EW.v, fmt=EW.fmt, S=EW.slot, each=EW.each;

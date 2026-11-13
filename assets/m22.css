@@ -1,4 +1,4 @@
-/* Module 8: customer tabs, placeholders, plant flow diagram */
+/* Module 22: customer tabs, placeholders, plant flow diagram */
 .part-head > h2{font-size:1.5rem}
 .ctabs{display:flex;gap:6px;overflow-x:auto;margin:14px -4px 0;padding:4px;scrollbar-width:none;position:sticky;top:52px;z-index:20;background:var(--panel)}
 .ctabs::-webkit-scrollbar{display:none}

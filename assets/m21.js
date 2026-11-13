@@ -1,4 +1,4 @@
-/* Module 7 widgets: Chiller Fundamentals */
+/* Module 21 widgets: Chiller Fundamentals */
 (function(){
   "use strict";
   var $=EW.$, v=EW.v, fmt=EW.fmt, S=EW.slot, each=EW.each;

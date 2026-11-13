@@ -7,22 +7,24 @@
   var PPREFIX="hvacTraining:v1:profile:";       /* per-profile state: hvacTraining:v1:profile:<id> */
   var PROFILES=[{id:"ian",name:"Ian"},{id:"landon",name:"Landon"},{id:"admin",name:"Admin"}];
   var NS=LEGACY_NS;
+  /* Boilers & Chillers moved after Electrical and was renumbered: old ids -> new ids (one-time migration below). */
+  var RENUM={m6:"m20",m7:"m21",m8:"m22"}, RENUM_FLAG="m6-m8>m20-m22";
   var MODULES=[
     {id:"m1", num:1, title:"Foundations of Refrigeration and Air Conditioning", group:"ref", file:"m1.html", sections:6, action:false, oldPrefix:"hvac1:"},
     {id:"m4", num:4, title:"Energy and Matter", group:"ref", file:"m4.html", sections:6, action:true, oldPrefix:"hvac4:"},
     {id:"m5", num:5, title:"Gases", group:"ref", file:"m5.html", sections:6, action:true, oldPrefix:"hvac5:"},
-    {id:"m6", num:6, title:"Boiler Room Fundamentals", group:"mech", file:"m6.html", sections:9, action:true},
-    {id:"m7", num:7, title:"Chiller Fundamentals", group:"mech", file:"m7.html", sections:9, action:true},
-    {id:"m8", num:8, title:"West Mechanical Field Notes", group:"mech", file:"m8.html", sections:13, action:true},
     {id:"m13", num:13, title:"Basic Electricity", group:"elec", file:"m13.html", sections:6, action:true},
     {id:"m14", num:14, title:"Electrical Power", group:"elec", file:"m14.html", sections:3, action:true},
     {id:"m15", num:15, title:"Basic Electronics", group:"elec", file:"m15.html", sections:4, action:true},
     {id:"m16", num:16, title:"Electric Motors", group:"elec", file:"m16.html", sections:5, action:true},
     {id:"m17", num:17, title:"Electrical Control Systems", group:"elec", file:"m17.html", sections:6, action:true},
     {id:"m18", num:18, title:"Electrical Troubleshooting", group:"elec", file:"m18.html", sections:4, action:true},
-    {id:"m19", num:19, title:"Servicing Electric Motors and Controls", group:"elec", file:"m19.html", sections:5, action:true}
+    {id:"m19", num:19, title:"Servicing Electric Motors and Controls", group:"elec", file:"m19.html", sections:5, action:true},
+    {id:"m20", num:20, title:"Boiler Room Fundamentals", group:"mech", file:"m20.html", sections:9, action:true, was:"m6"},
+    {id:"m21", num:21, title:"Chiller Fundamentals", group:"mech", file:"m21.html", sections:9, action:true, was:"m7"},
+    {id:"m22", num:22, title:"West Mechanical Field Notes", group:"mech", file:"m22.html", sections:13, action:true, was:"m8"}
   ];
-  var GROUPS=[{id:"ref",title:"Refrigeration Fundamentals"},{id:"mech",title:"Boilers & Chillers"},{id:"elec",title:"Electrical"}];
+  var GROUPS=[{id:"ref",title:"Refrigeration Fundamentals"},{id:"elec",title:"Electrical"},{id:"mech",title:"Boilers & Chillers"}];
   var byId={}; MODULES.forEach(function(m,i){m.index=i; byId[m.id]=m;});
 
   var mem={}, canStore=true;
@@ -34,7 +36,7 @@
   /* The profile is bound when the page loads, so in-memory state from one profile can never be written into another. */
   var pagePid=activeProfile();
   function keyFor(pid){return PPREFIX+(validPid(pid)?pid:pagePid);}
-  function blank(){return {v:1,migrated:false,last:null,lastAt:0,modules:{},study:{cards:{},sel:null},ui:{}};}
+  function blank(){return {v:1,migrated:false,renumbered:RENUM_FLAG,last:null,lastAt:0,modules:{},study:{cards:{},sel:null},ui:{}};}
   function read(pid){
     var raw=lsGet(keyFor(pid||pagePid));
     var o=null; try{o=raw?JSON.parse(raw):null;}catch(e){o=null;}
@@ -97,6 +99,36 @@
     });
   }
   migrate();
+  /* One-time, flagged per profile: move progress, study stats, the study picker, "continue" and the import note
+     from the old Boilers & Chillers ids (m6/m7/m8) to the new ones (m20/m21/m22). Existing new-id data wins. */
+  function renumber(){
+    if(!canStore) return;
+    ["ian","landon","admin"].forEach(function(pid){
+      if(lsGet(keyFor(pid))==null) return;
+      var o=read(pid); if(o.renumbered===RENUM_FLAG) return;
+      var moved=[];
+      for(var oldId in RENUM){
+        var newId=RENUM[oldId];
+        if(o.modules[oldId]){
+          var dst=o.modules[newId]||{}, src=o.modules[oldId];
+          for(var k in src) if(!Object.prototype.hasOwnProperty.call(dst,k)) dst[k]=src[k];
+          o.modules[newId]=dst; delete o.modules[oldId]; moved.push(oldId);
+        }
+        for(var cid in o.study.cards){
+          if(cid.indexOf(oldId+"-c")!==0) continue;
+          var ncid=newId+cid.slice(oldId.length);
+          if(!o.study.cards[ncid]) o.study.cards[ncid]=o.study.cards[cid];
+          delete o.study.cards[cid];
+        }
+        if(o.last===oldId) o.last=newId;
+      }
+      if(Array.isArray(o.study.sel)){var seen={}; o.study.sel=o.study.sel.map(function(id){return RENUM[id]||id;}).filter(function(id){if(seen[id])return false;seen[id]=1;return true;});}
+      if(Array.isArray(o.migratedFrom)) o.migratedFrom=o.migratedFrom.map(function(id){return RENUM[id]||id;});
+      o.renumbered=RENUM_FLAG; o.renumberedFrom=moved;
+      write(o,pid);
+    });
+  }
+  renumber();
   /* The safety-card unlock was removed: drop any stored safety ticks ("safety:<n>") from every profile. */
   (function purgeSafety(){ if(!canStore) return;
     ["ian","landon","admin"].forEach(function(pid){ var raw=lsGet(keyFor(pid)); if(!raw||raw.indexOf('"safety:')<0) return;
@@ -253,7 +285,7 @@
     wireInstall();
   });
 
-  window.HVAC={NS:NS,PKEY:PKEY,PPREFIX:PPREFIX,PROFILES:PROFILES,profile:function(){return pagePid;},profileName:profileName,setProfile:setProfile,onProfile:onProfile,resetProfile:resetProfile,keyFor:keyFor,MODULES:MODULES,GROUPS:GROUPS,byId:byId,read:read,write:write,store:store,progress:progress,summary:summary,
+  window.HVAC={NS:NS,RENUM:RENUM,RENUM_FLAG:RENUM_FLAG,PKEY:PKEY,PPREFIX:PPREFIX,PROFILES:PROFILES,profile:function(){return pagePid;},profileName:profileName,setProfile:setProfile,onProfile:onProfile,resetProfile:resetProfile,keyFor:keyFor,MODULES:MODULES,GROUPS:GROUPS,byId:byId,read:read,write:write,store:store,progress:progress,summary:summary,
     cards:cardsFor,moduleOfCard:moduleOfCard,study:study,setLast:setLast,resetModule:resetModule,resetAll:resetAll,esc:esc,
     canStore:canStore,isStandalone:isStandalone};
 })();

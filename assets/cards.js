@@ -96,132 +96,6 @@ window.HVAC_CARDS={
 "a": "Most likely moisture boiling off. A steady, nonstop rise points to a leak."
 }
 ],
-"m6": [
-{
-"id": "m6-c1",
-"q": "In a firetube boiler, what's inside the tubes?",
-"a": "Hot combustion gases. Water surrounds the tubes."
-},
-{
-"id": "m6-c2",
-"q": "What pressure divides low and high pressure steam?",
-"a": "15 psi."
-},
-{
-"id": "m6-c3",
-"q": "What does a softener swap for calcium and magnesium?",
-"a": "Sodium, through ion exchange on resin beads."
-},
-{
-"id": "m6-c4",
-"q": "A softener's brine tank looks full of salt, but the water test shows hardness. What should you check?",
-"a": "Salt bridging, a crust with no salt reaching the water."
-},
-{
-"id": "m6-c5",
-"q": "Why heat feedwater in a deaerator?",
-"a": "Hot water holds less oxygen and CO₂, so the gases come out and vent before they can corrode the boiler."
-},
-{
-"id": "m6-c6",
-"q": "Why is there an auxiliary LWCO with manual reset?",
-"a": "A backup in case the primary sticks, and the manual reset forces someone to find out why the water got low."
-},
-{
-"id": "m6-c7",
-"q": "Why blow down the bottom every day?",
-"a": "To remove sludge that settles as water boils off, before it bakes on or clogs the LWCO."
-},
-{
-"id": "m6-c8",
-"q": "A trap blows live steam into the return. Failed open or closed?",
-"a": "Failed open."
-}
-],
-"m7": [
-{
-"id": "m7-c1",
-"q": "How many Btu/h is one ton of refrigeration?",
-"a": "12,000 Btu/h."
-},
-{
-"id": "m7-c2",
-"q": "A chiller moves 240 GPM with a 12°F ΔT. How many tons?",
-"a": "500 × 240 × 12 = 1,440,000 Btu/h ÷ 12,000 = 120 tons."
-},
-{
-"id": "m7-c3",
-"q": "Where does the refrigerant go in a chiller system?",
-"a": "It stays inside the chiller. Water (or glycol) carries the cooling through the building."
-},
-{
-"id": "m7-c4",
-"q": "What does the cooling tower do?",
-"a": "It rejects the building's heat outdoors by evaporating some of the condenser water."
-},
-{
-"id": "m7-c5",
-"q": "Why does a low-pressure centrifugal chiller need a purge unit?",
-"a": "Part of it runs in a vacuum, so leaks pull air and moisture in. The purge removes them."
-},
-{
-"id": "m7-c6",
-"q": "Condenser approach is climbing over a few months. What's the likely cause?",
-"a": "Fouled condenser tubes, which slow heat transfer and raise head pressure."
-},
-{
-"id": "m7-c7",
-"q": "Why won't a chiller start without proof of flow?",
-"a": "Without water moving, the evaporator could freeze and the condenser could overpressure."
-},
-{
-"id": "m7-c8",
-"q": "In a primary-secondary plant, water in the decoupler is flowing from return to supply. What does that mean?",
-"a": "Deficit flow: the building is pulling more water than the primary pumps supply, so warm return water mixes into the supply and raises the supply temp. Usually time to stage on another chiller and pump."
-}
-],
-"m8": [
-{
-"id": "m8-c1",
-"q": "In order, what is the fill and boiler-water path at Tyson RVAF?",
-"a": "Water softeners → deaerator tank → boiler-room HPCR tank → the four boilers."
-},
-{
-"id": "m8-c2",
-"q": "What are the steam loads on this plant?",
-"a": "The hydrolyzer and three Tyson cookers."
-},
-{
-"id": "m8-c3",
-"q": "What controls level in each cooker HPCR tank?",
-"a": "A Fisher level controller and a Fisher actuated valve, piped back toward the boiler-room HPCR."
-},
-{
-"id": "m8-c4",
-"q": "What are the two positions of the three-way valve at each cooker?",
-"a": "Recirculate back to that cooker's HPCR tank, or open to the boiler-room circuit and send condensate to the boiler-room HPCR."
-},
-{
-"id": "m8-c5",
-"q": "Where does cooker low pressure condensate return?",
-"a": "To the boiler-room LPCR (low pressure condensate return) tank."
-},
-{
-"id": "m8-c6",
-"q": "How is the LPCR held near 40 psi, and where does the valve vent?",
-"a": "A back-pressure PRV (pressure regulating / back-pressure valve) holds upstream pressure at about 40 psi and vents to the roof."
-},
-{
-"id": "m8-c7",
-"q": "What moves condensate out of the LPCR tank?",
-"a": "A Fisher pneumatic level controller opens a Fisher actuated outlet valve, which feeds two pumps. One pump is always running. The pumps either recirculate or send condensate to the HPCR."
-},
-{
-"id": "m8-c8",
-"q": "How is water level controlled on the four boilers, and about what steam set point should you expect on a typical West Mechanical site?",
-"a": "Each of the four boilers has a Fisher level controller with an actuated fill valve. Typical boiler steam set points are around 115 psi; always read the actual gauge."
-}
-],
 "m13": [
 {
 "id": "m13-c1",
@@ -409,6 +283,132 @@ window.HVAC_CARDS={
 "id": "m19-c5",
 "q": "Why should you never run a compressor with the terminal cover off?",
 "a": "A failed terminal can blow out and spray hot oil and refrigerant, which can ignite."
+}
+],
+"m20": [
+{
+"id": "m20-c1",
+"q": "In a firetube boiler, what's inside the tubes?",
+"a": "Hot combustion gases. Water surrounds the tubes."
+},
+{
+"id": "m20-c2",
+"q": "What pressure divides low and high pressure steam?",
+"a": "15 psi."
+},
+{
+"id": "m20-c3",
+"q": "What does a softener swap for calcium and magnesium?",
+"a": "Sodium, through ion exchange on resin beads."
+},
+{
+"id": "m20-c4",
+"q": "A softener's brine tank looks full of salt, but the water test shows hardness. What should you check?",
+"a": "Salt bridging, a crust with no salt reaching the water."
+},
+{
+"id": "m20-c5",
+"q": "Why heat feedwater in a deaerator?",
+"a": "Hot water holds less oxygen and CO₂, so the gases come out and vent before they can corrode the boiler."
+},
+{
+"id": "m20-c6",
+"q": "Why is there an auxiliary LWCO with manual reset?",
+"a": "A backup in case the primary sticks, and the manual reset forces someone to find out why the water got low."
+},
+{
+"id": "m20-c7",
+"q": "Why blow down the bottom every day?",
+"a": "To remove sludge that settles as water boils off, before it bakes on or clogs the LWCO."
+},
+{
+"id": "m20-c8",
+"q": "A trap blows live steam into the return. Failed open or closed?",
+"a": "Failed open."
+}
+],
+"m21": [
+{
+"id": "m21-c1",
+"q": "How many Btu/h is one ton of refrigeration?",
+"a": "12,000 Btu/h."
+},
+{
+"id": "m21-c2",
+"q": "A chiller moves 240 GPM with a 12°F ΔT. How many tons?",
+"a": "500 × 240 × 12 = 1,440,000 Btu/h ÷ 12,000 = 120 tons."
+},
+{
+"id": "m21-c3",
+"q": "Where does the refrigerant go in a chiller system?",
+"a": "It stays inside the chiller. Water (or glycol) carries the cooling through the building."
+},
+{
+"id": "m21-c4",
+"q": "What does the cooling tower do?",
+"a": "It rejects the building's heat outdoors by evaporating some of the condenser water."
+},
+{
+"id": "m21-c5",
+"q": "Why does a low-pressure centrifugal chiller need a purge unit?",
+"a": "Part of it runs in a vacuum, so leaks pull air and moisture in. The purge removes them."
+},
+{
+"id": "m21-c6",
+"q": "Condenser approach is climbing over a few months. What's the likely cause?",
+"a": "Fouled condenser tubes, which slow heat transfer and raise head pressure."
+},
+{
+"id": "m21-c7",
+"q": "Why won't a chiller start without proof of flow?",
+"a": "Without water moving, the evaporator could freeze and the condenser could overpressure."
+},
+{
+"id": "m21-c8",
+"q": "In a primary-secondary plant, water in the decoupler is flowing from return to supply. What does that mean?",
+"a": "Deficit flow: the building is pulling more water than the primary pumps supply, so warm return water mixes into the supply and raises the supply temp. Usually time to stage on another chiller and pump."
+}
+],
+"m22": [
+{
+"id": "m22-c1",
+"q": "In order, what is the fill and boiler-water path at Tyson RVAF?",
+"a": "Water softeners → deaerator tank → boiler-room HPCR tank → the four boilers."
+},
+{
+"id": "m22-c2",
+"q": "What are the steam loads on this plant?",
+"a": "The hydrolyzer and three Tyson cookers."
+},
+{
+"id": "m22-c3",
+"q": "What controls level in each cooker HPCR tank?",
+"a": "A Fisher level controller and a Fisher actuated valve, piped back toward the boiler-room HPCR."
+},
+{
+"id": "m22-c4",
+"q": "What are the two positions of the three-way valve at each cooker?",
+"a": "Recirculate back to that cooker's HPCR tank, or open to the boiler-room circuit and send condensate to the boiler-room HPCR."
+},
+{
+"id": "m22-c5",
+"q": "Where does cooker low pressure condensate return?",
+"a": "To the boiler-room LPCR (low pressure condensate return) tank."
+},
+{
+"id": "m22-c6",
+"q": "How is the LPCR held near 40 psi, and where does the valve vent?",
+"a": "A back-pressure PRV (pressure regulating / back-pressure valve) holds upstream pressure at about 40 psi and vents to the roof."
+},
+{
+"id": "m22-c7",
+"q": "What moves condensate out of the LPCR tank?",
+"a": "A Fisher pneumatic level controller opens a Fisher actuated outlet valve, which feeds two pumps. One pump is always running. The pumps either recirculate or send condensate to the HPCR."
+},
+{
+"id": "m22-c8",
+"q": "How is water level controlled on the four boilers, and about what steam set point should you expect on a typical West Mechanical site?",
+"a": "Each of the four boilers has a Fisher level controller with an actuated fill valve. Typical boiler steam set points are around 115 psi; always read the actual gauge."
 }
 ]
 };

@@ -1,5 +1,5 @@
-/* Module 8 widgets: West Mechanical Field Notes (Tyson RVAF steam and condensate loop).
-   Every label and number here comes from the Module 8 markdown; anything illustrative is marked as such. */
+/* Module 22 widgets: West Mechanical Field Notes (Tyson RVAF steam and condensate loop).
+   Every label and number here comes from the Module 22 markdown; anything illustrative is marked as such. */
 (function(){
   "use strict";
   var $=EW.$, v=EW.v, fmt=EW.fmt, S=EW.slot, each=EW.each, store=EW.store;
@@ -29,7 +29,7 @@
     var id=a.getAttribute("href").slice(1); if(id&&reveal(id)){var el=document.getElementById(id); if(el){e.preventDefault(); el.scrollIntoView({behavior:RM?"auto":"smooth",block:"start"}); history.replaceState(null,"","#"+id);}}},true);
   if(location.hash) reveal(location.hash.slice(1));
   window.addEventListener("hashchange",function(){reveal(location.hash.slice(1));});
-  var rb=$("resumeBtn"); if(rb) rb.addEventListener("click",function(){var P=HVAC.progress("m8"); if(P&&P.last) reveal(P.last);},true);
+  var rb=$("resumeBtn"); if(rb) rb.addEventListener("click",function(){var P=HVAC.progress(CFG.mid); if(P&&P.last) reveal(P.last);},true);
 
   /* ---------- Hook: follow the pipe ---------- */
   var HK=[["Cooker HPCR tank","#"+RV.cooker,[30,60]],["Three-way valve","#"+RV.cooker,[90,60]],["Boiler-room HPCR","#"+RV.fill,[215,60]],["LPCR (~40 psi, vent to roof)","#"+RV.lpcr,[215,130]],["Deaerator","#"+RV.fill,[290,60]],["Four boilers","#"+RV.boilers,[275,150]]];
@@ -284,7 +284,7 @@
     $("flTrace").addEventListener("click",function(){
       var seq=KIND.fill.concat(KIND.steam,["C1>C1HP","C2>C2HP","C3>C3HP"],tw==="send"?["C1HP>BRHPCR","C2HP>BRHPCR","C3HP>BRHPCR"]:[],["C1>LPCR","C2>LPCR","C3>LPCR","LPCR>Roof"],lp==="send"?["LPCR>BRHPCR"]:[]);
       if(RM){lit=null;flDraw();return;} lit=[]; var i=0; var t=setInterval(function(){lit.push(seq[i++]); flDraw(); if(i>=seq.length){clearInterval(t); setTimeout(function(){lit=null;flDraw();},1200);}},280);});
-    window.M8FLOW={nodes:NODES,edges:EDGES};
+    window.M22FLOW={nodes:NODES,edges:EDGES};
   }
 
   /* ---------- RVAF 3: four boilers ---------- */
@@ -374,7 +374,7 @@
     g+='<path d="M200 75 H260 V12" stroke="'+(vent?"#F4A261":"#26323f")+'" stroke-width="5" fill="none"/><rect x="230" y="2" width="80" height="8" fill="#59616c"/><text x="300" y="24" fill="#9AA0A6" font-size="8" text-anchor="end">ROOF</text>';
     if(vent&&!RM) for(var k=0;k<3;k++){var yy=12-((lpT*3+k*9)%24); g+='<circle cx="'+(260+(k-1)*6)+'" cy="'+yy+'" r="4" fill="#cfe8ff" opacity=".5"/>';}
     $("lpSvg").innerHTML=g;}
-  $("lpFlip").addEventListener("click",function(){var c=$("lpCard"); c.hidden=!c.hidden; c.innerHTML='<b>Pressure reducing valve:</b> controls <u>downstream</u>. Drops a higher supply to a lower pressure (Module 6 PRV station).<br><b>Back-pressure valve:</b> holds <u>upstream</u>. Keeps the LPCR near 40 psi; opens and relieves (to the roof here) when pressure tries to climb above set point.';});
+  $("lpFlip").addEventListener("click",function(){var c=$("lpCard"); c.hidden=!c.hidden; c.innerHTML='<b>Pressure reducing valve:</b> controls <u>downstream</u>. Drops a higher supply to a lower pressure (Module 20 PRV station).<br><b>Back-pressure valve:</b> holds <u>upstream</u>. Keeps the LPCR near 40 psi; opens and relieves (to the roof here) when pressure tries to climb above set point.';});
   setInterval(lpTick,200); lpTick();
 
   /* ---------- RVAF 8 + Action: walkdown checklist ---------- */
