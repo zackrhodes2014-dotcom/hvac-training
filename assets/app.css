@@ -34,3 +34,6 @@ table.mdtable th{background:var(--panel2)}
 .prof-admin{display:inline-flex;align-items:center;gap:6px}
 .prof-tag{font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#F4A261;border:1px solid #F4A261;border-radius:6px;padding:2px 6px}
 .prof-reset{font:inherit;font-size:.74rem;background:none;border:1px solid #6b2a24;color:#ffb4aa;border-radius:8px;min-height:30px;padding:0 8px;cursor:pointer}
+/* Every module is open at any time: no lock icon, and the "Start Module N" link is always visible. */
+.unlock{display:none!important}
+.start-next{opacity:1!important;transform:none!important}

@@ -1,4 +1,4 @@
-/* Shared helpers for the generated modules (6-8, 13-19): unlock animation, widget builders. */
+/* Shared helpers for the generated modules (6-8, 13-19): widget builders. */
 var EW=(function(){
   "use strict";
   var $=H.$, store=H.store, num=H.num, fmt=H.fmt, each=H.each;
@@ -146,14 +146,7 @@ var EW=(function(){
     return wrap;
   }
 
-  /* ---------- Unlock message ---------- */
-  function unlockAnim(){
-    var nx=$("next"), un=$("unlock"); if(!nx||!un) return;
-    function openLock(){un.classList.add("open"); nx.classList.add("unlocked");}
-    if(H.reduceMotion||!("IntersectionObserver" in window)) openLock();
-    else new IntersectionObserver(function(en,obs){ if(en[0].isIntersecting){openLock();obs.disconnect();} },{threshold:0.4}).observe(nx);
-  }
-  unlockAnim();
+
 
   return {$:$,num:num,fmt:fmt,each:each,store:store,esc:esc,slot:slot,fld:fld,txt:txt,area:area,sel:sel,chk:chk,keep:keep,v:v,svg:svg,
     setBand:setBand,chooser:chooser,sorter:sorter,orderPuzzle:orderPuzzle,checklist:checklist,photoSlots:photoSlots};
