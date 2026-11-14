@@ -34,27 +34,31 @@
   /* ---------- Hook: follow the pipe over a plan view of the real Tyson RVAF layout ----------
      Positions follow Zach's marked-up aerial (white = building, red = cookers, yellow = cooker HPCR stations,
      purple = LPCR, blue = DA, green = boilers, orange = boiler-room HPCR). Pipe routes are schematic. */
-  var HC={red:"#ff5a5f",yellow:"#ffd23f",purple:"#b07cff",blue:"#4ea8ff",green:"#3ecf6a",orange:"#ff9a3c",white:"#e6edf3"};
+  var HC={soft:"#d7f6ff",softRim:"#22a6b3",red:"#ff5a5f",yellow:"#ffd23f",purple:"#b07cff",blue:"#4ea8ff",green:"#3ecf6a",orange:"#ff9a3c",white:"#e6edf3"};
+  /* water softeners (3): small upright cylinders inside the boiler room, top-left by the wall: [cx,cy] */
+  var SOFT=[[195,-2],[218,-2],[186,18]];
   /* equipment: key -> [x,y,w,h,color,label,info,link] */
   var EQ={
-    da:[194,12,13,28,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank (laid on its side) with its long axis perpendicular to the boiler row, just above the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off.",RV.fill],
+    da:[200,12,13,28,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank (laid on its side) with its long axis perpendicular to the boiler row, just above the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off.",RV.fill],
     lpcr:[183,48,36,18,HC.purple,"LPCR","<b>LPCR</b>, low pressure condensate return: a horizontal tank (laid on its side) with its long axis parallel to the boiler row, at the left end of the boiler room. Holds about <b>40 psi</b>; a back-pressure PRV opens above that and vents to the roof.",RV.lpcr],
     b1:[232,30,16,40,HC.green,"B1","<b>Boiler 1</b> of four, in a row across the boiler room.",RV.boilers],
     b2:[256,30,16,40,HC.green,"B2","<b>Boiler 2</b> of four.",RV.boilers],
     b3:[280,30,16,40,HC.green,"B3","<b>Boiler 3</b> of four.",RV.boilers],
     b4:[304,30,16,40,HC.green,"B4","<b>Boiler 4</b> of four.",RV.boilers],
     hpcr:[324,36,24,30,HC.orange,"HPCR","<b>Boiler-room HPCR</b>, high pressure condensate return tank, at the far right end of the boiler room. Takes HP condensate from the cookers and LPCR pump discharge, and feeds the boilers.",RV.fill],
-    c1:[28,118,38,40,HC.red,"Cooker 1","<b>Tyson cooker 1</b> of three, in a row along the top wall of the main building.",RV.loads],
-    c2:[72,118,38,40,HC.red,"Cooker 2","<b>Tyson cooker 2</b> of three.",RV.loads],
-    c3:[130,118,38,40,HC.red,"Cooker 3","<b>Tyson cooker 3</b> of three.",RV.loads],
-    y1:[12,127,14,22,HC.yellow,"1","<b>Cooker 1 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 1: that cooker's own HPCR tank, its three-way valve, and its back-pressure steam regulator.",RV.cooker],
-    y2:[112,127,14,22,HC.yellow,"2","<b>Cooker 2 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 2 (between cookers 2 and 3).",RV.cooker],
-    y3:[170,127,14,22,HC.yellow,"3","<b>Cooker 3 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 3 (just right of it).",RV.cooker]
+    c1:[72,118,38,40,HC.red,"Cooker 1","<b>Tyson cooker 1</b>, the middle cooker of the three in the row along the top wall of the main building.",RV.loads],
+    c2:[130,118,38,40,HC.red,"Cooker 2","<b>Tyson cooker 2</b>, the right-hand cooker of the three.",RV.loads],
+    c3:[28,118,38,40,HC.red,"Cooker 3","<b>Tyson cooker 3</b>, the left-hand cooker of the three.",RV.loads],
+    y1:[112,127,14,22,HC.yellow,"1","<b>Cooker 1 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 1 (the middle cooker, on its right): that cooker's own HPCR tank, its three-way valve, and its back-pressure steam regulator.",RV.cooker],
+    y2:[170,127,14,22,HC.yellow,"2","<b>Cooker 2 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 2 (the right-hand cooker, just right of it).",RV.cooker],
+    y3:[12,127,14,22,HC.yellow,"3","<b>Cooker 3 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 3 (the left-hand cooker, just left of it, by the wall).",RV.cooker]
   };
   /* pipe routes (schematic): key -> [path for drawing, path for moving dots, color, dashed] */
   var PIPE={
-    makeup:["M170 53 H176 V7 H200.5 V12","M170 53 H176 V7 H200.5 V12","#9ad1ff"],
-    da2hp:["M207 26 H213 V10 H336 V36","M207 26 H213 V10 H336 V36","#9ad1ff"],
+    /* makeup water through the boiler-room wall to the three softeners, then a softened-water header into the top of the DA */
+    makeup:["M152 -16 H218 M195 -16 V-7 M218 -16 V-7 M186 -16 V13",["M152 -16 H195 V-7","M152 -16 H218 V-7","M152 -16 H186 V13"],"#9ad1ff"],
+    soft:["M191 18 H193 V6 H218 M195 3 V6 M218 3 V6 M206.5 6 V12",["M195 3 V6 H206.5 V12","M218 3 V6 H206.5 V12","M191 18 H193 V6 H206.5 V12"],"#d7f6ff"],
+    da2hp:["M213 26 H220 V10 H336 V36","M213 26 H220 V10 H336 V36","#9ad1ff"],
     /* boiler feedwater: out of the boiler-room HPCR, along the BOTTOM side of the boiler row, then up into the LEFT side of each boiler */
     feed:["M324 60 H322 V78 H228 M228 78 V50 H232 M252 78 V50 H256 M276 78 V50 H280 M300 78 V50 H304",["M324 60 H322 V78 H228 V50 H232","M324 60 H322 V78 H252 V50 H256","M324 60 H322 V78 H276 V50 H280","M324 60 H322 V78 H300 V50 H304"],"#9ad1ff"],
     steam:["M312 30 V26 H225 V111 H47 V118 M91 111 V118 M149 111 V118","M312 26 H225 V111 H47 V118","#c3ccd6"],
@@ -68,7 +72,7 @@
     pump2hp:["M209 90 V94 H332 V66","M209 90 V94 H332 V66","#c9a7ff"]
   };
   var HK=[
-    {t:"Softeners / makeup → DA (blue)",lit:["da"],p:["makeup"],a:RV.fill,i:"Softened makeup water goes to the <b>deaerator</b> (blue) in the boiler room. The softeners' spot isn't marked on Zach's photo, so they show as a tag off the building."},
+    {t:"Makeup → 3 softeners → DA (blue)",lit:["s1","s2","s3","da"],p:["makeup","soft"],a:RV.fill,i:"Makeup water comes in through the boiler-room wall to the <b>three water softeners</b> in the top-left corner of the boiler room. A softened-water header then carries it into the top of the <b>deaerator</b> (blue)."},
     {t:"DA → boiler-room HPCR (orange)",lit:["da","hpcr"],p:["da2hp"],a:RV.fill,i:"From the DA, water heads to the <b>boiler-room HPCR</b> (orange) at the far right end of the boiler room."},
     {t:"HPCR → boilers B1–B4 (green)",lit:["hpcr","b1","b2","b3","b4"],p:["feed"],a:RV.boilers,i:"The HPCR feeds the <b>four boilers</b> (green): the feedwater line runs along the <b>bottom side</b> of the boiler row, then branches up into the <b>left side of each boiler</b>. Each boiler has its own Fisher level controller and actuated feed valve."},
     {t:"Steam out to the cookers (red) + hydrolyzer",lit:["b1","b2","b3","b4","c1","c2","c3"],p:["steam","hydro"],a:RV.loads,i:"Steam leaves the boilers for the <b>three Tyson cookers</b> (red) and the <b>hydrolyzer</b>. The hydrolyzer's location isn't marked yet, so it's a tag off the map."},
@@ -78,20 +82,20 @@
     {t:"LPCR pumps → recirculate, or to the HPCR (orange)",lit:["lpcr","pumps","hpcr"],p:["lp2pump","pumprec","pump2hp"],a:RV.pumps,i:"The LPCR's actuated outlet valve feeds <b>two pumps</b> (one always running). They <b>recirculate</b> or send condensate to the <b>boiler-room HPCR</b> (orange)."}
   ];
   S("w-hook","Follow the pipe: Tyson RVAF plan view",
-    '<div class="svgbox hk-map"><svg id="hkSvg" viewBox="6 0 348 334" role="img" aria-label="Plan view of the Tyson RVAF plant: main building with three cookers along the top wall, boiler room block at the top right with LPCR, deaerator, four boilers and the boiler-room HPCR"></svg></div>'+
+    '<div class="svgbox hk-map"><svg id="hkSvg" viewBox="6 -28 348 362" role="img" aria-label="Plan view of the Tyson RVAF plant: main building with three cookers along the top wall, boiler room block at the top right with LPCR, deaerator, four boilers and the boiler-room HPCR"></svg></div>'+
     '<p class="hk-cap">Simplified plan view based on Zach\'s marked-up aerial; pipe routes are schematic.</p>'+
     '<div class="hk-legend" id="hkLegend"></div>'+
     '<div class="row"><button type="button" id="hkGo">🔦 Follow the pipe</button><button type="button" class="secondary" id="hkClear">Clear</button></div>'+
     '<ol class="hk-stops" id="hkStops"></ol><div class="infocard" id="hkOut" aria-live="polite">Tap <b>Follow the pipe</b>, a numbered step, or any piece of equipment.</div>');
-  $("hkLegend").innerHTML=[["white","Building outline",1],["red","Tyson cookers (3)"],["yellow","Cooker HPCR + 3-way + back-pressure regulator (1 per cooker)"],["purple","LPCR (~40 psi)"],["blue","DA (deaerator)"],["green","Boilers B1–B4"],["orange","Boiler-room HPCR"]].map(function(l){return '<span><i style="'+(l[2]?'border:2px solid '+HC.white+';background:transparent':'background:'+HC[l[0]])+'"></i>'+l[1]+'</span>';}).join("")+'<span><i class="dash"></i>Location not marked yet</span>'+[["#c3ccd6","Steam"],["#9ad1ff","Makeup / feed water"],["#2EC4B6","HP condensate"],["#c9a7ff","LP condensate"]].map(function(l){return '<span><i class="pipe" style="background:'+l[0]+'"></i>'+l[1]+'</span>';}).join("");
+  $("hkLegend").innerHTML=[["white","Building outline",1],["soft","Softeners (3)"],["red","Tyson cookers (3)"],["yellow","Cooker HPCR + 3-way + back-pressure regulator (1 per cooker)"],["purple","LPCR (~40 psi)"],["blue","DA (deaerator)"],["green","Boilers B1–B4"],["orange","Boiler-room HPCR"]].map(function(l){return '<span><i style="'+(l[2]?'border:2px solid '+HC.white+';background:transparent':l[0]==="soft"?'background:'+HC.soft+';border:2px solid '+HC.softRim+';border-radius:50%':'background:'+HC[l[0]])+'"></i>'+l[1]+'</span>';}).join("")+'<span><i class="dash"></i>Location not marked yet</span>'+[["#c3ccd6","Steam"],["#9ad1ff","Makeup / feed water"],["#2EC4B6","HP condensate"],["#c9a7ff","LP condensate"]].map(function(l){return '<span><i class="pipe" style="background:'+l[0]+'"></i>'+l[1]+'</span>';}).join("");
   var hkN=-1, hkOne=-1, hkSel=null, hkTimer=null;
   function hkActive(){ var s={lit:{},p:{},cur:{}}; HK.forEach(function(st,i){ var on=hkOne>=0?i===hkOne:i<=hkN; if(!on) return; st.lit.forEach(function(k){s.lit[k]=1;}); st.p.forEach(function(k){s.p[k]=1; if(i===(hkOne>=0?hkOne:hkN)) s.cur[k]=1;}); }); return s; }
   function hkDraw(){
-    var A=hkActive(), g='<defs><linearGradient id="hkShadeV" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".45" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient><linearGradient id="hkShadeH" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".45" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient></defs>';
+    var A=hkActive(), g='<defs><radialGradient id="hkShadeR" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient><linearGradient id="hkShadeV" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".45" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient><linearGradient id="hkShadeH" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".45" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient></defs>';
     g+='<rect x="10" y="104" width="340" height="196" fill="#121a22" stroke="'+HC.white+'" stroke-width="2"/>';
-    g+='<rect x="180" y="4" width="170" height="100" fill="#16202b" stroke="'+HC.white+'" stroke-width="2"/>';
+    g+='<rect x="180" y="-24" width="170" height="128" fill="#16202b" stroke="'+HC.white+'" stroke-width="2"/>';
     g+='<text x="20" y="292" fill="#9AA0A6" font-size="9">MAIN BUILDING</text><text x="300" y="101" fill="#9AA0A6" font-size="8" text-anchor="middle">BOILER ROOM</text>';
-    g+='<rect x="14" y="40" width="156" height="26" rx="5" fill="none" stroke="#8b949e" stroke-dasharray="4 3"/><text x="92" y="56" fill="#c9d1d9" font-size="8.5" text-anchor="middle">Softeners / makeup (not marked)</text>';
+    g+='<text x="150" y="-19" fill="#c9d1d9" font-size="7.5" text-anchor="end">makeup in →</text>';
     g+='<rect x="196" y="308" width="150" height="22" rx="5" fill="#0f1720" stroke="#8b949e" stroke-dasharray="4 3"/><text x="271" y="323" fill="#c9d1d9" font-size="8" text-anchor="middle">Hydrolyzer (location TBD)</text>';
     g+='<text x="342" y="292" fill="#9AA0A6" font-size="9" text-anchor="end">W</text>';
     Object.keys(PIPE).forEach(function(k){ var p=PIPE[k], on=A.p[k];
@@ -109,6 +113,8 @@
       if(e[5]) g+='<text x="'+cxx+'" y="'+(cyy+(vert&&cyl?2.5:3))+'" fill="#0b1015" font-size="'+(cyl?7:(w<20?7:8))+'" font-weight="700" text-anchor="middle" pointer-events="none"'+(vert&&cyl?' transform="rotate(-90 '+cxx+' '+cyy+')"':'')+'>'+e[5]+'</text>';
       g+='</g>';
     });
+    SOFT.forEach(function(sf,i){ var k="s"+(i+1), on=A.lit[k]||hkSel===k, sel=hkSel===k;
+      g+='<g class="hk-eq hk-soft" data-k="'+k+'" tabindex="0" role="button" aria-label="Water softener '+(i+1)+' of 3"><circle cx="'+sf[0]+'" cy="'+sf[1]+'" r="5" fill="'+HC.soft+'" fill-opacity="'+(on?0.95:0.4)+'" stroke="'+(sel?"#ffffff":HC.softRim)+'" stroke-width="'+(sel?2.2:1.6)+'"/><circle cx="'+sf[0]+'" cy="'+sf[1]+'" r="5" fill="url(#hkShadeR)" pointer-events="none"/><circle cx="'+sf[0]+'" cy="'+sf[1]+'" r="2.4" fill="none" stroke="'+HC.softRim+'" stroke-width=".8" pointer-events="none"/></g>'; });
     var pon=A.lit.pumps||hkSel==="pumps";
     g+='<g class="hk-eq" data-k="pumps" tabindex="0" role="button" aria-label="LPCR pumps"><circle cx="195" cy="84" r="6" fill="'+HC.purple+'" fill-opacity="'+(pon?0.95:0.38)+'" stroke="'+HC.purple+'"/><circle cx="209" cy="84" r="6" fill="'+HC.purple+'" fill-opacity="'+(pon?0.95:0.38)+'" stroke="'+HC.purple+'"/><text x="202" y="87" fill="#0b1015" font-size="6" font-weight="700" text-anchor="middle" pointer-events="none">P P</text></g>';
     g+='<circle cx="188" cy="50" r="1.8" fill="none" stroke="#e6edf3"/>';
@@ -117,7 +123,8 @@
       return '<li class="'+(done?"ok":"")+'"><button type="button" class="hk-step" data-i="'+i+'" aria-pressed="'+(hkOne===i)+'"><b>'+(i+1)+'</b> '+s.t+'</button> <a href="#'+s.a+'" class="hk-jump">open ›</a></li>';}).join("");
     each($("hkStops").querySelectorAll(".hk-step"),function(b){b.addEventListener("click",function(){ if(hkTimer){clearInterval(hkTimer);hkTimer=null;} var i=+b.getAttribute("data-i"); hkOne=i; hkN=-1; hkSel=null; hkDraw(); $("hkOut").innerHTML="<b>Step "+(i+1)+".</b> "+HK[i].i+' <a href="#'+HK[i].a+'">Go to that subsection ›</a>';});});
     each($("hkSvg").querySelectorAll(".hk-eq"),function(el){ function pick(){ var k=el.getAttribute("data-k"); hkSel=k; hkDraw();
-        if(k==="pumps") $("hkOut").innerHTML='<b>LPCR pumps</b> (two, one always running). Spot drawn next to the LPCR is schematic. <a href="#'+RV.pumps+'">Go to that subsection ›</a>';
+        if(/^s[123]$/.test(k)) $("hkOut").innerHTML='<b>Water softener '+k.slice(1)+' of 3</b>, inside the boiler room in the top-left corner by the wall. Makeup water comes through the wall to the softeners; softened water heads to the top of the deaerator. <a href="#'+RV.fill+'">Go to that subsection ›</a>';
+        else if(k==="pumps") $("hkOut").innerHTML='<b>LPCR pumps</b> (two, one always running). Spot drawn next to the LPCR is schematic. <a href="#'+RV.pumps+'">Go to that subsection ›</a>';
         else $("hkOut").innerHTML=EQ[k][6]+' <a href="#'+EQ[k][7]+'">Go to that subsection ›</a>'; }
       el.addEventListener("click",pick); el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();}}); });
   }
