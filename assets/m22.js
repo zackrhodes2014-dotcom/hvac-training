@@ -37,8 +37,8 @@
   var HC={red:"#ff5a5f",yellow:"#ffd23f",purple:"#b07cff",blue:"#4ea8ff",green:"#3ecf6a",orange:"#ff9a3c",white:"#e6edf3"};
   /* equipment: key -> [x,y,w,h,color,label,info,link] */
   var EQ={
-    da:[186,14,30,14,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank laid parallel to the boilers, in the boiler room next to the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off.",RV.fill],
-    lpcr:[192,36,18,40,HC.purple,"LPCR","<b>LPCR</b>, low pressure condensate return: a horizontal tank laid perpendicular to the boilers, at the left end of the boiler room. Holds about <b>40 psi</b>; a back-pressure PRV opens above that and vents to the roof.",RV.lpcr],
+    da:[194,12,13,28,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank (laid on its side) with its long axis perpendicular to the boiler row, just above the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off.",RV.fill],
+    lpcr:[183,48,36,18,HC.purple,"LPCR","<b>LPCR</b>, low pressure condensate return: a horizontal tank (laid on its side) with its long axis parallel to the boiler row, at the left end of the boiler room. Holds about <b>40 psi</b>; a back-pressure PRV opens above that and vents to the roof.",RV.lpcr],
     b1:[232,30,16,40,HC.green,"B1","<b>Boiler 1</b> of four, in a row across the boiler room.",RV.boilers],
     b2:[256,30,16,40,HC.green,"B2","<b>Boiler 2</b> of four.",RV.boilers],
     b3:[280,30,16,40,HC.green,"B3","<b>Boiler 3</b> of four.",RV.boilers],
@@ -53,18 +53,18 @@
   };
   /* pipe routes (schematic): key -> [path for drawing, path for moving dots, color, dashed] */
   var PIPE={
-    makeup:["M170 53 H176 V21 H186","M170 53 H176 V21 H186","#9ad1ff"],
-    da2hp:["M216 21 H220 V10 H336 V36","M216 21 H220 V10 H336 V36","#9ad1ff"],
+    makeup:["M170 53 H176 V7 H200.5 V12","M170 53 H176 V7 H200.5 V12","#9ad1ff"],
+    da2hp:["M207 26 H213 V10 H336 V36","M207 26 H213 V10 H336 V36","#9ad1ff"],
     /* boiler feedwater: out of the boiler-room HPCR, along the BOTTOM side of the boiler row, then up into the LEFT side of each boiler */
     feed:["M324 60 H322 V78 H228 M228 78 V50 H232 M252 78 V50 H256 M276 78 V50 H280 M300 78 V50 H304",["M324 60 H322 V78 H228 V50 H232","M324 60 H322 V78 H252 V50 H256","M324 60 H322 V78 H276 V50 H280","M324 60 H322 V78 H300 V50 H304"],"#9ad1ff"],
     steam:["M312 30 V26 H225 V111 H47 V118 M91 111 V118 M149 111 V118","M312 26 H225 V111 H47 V118","#c3ccd6"],
     hydro:["M225 111 H270 V308","M225 111 H270 V308","#c3ccd6",1],
     recirc:["M14 127 a5 5 0 1 1 10 0 M114 127 a5 5 0 1 1 10 0 M172 127 a5 5 0 1 1 10 0","M114 127 a5 5 0 1 1 10 0","#2EC4B6"],
     hpret:["M19 149 V170 H344 V66 M119 149 V170 M177 149 V170","M19 170 H344 V66","#2EC4B6"],
-    lp:["M47 158 V190 H218 V54 H210 M91 158 V190 M149 158 V190","M47 190 H218 V54 H210","#c9a7ff"],
-    vent:["M201 40 l9 -9","M201 40 l9 -9","#c9d1d9",1],
-    lp2pump:["M201 76 V78","M201 76 V78","#c9a7ff"],
-    pumprec:["M189 84 H186 V54 H192","M189 84 H186 V54 H192","#c9a7ff",1],
+    lp:["M47 158 V190 H222 V57 H219 M91 158 V190 M149 158 V190","M47 190 H222 V57 H219","#c9a7ff"],
+    vent:["M188 50 l-4 -6","M188 50 l-4 -6","#c9d1d9",1],
+    lp2pump:["M201 66 V78","M201 66 V78","#c9a7ff"],
+    pumprec:["M189 84 H187 V66","M189 84 H187 V66","#c9a7ff",1],
     pump2hp:["M209 90 V94 H332 V66","M209 90 V94 H332 V66","#c9a7ff"]
   };
   var HK=[
@@ -111,7 +111,7 @@
     });
     var pon=A.lit.pumps||hkSel==="pumps";
     g+='<g class="hk-eq" data-k="pumps" tabindex="0" role="button" aria-label="LPCR pumps"><circle cx="195" cy="84" r="6" fill="'+HC.purple+'" fill-opacity="'+(pon?0.95:0.38)+'" stroke="'+HC.purple+'"/><circle cx="209" cy="84" r="6" fill="'+HC.purple+'" fill-opacity="'+(pon?0.95:0.38)+'" stroke="'+HC.purple+'"/><text x="202" y="87" fill="#0b1015" font-size="6" font-weight="700" text-anchor="middle" pointer-events="none">P P</text></g>';
-    g+='<circle cx="201" cy="40" r="2.2" fill="none" stroke="#e6edf3"/>';
+    g+='<circle cx="188" cy="50" r="1.8" fill="none" stroke="#e6edf3"/>';
     $("hkSvg").innerHTML=g;
     $("hkStops").innerHTML=HK.map(function(s,i){ var done=hkOne>=0?i===hkOne:i<=hkN;
       return '<li class="'+(done?"ok":"")+'"><button type="button" class="hk-step" data-i="'+i+'" aria-pressed="'+(hkOne===i)+'"><b>'+(i+1)+'</b> '+s.t+'</button> <a href="#'+s.a+'" class="hk-jump">open ›</a></li>';}).join("");
