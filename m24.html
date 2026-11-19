@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 24: The MegaTron Blowdown Controller</title>
+<meta name="description" content="HVAC Module 24: The MegaTron Blowdown Controller. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="assets/m23.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m24">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 24</h1>
+  <p class="sub">The MegaTron Blowdown Controller</p>
+  <p class="note">(An interactive learning module for Ian and Landon. How an Advantage Controls MegaTron measures boiler water conductivity and runs the surface blowdown valve, as described in Advantage Controls&#x27; manuals and by Zach; all wording here is original.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 60 min + hands-on activity</span>
+    <span class="chip">🏭 Boilers &amp; Chillers</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: Three questions at the controller</a></li>
+      <li><a href="#s1">1. Why the Boiler Needs Automatic Blowdown (Quick Recap)</a></li>
+      <li><a href="#s2">2. How the MegaTron Works (Theory of Operation)</a></li>
+      <li><a href="#s3">3. See It Run (Animated Sequence)</a></li>
+      <li><a href="#s4">4. Parts and Installation</a></li>
+      <li><a href="#s5">5. What Else the MegaTron Does</a></li>
+      <li><a href="#s6">6. Probe Care and Troubleshooting</a></li>
+      <li><a href="#s7">7. Field Note: Tyson RVAF</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Find the MegaTron at RVAF</a></li>
+      <li><a href="#next">You've finished the set</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/7</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/9</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/11</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/11</b></span>
+      <span class="stat" id="statStreak">🧪 Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>🧪 Three questions at the controller</h2>
+  <p class="big">Zach stops at the boiler room's conductivity controller and doesn't say a word about the settings. He asks Ian three questions instead. "What number is on the screen? What number is it trying to stay under? And is that blowdown valve open right now, or isn't it?"</p><p class="big">Ian can read the first one off the display. The other two take a little more: a setpoint in the controller, and a valve out on the skimmer line that Ian has to go and look at. By the end of this module, Ian can answer all three, and can say why a reading that looks frozen might be perfectly normal.</p><div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><p>the opening story he'd like for this module, if he has a real one.</p></div>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="s1">
+  <h2>1. Why the Boiler Needs Automatic Blowdown (Quick Recap)</h2>
+  <p class="lede">Salt builds up as steam leaves</p>
+  <p>Steam leaves a boiler as nearly pure water, so the dissolved solids stay behind and the boiler water gets saltier. Too much and you risk foaming, carryover into the steam lines, scale, and overheated tubes. Too much blowdown wastes fuel, water, and chemicals. <strong>Surface (skimmer) blowdown</strong> bleeds off a little salty water from near the water line to hold the balance. The full story, including softeners, cycles of concentration, and what conductivity really measures, is in <strong>Module 20, Section 8</strong>.</p>
+  <p>This module is about the box that automates that job: the <strong>MegaTron</strong>, made by Advantage Controls.</p>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2">
+  <h2>2. How the MegaTron Works (Theory of Operation)</h2>
+  <p class="lede">Measure, compare, open, close</p>
+  <p><strong>1. The probe turns salts into a number.</strong> A <strong>boiler electrode</strong> sits in the surface blowdown line. Water with more dissolved salts carries more electrical current between the electrode's tips, so the reading goes up. The MegaTron shows that reading as <strong>conductivity in microsiemens per centimeter (µS/cm)</strong>, which stands in for the total dissolved solids (TDS) in the boiler water. Conductivity isn't TDS exactly. Module 20 explains the conversion and why it needs care. For blowdown control, the controller works directly from the conductivity number.</p>
+  <p><strong>2. The controller compares the reading to the setpoint.</strong> Every control function in a MegaTron works from a reading, a <strong>set point</strong>, and a <strong>differential</strong>:</p>
+  <ul><li><strong>Set point:</strong> the reading at which the controller turns its relay <strong>on</strong>. For blowdown, that relay opens the blowdown valve.</li><li><strong>Differential:</strong> how far the reading has to change from the setpoint before the relay turns <strong>off</strong> again. In plain terms, it's the gap that stops the valve from chattering open and closed around one number.</li><li><strong>High alarm</strong> and <strong>low alarm:</strong> readings that raise an alarm notice. A high alarm says the water is saltier than expected. A low alarm says it's lower than expected. The manual doesn't say what that means in the field, so ask Zach what a low alarm means at his sites.</li><li><strong>Limit timer:</strong> an alarm for too much time spent bleeding continuously. On a conductivity control, this alarm doesn't lock the bleed out.</li></ul>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical recommended setpoint: 3,500 µS/cm</strong> (as read on the MegaTron; confirm units on the controller). That is West Mechanical's recommended number for the set point. The water treatment vendor and the boiler maker still own the real limit for a given boiler.</p></div>
+  <p><strong>3. The valve opens above the setpoint.</strong> When the reading reaches the setpoint, the controller energizes the relay and the <strong>blowdown valve opens</strong>. Hot, salty water leaves through the skimmer line. Fresh feedwater comes in behind it, so the boiler water gets less salty and the reading falls.</p>
+  <p><strong>4. The valve closes once the reading has dropped by the differential.</strong> When the reading has fallen below the setpoint by the differential amount, the relay turns off and the valve closes. The boiler then concentrates again until the reading climbs back to the setpoint, and the cycle repeats.</p>
+  <p><strong>One more thing: the reading you see depends on how it's sampled.</strong> Boiler water in the skimmer line is hot and under pressure, and a probe sitting in still water in a closed line reads stale water. The controller needs to be sure the probe is seeing real, current boiler water. That is what the <strong>sampling mode</strong> is for. The manual lists these:</p>
+  <ul><li><strong>Continuous sampling.</strong> Boiler water flows past the probe all the time. If the reading is above the setpoint, blowdown continues until the setpoint is satisfied. This is the simplest idea, but it uses a steady stream of water for sampling. Advantage's boiler literature says the sample water goes to the drain, not back to the boiler. On a small boiler, that sampling flow could be more than the boiler needs to blow down. Advantage's guidance: as a general rule, boilers that need <strong>more than about 5,000 lb/hr of blowdown</strong> suit continuous sampling, and smaller ones suit timed sampling. (That rule comes from Advantage's analog boiler manual and boiler datasheet, not the MegaTron manual.)</li><li><strong>Timed sampling.</strong> The controller opens the valve on a schedule. A <strong>sample interval</strong> sets how often, and a <strong>sample duration</strong> sets how long the valve stays open for each sample. During the sample, fresh boiler water reaches the probe. If the reading is above the setpoint, blowdown continues until the reading has come back down. If it's below, the valve closes at the end of the sample. The controller then waits for the next interval. The manual allows intervals from 1 minute to just under 100 hours and durations from 1 second to just under 100 minutes.</li><li><strong>Sample and hold.</strong> The controller samples for its sample duration, then <strong>holds the valve closed</strong> for a set <strong>hold time</strong>, then <strong>checks the conductivity at the end of the hold</strong>. If more blowdown is needed, it holds the valve open for a preset <strong>blowdown time</strong>, then repeats the hold and check. When the reading is back in range it returns to the normal sample cycle.</li><li><strong>Pulse sample.</strong> The manual also lists a pulse option that starts a sample from a makeup-water meter pulse instead of the interval timer.</li></ul>
+  <blockquote><p><strong>Reading looks frozen?</strong> On timed and sample-and-hold systems, the MegaTronXS manual says the conductivity reading only updates at the end of each sample period. A number that sits still between samples isn't necessarily a failed controller. The manual gives a key on the run screen to force a sample and an updated reading.</p></blockquote>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical field note: RVAF:</strong> Zach says the boiler conductivity and blowdown controller at Tyson RVAF is an <strong>Advantage Controls MegaTron</strong>. <strong>Zach's notes (to expand): MegaTron model / sampling mode / setpoint at RVAF.</strong></p></div>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3">
+  <h2>3. See It Run (Animated Sequence)</h2>
+  <p class="lede">Sample, hold, blow down, wait</p>
+  <p>This section walks through one blowdown cycle. It uses a few <strong>example numbers</strong>, each tagged EXAMPLE on screen. The set point shown is West Mechanical's recommended 3,500 µS/cm. Everything else (differential, alarms, times) is an example, not Advantage's recommendation and not the RVAF settings.</p>
+  <p><strong>What you'll see.</strong> On the left, the skimmer line: boiler, full-port isolation valve, the cross with the electrode (BE-32), the flow-throttling device, the motorized blowdown valve, and the drain, with a flush line hanging off the cross. Water flows as teal dots, and the valve is <strong>red when closed</strong> and <strong>green when open</strong>. On the right, a strip chart shows the conductivity reading, a <strong>Set point</strong> line, and a <strong>Set point minus differential</strong> line. A banner names the current state, and time is compressed in this demo.</p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th>State</th><th>Valve</th><th>What happens</th><th>Caption</th></tr></thead><tbody><tr><td><strong>SAMPLE</strong></td><td>Open</td><td>Fresh boiler water flows past the probe, and the reading climbs to the real value.</td><td>"Valve opens. Fresh boiler water reaches the probe, and the reading climbs to the real value."</td></tr><tr><td><strong>HOLD</strong> (sample and hold only)</td><td>Closed</td><td>Flow stops and the controller checks the reading against the set point.</td><td>"Valve closed. The controller checks the reading against the set point."</td></tr><tr><td><strong>BLOW DOWN</strong> (only if above the set point)</td><td>Open</td><td>Salty water leaves and the reading falls.</td><td>"Reading is above the set point, so the valve stays open and salty water leaves."</td></tr><tr><td><strong>WAIT</strong></td><td>Closed</td><td>The displayed number holds while the real boiler water creeps saltier.</td><td>"Valve closed. The controller waits for the next sample interval."</td></tr></tbody></table></div>
+  <p><strong>Two modes.</strong> In <strong>Timed sampling</strong>, the valve stays open after the sample until the reading falls to set point minus differential, then it closes and the demo waits. In <strong>Sample and hold</strong>, the valve closes for a hold, the controller checks, and if it's above the set point the valve opens for a preset blowdown time, then holds and checks again until the reading is in range. If the reading is already below the set point at the check, the demo says "Nothing to do this time. That is normal."</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical recommended setpoint: 3,500 µS/cm</strong> (as read on the MegaTron; confirm units on the controller). The animation starts with this number as its example set point. Drag the set point or differential handles to see the valve open and close at different readings.</p></div>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="widget" id="w-s3-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4">
+  <h2>4. Parts and Installation</h2>
+  <p class="lede">What's in the line, and why it's there</p>
+  <p>Here's what the manual shows around the probe, in order from the boiler:</p>
+  <ul><li><strong>The controller.</strong> Reads the probe, holds the settings, and switches the relays. It also has alarms and, depending on the model, chemical feed timers.</li><li><strong>A fully ported isolation valve</strong> between the boiler and the electrode. It lets you isolate the probe to remove and clean it.</li><li><strong>The boiler electrode in a cross.</strong> The standard boiler electrode has a stainless steel MNPT bushing and goes into a FNPT <strong>cross</strong> made for the <strong>skimmer (surface) blowdown line</strong>. Advantage's NanoTron datasheet lists the <strong>BE-32</strong> boiler electrode at <strong>250 psi at 400°F</strong>, supplied with a <strong>1-inch MNPT bushing</strong>. The manual says to mount the cross in a <strong>1-inch skimmer line within about 4 feet of the boiler</strong>, because smaller lines and longer distances can slow response and hurt accuracy. Mount the probe's alignment arrows <strong>parallel to the flow</strong>. The BE-32 is the boiler electrode without temperature compensation (it needs only a 2-conductor cable; the manual lists a separate RTD boiler electrode, the BE-4RTD, that adds temperature). With a no-temperature probe, a fresh, hot sample matters. Check your own electrode's tag for its rating.</li><li><strong>A flow-throttling device</strong> about <strong>24 inches or less downstream</strong> of the probe. It keeps back-pressure on the electrode so it sees <strong>water, not steam</strong>. Without it, hot water can flash to steam in the chamber and give wrong readings. The manual warns the probe must be fully immersed to read correctly.</li><li><strong>A flush line</strong> with a quarter-turn ball valve at the bottom of the cross, to flush sediment out of the electrode chamber now and then.</li><li><strong>The blowdown valve</strong>, motorized or solenoid, in the same line, driven by the controller's relay, with the drain or blowdown tank beyond it.</li></ul>
+  <blockquote><p>The manual's drawing warns: <strong>do not use this probe arrangement on bottom blowdown lines.</strong> It is for the continuous or surface blowdown line only.</p></blockquote>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><p>where the RVAF probe, isolation valve, throttling device, flush line, and blowdown valve physically are, and what the BE-32 probe cross looks like there.</p></div>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5">
+  <h2>5. What Else the MegaTron Does</h2>
+  <p class="lede">Alarms, chemical feed, and the family</p>
+  <ul><li><strong>Alarms.</strong> High and low alarms for each reading, plus the limit timer. The run screen flashes how many alarms are active. Each alarm can also be set to show on the front screen or send a remote notice, if the controller is connected.</li><li><strong>Chemical feed timers.</strong> Depending on the model, the MegaTron can run feed timers that switch a relay for a pump. The manual lists types such as pulse (from a makeup-water meter), feed with bleed, feed after bleed, percentage, and 28-day. This lets the same controller coordinate chemical feed with blowdown.</li><li><strong>A controller family.</strong> Advantage's boiler page lists the <strong>MegaTron MT</strong> (a flexible multi-system controller for blowdown, chemical feed, and monitoring), the <strong>MegaTron XT</strong> (an advanced touchscreen controller with more communications and data features), and the <strong>MegaTron XK</strong> (a configurable controller with expandable inputs, outputs, and communications). Advantage's manuals show a keypad MegaTron, a single-system MegaTronXS, and a touchscreen MegaTronXT. Which one is at a plant is on its model label.</li><li><strong>Two modes at the panel.</strong> In <strong>RUN</strong> the display shows readings and no settings can be changed. <strong>SET UP</strong> is where settings are changed, and in the manual it's reached from the run screen with one key.</li></ul>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><p>MegaTron model / sampling mode / setpoint at RVAF, plus whether it also runs chemical feed there.</p></div>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6">
+  <h2>6. Probe Care and Troubleshooting</h2>
+  <p class="lede">When the number can't be trusted</p>
+  <p><strong>Cleaning.</strong> A dirty or scaled electrode gives a false reading. The manual's order of operations: record the current reading, stop the flow through the electrode loop, bleed the pressure off, and take the electrode out. Wipe the flat face with a clean cloth and a mild cleaner. For scale, use a mild acid solution or fine sandpaper (200 grit or finer) on a flat surface, and don't touch the face with your fingers, because skin oil fouls it. Reinstall, let the reading settle, and calibrate to a reliable test reading. If it still won't calibrate, clean harder, and replace the electrode if needed.</p>
+  <p><strong>Flushing.</strong> Use the flush line at the bottom of the cross now and then to clear sediment from the electrode chamber.</p>
+  <p><strong>Calibration.</strong> Calibrate by comparing the controller to a known reading, such as a calibrated handheld tester. The manual says boiler probes should have <strong>fresh hot water blown past them for at least 2 minutes</strong> before calibrating. On a boiler the relay can be forced on from the calibration screen to get that fresh sample. The controller will only accept a new value within a limited range of the current reading. If it refuses, something is wrong with the probe or wiring, or call Advantage.</p>
+  <p><strong>Troubleshooting chart (from the manual):</strong></p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th>Symptom</th><th>Possible cause</th><th>What to check</th></tr></thead><tbody><tr><td>False reading</td><td>Dirty or bad electrode; out of calibration</td><td>Clean the electrode; recalibrate</td></tr><tr><td>Won't calibrate</td><td>Dirty or faulty electrode; faulty wiring</td><td>Clean, then replace the electrode or wiring if needed</td></tr><tr><td>Outputs not energized (the valve gets no signal)</td><td>No flow in the sample line; blown fuse</td><td>Look for clogged pipes or strainers in the sample line; check the fuse</td></tr><tr><td>Unstable reading</td><td>Flashing to steam in the electrode chamber (Advantage's analog boiler manual)</td><td>Throttle the flow control down so the probe stays in water</td></tr></tbody></table></div>
+  <p><strong>Walk-down: three questions.</strong> (1) Is the <strong>reading</strong> believable, or is the probe dirty? (2) Is the reading <strong>above or below the setpoint</strong>, and is the <strong>valve</strong> doing what that says? (3) For timed modes, <strong>when was the last sample?</strong> The valve may be closed because it's not time yet, not because it's broken. If the blowdown only ever happens during sample periods, Advantage's analog manual says the interval may be too frequent. If blowdown runs for a long time after each sample, the interval may be too short. Settings are Zach's and the water treatment vendor's call.</p>
+  <div class="widget" id="w-s6" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s7">
+  <h2>7. Field Note: Tyson RVAF</h2>
+  <p class="lede">What we know, and what Zach will fill in</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical field note: RVAF:</strong> The boiler conductivity and blowdown controller at Tyson RVAF is an <strong>Advantage Controls MegaTron</strong> (per Zach). Typical West Mechanical boiler steam set points are around <strong>115 psi</strong>, well inside the BE-32's 250 psi rating, though always read the actual gauge and the probe's own tag. Water comes through softeners, then the deaerator, then the boilers; the softeners don't lower conductivity, so the controller's blowdown is what holds the salts in range.</p></div>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><p>MegaTron model (MT, XT, or XK) / sampling mode / setpoint, differential, and alarm values at RVAF / where the probe and blowdown valve are / whether it runs chemical feed.</p></div>
+  <div class="widget" id="w-s7" data-gen="1"></div>
+  <h3>Sources</h3>
+  <ul><li>Advantage Controls, MegaTron Controller Manual: www.advantagecontrols.com/wp-content/uploads/manuals/M-MegaTron.pdf</li><li>Advantage Controls, MegaTronXS Manual: www.advantagecontrols.com/wp-content/uploads/manuals/M-MegaTronXS.pdf</li><li>Advantage Controls, MegaTronXT Manual (BE-32C rating): www.advantagecontrols.com/wp-content/uploads/manuals/M-MegaTronXT.pdf</li><li>Advantage Controls, Boiler Water Treatment Equipment page (MT, XT, XK): www.advantagecontrols.com/products/boiler-water-treatment-equipment/</li><li>Advantage Controls, NanoTron datasheet (BE-32, 250 psi at 400°F, 1-inch MNPT bushing): www.advantagecontrols.com/wp-content/uploads/datasheets/D-NanoTron.pdf</li><li>Advantage Controls, Analog Boiler Manual and Boiler Savings datasheet (timed vs. continuous, 5,000 lb/hr rule, sampling tips): www.advantagecontrols.com/wp-content/uploads/manuals/M-Analog_Boiler.pdf and www.advantagecontrols.com/wp-content/uploads/datasheets/D-Boiler_Savings.pdf</li><li>Module 20, Section 8 (conductivity background and its sources)</li></ul>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s7" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/11</span>
+  </div>
+  <p class="lede">Eleven cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🧪 streak goes up on each "Got it" and resets on a miss. Eleven correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action">
+  <h2>🛠️ Action Item: Find the MegaTron at RVAF</h2>
+  <p>With Zach beside you at Tyson RVAF:</p>
+  <ol><li>Find the <strong>MegaTron</strong> and read the model label. Write the model down.</li><li>Read the display in <strong>RUN</strong> mode: the conductivity reading, and any alarm count. Don't change anything. Settings are made in SET UP, and that's Zach's call.</li><li>Ask Zach, or find on the screens, the <strong>sampling mode</strong> (continuous, timed, or sample and hold), the <strong>set point</strong>, and the <strong>differential</strong>. Write all three down.</li><li>Trace the <strong>skimmer line</strong> from the boiler to the <strong>probe cross</strong>. Point out the isolation valve, the throttling device, the flush line, and the <strong>blowdown valve</strong>. Note where the line goes after the valve.</li><li>Note whether the <strong>blowdown valve is open or closed</strong> right now, and whether that makes sense for the reading versus the set point.</li><li>Put it all on the log line below and have Zach check it. Fill in Zach's notes for Section 7 with what you learned.</li></ol>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser">
+  <h2>You've finished the set</h2>
+  
+  <p class="badge-done">🏅 Full Set Complete</p>
+  <p>Nice work. You can now explain what the MegaTron measures, how it decides when to open and close the blowdown valve, what each part of the skimmer line does, and what to look at when the number looks wrong. More modules and field notes from Zach will be added as they come in.</p>
+  <a class="start-next" id="startNext" href="./">Back to all modules →</a>
+</section>
+
+</main>
+<footer>HVAC Module 24 · The MegaTron Blowdown Controller</footer>
+
+<script>
+var CFG={"mid": "m24", "sections": ["s1", "s2", "s3", "s4", "s5", "s6", "s7"], "firstId": "hook", "streakIcon": "🧪", "appName": "HVAC Module 24"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m24.js"></script>
+</body>
+</html>

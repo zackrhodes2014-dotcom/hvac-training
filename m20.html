@@ -18,6 +18,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="assets/m23.css">
 <script src="assets/cards.js"></script>
 <script src="assets/common.js"></script>
 </head>
@@ -48,8 +49,9 @@
       <li><a href="#s5">5. Feedwater and Pump Controls</a></li>
       <li><a href="#s6">6. Typical Boiler Safeties</a></li>
       <li><a href="#s7">7. Bottom Blowdown</a></li>
-      <li><a href="#s8">8. Basic Steam System Components</a></li>
-      <li><a href="#s9">9. Hot Water Boilers (Quick Look)</a></li>
+      <li><a href="#s8">8. Conductivity and Automatic Surface Blowdown</a></li>
+      <li><a href="#s9">9. Basic Steam System Components</a></li>
+      <li><a href="#s10">10. Hot Water Boilers (Quick Look)</a></li>
       <li><a href="#quiz">Flip-Card Quiz</a></li>
       <li><a href="#action">Action Item: Your first boiler room walkthrough</a></li>
       <li><a href="#next">Up next: Module 21, Chiller Fundamentals</a></li>
@@ -62,10 +64,10 @@
     <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
     <div id="segBar" aria-hidden="true"></div>
     <div class="pp-stats">
-      <span class="stat" id="statSections"><b>0/9</b> sections complete</span>
-      <span class="stat" id="statItems">Overall: <b>0/11</b></span>
-      <span class="stat" id="statScore">Quiz: <b>0/8</b></span>
-      <span class="stat" id="statBest">Best score: <b>0/8</b></span>
+      <span class="stat" id="statSections"><b>0/10</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/12</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/14</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/14</b></span>
       <span class="stat" id="statStreak">🔥 Streak: <b>0</b> (best 0)</span>
     </div>
     <div class="row">
@@ -111,6 +113,7 @@
   <p><strong>Salt bridging:</strong> Sometimes salt forms a hard crust above the water in the brine tank. It looks full, but the water underneath has no salt touching it, so regeneration does nothing. Zach breaks the bridge carefully with a broom handle.</p>
   <p><strong>Softener capacity math:</strong> days between regenerations = capacity in grains ÷ (hardness in gpg × gallons per day).</p>
   <p><em>Example:</em> a 30,000-grain softener, 15 gpg water, 500 gallons of makeup per day: 15 × 500 = 7,500 grains a day, so 30,000 ÷ 7,500 = <strong>4 days</strong>. (Real capacity depends on the salt setting, so this is a typical estimate.)</p>
+  <p><strong>What a softener doesn't do:</strong> A softener removes hardness, not dissolved solids. See Section 8.</p>
   <div class="widget" id="w-s2" data-gen="1"></div>
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
 </section>
@@ -168,40 +171,84 @@
   <p>As water boils off as steam, the minerals and dirt stay behind. Two problems build up:</p>
   <ul><li><strong>Sludge and sediment</strong> settle at the bottom.</li><li><strong>Dissolved solids (TDS)</strong> concentrate in the water and can cause foaming and carryover.</li></ul>
   <p><strong>Bottom blowdown</strong> opens valves at the lowest point of the boiler for a few seconds to blast settled sludge out. It's done daily (or as the water treatment program says) because sludge builds every day. Left alone, it bakes onto the bottom and can block the LWCO.</p>
-  <p><strong>Surface (continuous) blowdown</strong> bleeds a small, steady stream from just below the water line to keep TDS in range.</p>
+  <p><strong>Surface (continuous) blowdown</strong> bleeds a small, steady stream from just below the water line to keep TDS in range. How that surface blowdown is automated is in Section 8.</p>
   <p><strong>Typical sequence:</strong> Most bottom blowdown lines have two valves, a <strong>quick-opening</strong> valve and a <strong>slow-opening</strong> valve. A common sequence is to open the quick-opening valve first, then open the slow-opening valve slowly to blow, then close the slow-opening valve first and the quick-opening valve last. Always follow the site's written procedure. Blowdown water goes to a <strong>blowdown separator or tank</strong> that lets it cool before it reaches the drain. Never walk away while a blowdown valve is open, because the boiler can lose water fast.</p>
   <div class="widget" id="w-s7" data-gen="1"></div>
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s7" aria-pressed="false">Mark section complete</button></div>
 </section>
 
 <section id="s8">
-  <h2>8. Basic Steam System Components</h2>
-  <p class="lede">Getting steam where it's going</p>
-  <ul><li><strong>Steam header:</strong> the main pipe that collects steam from the boilers and sends it out.</li><li><strong>Main stop valves:</strong> isolate each boiler from the header.</li><li><strong>Steam traps:</strong> let condensate and air out, but hold steam in. Common types:<ul><li><strong>Thermostatic:</strong> opens when cooler condensate or air reaches it.</li><li><strong>Float and thermostatic (F&amp;T):</strong> a float drains condensate, and a thermostatic vent lets out air.</li><li><strong>Inverted bucket:</strong> a bucket floats and sinks to open and close the outlet.</li><li><strong>Thermodynamic (disc):</strong> a small disc snaps open and shut using flash steam pressure.</li></ul></li><li><strong>Failed-open trap:</strong> blows live steam into the return, wastes fuel, and overheats condensate units.</li><li><strong>Failed-closed trap:</strong> backs up condensate, so equipment heats poorly and <strong>water hammer</strong> can happen when steam slams slugs of water into fittings.</li><li><strong>Pressure reducing valve (PRV):</strong> drops header steam to a lower pressure for equipment that needs it. Pilot-operated PRVs hold the pressure steady. A typical station has a <strong>strainer</strong> upstream, a <strong>safety relief valve</strong> downstream sized for the lower pressure, gauges on both sides, and a <strong>bypass</strong> valve for maintenance.</li><li><strong>Drip legs:</strong> low pockets in steam mains with traps that drain condensate.</li><li><strong>Strainers:</strong> catch scale and dirt before traps and valves.</li><li><strong>Sight glasses:</strong> let you look at flow in a line.</li><li><strong>Vacuum breakers:</strong> let air in when steam condenses so equipment doesn't pull a vacuum.</li><li><strong>Check valves:</strong> stop water from flowing backward.</li></ul>
+  <h2>8. Conductivity and Automatic Surface Blowdown</h2>
+  <p class="lede">Why the boiler water gets saltier every hour</p>
+  <p>Steam leaves the boiler as nearly pure water. Almost everything that was dissolved in the water going in stays behind. So the dissolved solids in the boiler get more concentrated the longer the boiler steams. That is the whole reason boilers need blowdown, and <strong>conductivity</strong> is how we keep an eye on it.</p>
+  <h3>Where the "stuff" in the water comes from</h3>
+  <p><strong>Dissolved solids (TDS)</strong> are salts that have broken into charged particles called <strong>ions</strong>. The common ones are:</p>
+  <ul><li><strong>Positive ions:</strong> sodium, calcium, magnesium.</li><li><strong>Negative ions:</strong> chloride, sulfate, bicarbonate.</li><li><strong>Silica:</strong> also dissolved in the water and watched closely, because it can bake into hard deposits.</li></ul>
+  <p>They come in three ways:</p>
+  <ol><li><strong>Makeup water.</strong> City or well water carries all of the above.</li><li><strong>Treatment chemicals.</strong> The program that protects the boiler adds some solids of its own (for example sodium-based chemicals).</li><li><strong>Condensate return</strong>, but only a little. Returned condensate is very low in dissolved solids, so it <strong>dilutes</strong> the feedwater. The more condensate you get back, the less makeup you need and the less the boiler water concentrates.</li></ol>
+  <p><strong>The softener trap.</strong> A softener swaps calcium and magnesium for sodium. Hardness goes to about zero, but the number of dissolved ions does not go down. It is a swap, not a removal. Sodium softening takes out the scale-formers and leaves the total dissolved solids (TDS) and the conductivity about the same. One more consequence: you can't tell a worn-out softener by watching conductivity, because it doesn't change. That is why softeners regenerate by time or gallons (see Section 2). Zach's sites run <strong>softeners, then the deaerator, then the boilers</strong>. The DA takes gases out, not salts, so the salts keep riding along into the boiler.</p>
+  <p><strong>Cycles of concentration.</strong> This is how many times saltier the boiler water is than the feedwater. If the boiler water holds ten times the dissolved solids that the feedwater does, that is <strong>10 cycles</strong>. A simple rule: <strong>blowdown as a share of feedwater is about 1 divided by cycles.</strong> Ten cycles is roughly 10% of the feedwater going down the drain. Higher cycles means less blowdown, but only up to the limit the boiler and the water treatment program can tolerate.</p>
+  <h3>What conductivity measures</h3>
+  <p>Pure water barely carries electricity. Dissolved ions carry it. A <strong>conductivity probe</strong> puts a voltage across two electrodes in the water. The more ions, the more current flows, and the higher the reading. Readings are in <strong>microsiemens per centimeter (µS/cm)</strong>, also written µmho/cm. More salts in the water means a higher reading.</p>
+  <p><strong>Conductivity to TDS.</strong> TDS in ppm is roughly conductivity times a factor, and the factor is not one fixed number:</p>
+  <ul><li>The ASME consensus guideline says the factor for <strong>unneutralized</strong> boiler water is typically about <strong>0.5 to 0.7 ppm per µS/cm</strong>, and about <strong>0.75 to 0.8</strong> for <strong>neutralized</strong> samples. It adds that the real factor for a given boiler should be found by testing and changes with the water.</li><li>Veolia's handbook gives about 0.5 to 0.6 for very dilute water like condensate and 0.55 to 0.90 for boiler water.</li><li><strong>Why neutralized matters:</strong> boiler water is alkaline, and the hydroxide ion carries current very well. Test kits often neutralize the sample first (Spirax describes adding acetic acid until the pink indicator color disappears) so the reading reflects the salts and not the hydroxide. A reading from an unneutralized sample, like a probe sitting in the blowdown line, will be higher than a neutralized one. Always know which kind of number you are looking at.</li><li>Temperature matters too. Hot water conducts better, so a hot-sample reading is higher than the same water cooled to 25°C. Controllers either compensate for temperature or assume it stays steady.</li></ul>
+  <blockquote><p><strong>Ian's take:</strong> Treat a conductivity number as a <strong>health reading for the boiler water</strong>, not a score. The number that matters is the one on the controller you're standing at, compared to the limit your water treatment vendor gave this boiler.</p></blockquote>
   <div class="widget" id="w-s8" data-gen="1"></div>
+  <h3>What too much conductivity does</h3>
+  <p>When dissolved solids get too concentrated, several things go wrong:</p>
+  <ul><li><strong>Foaming and carryover.</strong> Steam bubbles stop popping at the water surface. A blanket of foam fills the steam space and boiler water is carried into the steam header. Spirax calls high TDS the most common cause of carryover when other things are under control. <strong>Priming</strong>, which is water thrown into the steam outlet, is a separate cause, usually from too high a water level, running well below design pressure, or a sudden big steam demand. Either way, carryover leaves solids on <strong>control valves, heat exchangers, and steam trap orifices</strong>, and wet steam goes out to the plant.</li><li><strong>Level problems and nuisance lockouts.</strong> Foam can make the gauge glass look wrong, confuse level controls, and trip low-water alarms or lockouts. (Remember the 6 a.m. lockout in this module's opening?)</li><li><strong>Scale, sludge, and deposits.</strong> Dissolved salts that pass their solubility limit in the boiler drop out as solids that stick to hot metal or settle as sludge. Silica is a classic one.</li><li><strong>Heat transfer loss and overheating.</strong> Deposits insulate. The fire works harder for the same steam, and the tube metal behind the deposit runs hotter. In the worst case, tubes overheat and fail. (Nalco's boiler failure guide describes deposits insulating tube walls and causing overheating and rupture.)</li><li><strong>Under-deposit corrosion.</strong> Under a deposit, water boils off and leaves corrosive chemicals concentrated against the metal, which can gouge it out.</li></ul>
+  <p>And <strong>too little conductivity</strong> costs money in the other direction. Over-blowing down dumps hot, treated water down the drain, so you pay again for the fuel, the water, and the chemicals.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>Guideline numbers, not a setpoint.</strong> ASME's consensus tables and ABMA's older standard give suggested limits by boiler type and pressure. For an industrial <strong>firetube</strong> boiler in the <strong>0 to 300 psig</strong> range (where a typical 115 psi West Mechanical boiler sits), the ASME consensus table suggests boiler-water <strong>specific conductance under 7,000 µS/cm</strong> measured <strong>without neutralization</strong>. ABMA's older table lists <strong>3,500 ppm TDS</strong> in the same pressure range, and Spirax says shell boilers are normally run between roughly <strong>2,000 and 3,500 ppm TDS</strong>. Veolia's version of the ASME table for water-tube boilers that supply steam to critical users shows <strong>3,500 µS/cm</strong> for the same range. These disagree because they are for different boiler types and steam-purity needs. <strong>Treat them as ceilings in a guideline, not a number to dial in.</strong> <strong>West Mechanical's recommended setpoint is 3,500 µS/cm (as read on the MegaTron; confirm units on the controller).</strong> The actual setpoint for a given boiler still comes from your water treatment vendor and the boiler maker, based on the boiler type, pressure, feedwater, and steam use. Veolia's handbook stresses that real limits must be proven for each boiler by steam purity testing.</p></div>
+  <div class="widget" id="w-s8-2" data-gen="1"></div>
+  <h3>Why a controller runs the blowdown</h3>
+  <p><strong>Surface blowdown</strong> pulls a small amount of water from just under the water line, where the dissolved solids are most concentrated. That water leaves through the <strong>skimmer (surface blowdown) line</strong>. A <strong>conductivity controller</strong> automates it:</p>
+  <ol><li>A <strong>probe</strong> (electrode) in that line measures conductivity.</li><li>The <strong>controller</strong> compares the reading to a <strong>setpoint</strong>.</li><li><strong>Above setpoint:</strong> the controller opens the blowdown valve. Hot, salty water leaves and is replaced with fresher feedwater, so the reading drops.</li><li><strong>Back below setpoint, by a set margin (the differential):</strong> the controller closes the valve.</li></ol>
+  <p>Without it, the operator has to guess. The U.S. Department of Energy points out that with manual surface blowdown "there is no way to determine the concentration of dissolved solids in the boiler water," and so no way to know when or how long to blow down. A fixed rate doesn't follow changes in makeup quality, steam demand, or condensate return. Automatic control follows the actual water chemistry.</p>
+  <h3>Continuous vs. intermittent.</h3>
+  <ul><li><strong>Surface (continuous) blowdown</strong> controls <strong>dissolved solids</strong>. This is what the conductivity controller drives. Plants use either a steady bleed or a valve that opens and closes on conductivity.</li><li><strong>Bottom (mud) blowdown</strong> controls <strong>sludge</strong> and settled solids. It's a short manual blow every so often, or on a timer. A conductivity controller does <strong>not</strong> replace it. Section 7 covers it. Veolia notes that where continuous blowdown is used, bottom blowdown is usually cut back to roughly one short blow per shift. Some controllers also include a bottom blowdown timer.</li></ul>
+  <p><strong>Timer-sampled systems.</strong> A probe in a line with no flow reads stale water, and a probe on a small boiler may be sampled with water that would otherwise stay in the boiler. So many controllers sample on a <strong>timer</strong>: the valve opens at an interval for a set time so fresh boiler water reaches the probe, the controller reads it, and if the reading is high the valve stays open until it falls. Module 24 explains continuous, timed, and sample-and-hold sampling.</p>
+  <h3>Benefits compared with manual.</h3>
+  <ul><li><strong>Steadier TDS.</strong> Veolia notes that automatic control can hold boiler-water conductivity to within about 5% of setpoint on sodium-softened makeup, and that manual adjustment held that band only a small part of the time. With manual control, operators usually keep a wide margin to be safe.</li><li><strong>Less wasted heat, water, and chemicals.</strong> Veolia estimates the average plant saves roughly 20% of its blowdown by going from manually adjusted to automatic continuous blowdown. DOE's worked example of cutting blowdown from 8% to 6% on a 100,000 lb/hr boiler saves tens of thousands of dollars a year (it depends on fuel and water cost).</li><li><strong>Less operator time</strong>, and the record of readings and alarms.</li></ul>
+  <p><strong>Blowdown heat recovery, briefly.</strong> Blowdown leaves at boiler-water temperature, so it carries a lot of heat. Boilers with high blowdown rates and no recovery have the most to gain. A <strong>flash tank</strong> (which makes low-pressure steam from the blowdown) and a <strong>heat exchanger</strong> (which preheats makeup water) can recover part of that heat.</p>
+  <p><strong>Probe cleaning and calibration.</strong> The electrode lives in dirty, hot water. Scale or film on the tip makes the reading wrong. Controllers read off a real water sample, so the electrode needs periodic cleaning and the controller needs to be checked against a known reading. Module 24 covers this for the MegaTron.</p>
+  <p><strong>Who sets the number?</strong> Not the technician, and not a table in a training module. West Mechanical's recommended setpoint is <strong>3,500 µS/cm</strong> (as read on the MegaTron), and the <strong>vendor and the boiler maker</strong> still own the real number for each boiler. It comes from them, based on the boiler type, operating pressure, makeup quality, and steam use. Your job is to read it, log it, and flag when the reading and the setpoint don't match what you see.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical field note: RVAF:</strong> Zach says the boiler conductivity and blowdown controller at Tyson RVAF is an <strong>Advantage Controls MegaTron</strong>. It reads conductivity in µS/cm from a boiler electrode in the surface blowdown line, compares the reading to a setpoint, and opens and closes the blowdown valve. It has high and low alarms and can also run chemical feed. Module 24 goes through how it works. Typical West Mechanical boiler steam set points are around <strong>115 psi</strong>; always read the actual gauge. <strong>Zach's notes (to expand): MegaTron model / sampling mode / setpoint at RVAF.</strong></p></div>
+  <div class="widget" id="w-s8-3" data-gen="1"></div>
+  <div class="widget" id="w-s8-4" data-gen="1"></div>
+  <h3>Sources</h3>
+  <ul><li>U.S. DOE, Steam Tip Sheet #9, Minimize Boiler Blowdown: www.energy.gov/sites/prod/files/2014/05/f16/steam9_blowdown.pdf</li><li>U.S. DOE, Steam Tip Sheet #23, Install an Automatic Blowdown-Control System: www.energy.gov/sites/default/files/2014/05/f16/steam23_control_system.pdf</li><li>ASME, Consensus on Operating Practices for the Control of Feedwater and Boiler Water Chemistry in Modern Industrial Boilers (section 6.7 on conductivity and Table 3, industrial firetube): studylib.net/doc/27348495/asme-crtd-vol-34 and www.scribd.com/document/378895282/ASME-Standard-Consensus-Water-Chemistry (copies of the ASME document; ASME's catalog page: asmedigitalcollection.asme.org/ebooks/book/282/Consensus-on-Operating-Practices-for-the-Control)</li><li>ABMA/ASME limits as summarized by Hydro-Logic: www.watertreater.net/technicalasme.php; older ASME guideline table, Syntec: www.syntec.com/wp-content/uploads/2014/09/Guidelines_for_Boiler_Blowdown_and_Cycles_of_Concentration.pdf</li><li>National Board, "Improper Blowdown Techniques" (ABMA TDS table, sodium zeolite note, foaming and level effects): www.nationalboard.org/PrintPage.aspx?pageID=244</li><li>Veolia Water Handbook, Chapter 13, Boiler Blowdown Water Systems and Control (conductivity factors, neutralizing, automatic control, 5% and 20% figures, ASME Table 13-2): www.watertechnologies.com/handbook/chapter-13-boiler-blowdown-control</li><li>Spirax Sarco, Controlling TDS in the Boiler Water: www.spiraxsteam.com/learn-about-steam/the-boiler-house/controlling-tds-in-the-boiler-water/</li><li>Spirax Sarco, Water for the Boiler (sodium base exchange, carryover, priming, foaming): www.spiraxsteam.com/learn-about-steam/the-boiler-house/water-for-the-boiler/</li><li>Spirax Sarco BC3200/BC3210 and BC3250 blowdown controller manuals (hysteresis, temperature compensation, probe cleaning, purge/sample modes): content.spiraxsarco.com/-/media/spiraxsarco/international/documents/us/im/bc3200_bc3210-im-p403-53-us.ashx?rev=759fbb4aecdd418aa97e5ff116f26485</li><li>Nalco, The Nalco Guide to Boiler Failure Analysis (deposits, overheating, under-deposit attack): www.rexresearch1.com/SteamLibrary/NALCOGuideBoilerFailureAnalysisPort.pdf</li><li>Lenntech, Boiler water treatment (cation exchange does not reduce total solids; treatment chemicals): www.lenntech.com/applications/process/boiler/boiler-water-treatment.htm</li><li>Advantage Controls, boiler water treatment equipment page and MegaTron manuals: www.advantagecontrols.com/products/boiler-water-treatment-equipment/ , www.advantagecontrols.com/wp-content/uploads/manuals/M-MegaTron.pdf , www.advantagecontrols.com/wp-content/uploads/manuals/M-MegaTronXS.pdf</li></ul>
+  <p><em>These are guidelines for learning. The boiler maker's manual and the site's water treatment vendor set the real limits.</em></p>
   <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s8" aria-pressed="false">Mark section complete</button></div>
 </section>
 
 <section id="s9">
-  <h2>9. Hot Water Boilers (Quick Look)</h2>
+  <h2>9. Basic Steam System Components</h2>
+  <p class="lede">Getting steam where it's going</p>
+  <ul><li><strong>Steam header:</strong> the main pipe that collects steam from the boilers and sends it out.</li><li><strong>Main stop valves:</strong> isolate each boiler from the header.</li><li><strong>Steam traps:</strong> let condensate and air out, but hold steam in. Common types:<ul><li><strong>Thermostatic:</strong> opens when cooler condensate or air reaches it.</li><li><strong>Float and thermostatic (F&amp;T):</strong> a float drains condensate, and a thermostatic vent lets out air.</li><li><strong>Inverted bucket:</strong> a bucket floats and sinks to open and close the outlet.</li><li><strong>Thermodynamic (disc):</strong> a small disc snaps open and shut using flash steam pressure.</li></ul></li><li><strong>Failed-open trap:</strong> blows live steam into the return, wastes fuel, and overheats condensate units.</li><li><strong>Failed-closed trap:</strong> backs up condensate, so equipment heats poorly and <strong>water hammer</strong> can happen when steam slams slugs of water into fittings.</li><li><strong>Pressure reducing valve (PRV):</strong> drops header steam to a lower pressure for equipment that needs it. Pilot-operated PRVs hold the pressure steady. A typical station has a <strong>strainer</strong> upstream, a <strong>safety relief valve</strong> downstream sized for the lower pressure, gauges on both sides, and a <strong>bypass</strong> valve for maintenance.</li><li><strong>Drip legs:</strong> low pockets in steam mains with traps that drain condensate.</li><li><strong>Strainers:</strong> catch scale and dirt before traps and valves.</li><li><strong>Sight glasses:</strong> let you look at flow in a line.</li><li><strong>Vacuum breakers:</strong> let air in when steam condenses so equipment doesn't pull a vacuum.</li><li><strong>Check valves:</strong> stop water from flowing backward.</li></ul>
+  <div class="widget" id="w-s9" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s9" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s10">
+  <h2>10. Hot Water Boilers (Quick Look)</h2>
   <p class="lede">Same fire, different loop</p>
   <p>A hot water boiler heats water without boiling it and pumps it around a <strong>closed loop</strong>.</p>
   <ul><li><strong>Expansion tank:</strong> gives heated water room to expand.</li><li><strong>Circulators:</strong> pumps that move water through the loop.</li><li><strong>Relief valve:</strong> rated in psi (30 psi is typical on smaller systems) and opens if pressure gets too high.</li><li><strong>Temperature limits:</strong> operating and high limit controls work on temperature, not steam pressure.</li><li><strong>LWCO:</strong> often required on hot water boilers too.</li></ul>
   <p><strong>Key differences:</strong> No steam traps, little makeup water, no daily bottom blowdown in most cases, and controls based on temperature.</p>
-  <div class="widget" id="w-s9" data-gen="1"></div>
-  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s9" aria-pressed="false">Mark section complete</button></div>
+  <div class="widget" id="w-s10" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s10" aria-pressed="false">Mark section complete</button></div>
 </section>
 
 <section id="quiz">
   <div class="quiz-top">
     <h2>🃏 Flip-Card Quiz</h2>
-    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/8</span>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/14</span>
   </div>
-  <p class="lede">Eight cards. Tap to flip. Keep your streak alive.</p>
+  <p class="lede">Fourteen cards. Tap to flip. Keep your streak alive.</p>
   <p class="streak-big" id="streakBig" aria-live="polite"></p>
   <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
   <p class="scoreline" id="scoreLine" aria-live="polite"></p>
-  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🔥 streak goes up on each "Got it" and resets on a miss. Eight correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🔥 streak goes up on each "Got it" and resets on a miss. Fourteen correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
   <div class="cards" id="cards"></div>
   <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
 </section>
@@ -209,7 +256,7 @@
 <section id="action">
   <h2>🛠️ Action Item: Your first boiler room walkthrough</h2>
   <p>With Zach beside you:</p>
-  <ol><li>Walk the boiler room and point out the burner, gauge glass, try cocks, pressure gauge, controls, relief valve, softener, brine tank, DA or feed tank, and condensate unit.</li><li>Read the softener's control head: regeneration mode (meter or timer), capacity, and next regen.</li><li>Run a hardness test on softened water and record the gpg.</li><li>Watch Zach do the bottom blowdown and LWCO blowdown test from a safe spot. Write down the steps in order.</li><li>Fill out one line of a daily boiler log: steam pressure, water level, stack temperature, and softener hardness.</li></ol>
+  <ol><li>Walk the boiler room and point out the burner, gauge glass, try cocks, pressure gauge, controls, relief valve, softener, brine tank, DA or feed tank, and condensate unit.</li><li>Read the softener's control head: regeneration mode (meter or timer), capacity, and next regen.</li><li>Run a hardness test on softened water and record the gpg.</li><li>Watch Zach do the bottom blowdown and LWCO blowdown test from a safe spot. Write down the steps in order.</li><li>Fill out one line of a daily boiler log: steam pressure, water level, stack temperature, and softener hardness.</li><li>At the boiler, find the <strong>conductivity controller</strong> and the <strong>blowdown valve</strong>. Read the conductivity and the setpoint, and write them in the daily log.</li><li>Ask Zach where the <strong>conductivity probe</strong> is on the skimmer line, and trace that line to the blowdown valve and the drain or blowdown separator.</li></ol>
   <div class="widget" id="w-action" data-gen="1"></div>
   <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
 </section>
@@ -226,7 +273,7 @@
 <footer>HVAC Module 20 · Boiler Room Fundamentals</footer>
 
 <script>
-var CFG={"mid": "m20", "sections": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9"], "firstId": "hook", "streakIcon": "🔥", "appName": "HVAC Module 20"};
+var CFG={"mid": "m20", "sections": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"], "firstId": "hook", "streakIcon": "🔥", "appName": "HVAC Module 20"};
 </script>
 <script src="assets/core.js"></script>
 <script src="assets/elec-common.js"></script>

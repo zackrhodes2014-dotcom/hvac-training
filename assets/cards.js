@@ -325,6 +325,36 @@ window.HVAC_CARDS={
 "id": "m20-c8",
 "q": "A trap blows live steam into the return. Failed open or closed?",
 "a": "Failed open."
+},
+{
+"id": "m20-c9",
+"q": "A softener takes calcium and magnesium out of the water. Does boiler water conductivity go down?",
+"a": "No. The softener swaps them for sodium. Hardness drops to about zero, but total dissolved solids and conductivity stay about the same."
+},
+{
+"id": "m20-c10",
+"q": "Why does boiler water get saltier the longer it steams?",
+"a": "Steam leaves nearly pure, so dissolved solids stay behind and concentrate. Blowdown and fresh feedwater keep them in range."
+},
+{
+"id": "m20-c11",
+"q": "What does a conductivity controller do when the reading goes above setpoint?",
+"a": "It opens the surface blowdown valve to remove salty water, then closes the valve once the reading has fallen by the differential."
+},
+{
+"id": "m20-c12",
+"q": "Name two things that go wrong when boiler water conductivity is too high.",
+"a": "Foaming and carryover (wet, dirty steam that fouls traps and valves, and can trip level alarms), and deposits and scale (lost heat transfer, overheated tubes, under-deposit corrosion)."
+},
+{
+"id": "m20-c13",
+"q": "Who sets the conductivity setpoint?",
+"a": "The water treatment vendor with the boiler maker, based on boiler type, pressure, and water. Guideline tables are ceilings, not a number to dial in. Read it and log it."
+},
+{
+"id": "m20-c14",
+"q": "What is West Mechanical's recommended conductivity setpoint?",
+"a": "3,500 µS/cm, as read on the MegaTron (confirm units on the controller). The water treatment vendor and boiler maker still set the real limit for each boiler."
 }
 ],
 "m21": [
@@ -383,7 +413,7 @@ window.HVAC_CARDS={
 {
 "id": "m22-c3",
 "q": "What controls level in each cooker HPCR tank?",
-"a": "A Fisher level controller and a Fisher actuated valve, piped back toward the boiler-room HPCR."
+"a": "A 4150-style pneumatic level controller and a Fisher actuated valve, piped back toward the boiler-room HPCR."
 },
 {
 "id": "m22-c4",
@@ -403,12 +433,146 @@ window.HVAC_CARDS={
 {
 "id": "m22-c7",
 "q": "What moves condensate out of the LPCR tank?",
-"a": "A Fisher pneumatic level controller opens a Fisher actuated outlet valve, which feeds two pumps. One pump is always running. The pumps either recirculate or send condensate to the HPCR."
+"a": "The LPCR's one 4150-style pneumatic level controller opens a Fisher actuated outlet valve (controlling water out of the tank), which feeds two pumps. One pump is always running. The pumps either recirculate or send condensate to the HPCR."
 },
 {
 "id": "m22-c8",
 "q": "How is water level controlled on the four boilers, and about what steam set point should you expect on a typical West Mechanical site?",
-"a": "Each of the four boilers has a Fisher level controller with an actuated fill valve. Typical boiler steam set points are around 115 psi; always read the actual gauge."
+"a": "Each of the four boilers has its own 4150-style pneumatic level controller with an actuated fill valve, controlling water going into that boiler (the LPCR's controller controls water going out). Typical boiler steam set points are around 115 psi; always read the actual gauge."
+}
+],
+"m23": [
+{
+"id": "m23-c1",
+"q": "What are the three main parts of a pneumatic control valve assembly?",
+"a": "The body (plug, seat, stem), the actuator that moves the stem, and accessories such as the positioner, I/P, and filter-regulator."
+},
+{
+"id": "m23-c2",
+"q": "A 3-15 psi signal on an air-to-open valve with a spring: what is the stem travel at 9 psi?",
+"a": "About 50 percent, because 9 psi is halfway between 3 and 15."
+},
+{
+"id": "m23-c3",
+"q": "An I/P gets 12 mA on a 4-20 mA signal into a 3-15 psi range. What should the output be?",
+"a": "About 9 psi, halfway through the range."
+},
+{
+"id": "m23-c4",
+"q": "How does a Fisher 667 actuator work?",
+"a": "It is a reverse-acting spring-and-diaphragm actuator. Air to the lower casing lifts the stem against the spring, and on loss of air the spring drives the stem fully down."
+},
+{
+"id": "m23-c5",
+"q": "Before you assume more air opens a valve, what do you check?",
+"a": "Where the signal tubing goes on the actuator (a 667 is fed underneath, a 657 on top), the actuator nameplate, the body's plug action, and the controller or positioner action. All of them together decide what more air does."
+},
+{
+"id": "m23-c6",
+"q": "What happens on loss of air with a 657 or a 667 on a push-down-to-close body?",
+"a": "A 657 fails open, and a 667 fails closed. The body's plug action decides it; on a push-down-to-open body it flips."
+},
+{
+"id": "m23-c7",
+"q": "Why put a positioner on a control valve?",
+"a": "To overcome packing and seat friction, hold an accurate stem position, allow split range, and move the stem faster."
+},
+{
+"id": "m23-c8",
+"q": "What makes good instrument air?",
+"a": "Clean, dry, and oil-free, at the supply pressure the equipment's nameplate and manual call for."
+},
+{
+"id": "m23-c9",
+"q": "At Tyson RVAF, how do the boiler level controllers differ from the LPCR level controller?",
+"a": "Each boiler's own controller controls water going into that boiler. The LPCR's one controller controls water going out of the tank."
+},
+{
+"id": "m23-c10",
+"q": "What is a good order for checking a pneumatic valve on a walkdown?",
+"a": "Supply gauge, signal gauge, trace the tubing, listen for leaks, watch the stem, then compare the stem position to the process."
+},
+{
+"id": "m23-c11",
+"q": "In Zach's words, what are the \"float,\" the \"wiper,\" and the \"vent\" inside a Fisher-style level controller?",
+"a": "The float is the displacer (a 2500 has no float). The wiper most likely means the flapper (inferred, so confirm with Zach). The vent is the relay exhaust, where air escapes when the output drops."
+},
+{
+"id": "m23-c12",
+"q": "Direct-acting level controller, level rising. What happens inside, in order?",
+"a": "The flapper moves toward the nozzle, nozzle pressure rises, the relay inlet opens and its exhaust closes, and the output rises toward 15 psig. Reverse action is the opposite."
+},
+{
+"id": "m23-c13",
+"q": "How do you reverse the action of a Fisher 2500 level controller?",
+"a": "You don't need a different controller. Following manual section 7.6 and Figure 15, you turn the flapper base over (and reposition the Bourdon tube as the manual shows), then perform the calibration procedure again."
+},
+{
+"id": "m23-c14",
+"q": "What is span on a 2500, and what does West Mechanical set it to?",
+"a": "Span links how far the level must move to how far the output swings. The PROPORTIONAL BAND dial sets it, and West Mechanical always sets it at one (about 10 percent of the displacer, a narrow band). If it cycles, broaden it slightly."
+},
+{
+"id": "m23-c15",
+"q": "In a 2500 calibration, what sets zero, what sets span, and why repeat?",
+"a": "The flapper sets zero (3 psig at the bottom for direct). Sliding the flexure strip base trims span. Sliding it also moves zero, so repeat zero and span until both end points hold."
+}
+],
+"m24": [
+{
+"id": "m24-c1",
+"q": "What does the MegaTron's boiler electrode measure?",
+"a": "Conductivity, in µS/cm, which tracks how many dissolved salts are in the boiler water."
+},
+{
+"id": "m24-c2",
+"q": "Where does the probe go?",
+"a": "In a cross in the skimmer (surface) blowdown line, within about 4 feet of the boiler. Never on a bottom blowdown line."
+},
+{
+"id": "m24-c3",
+"q": "Set point vs. differential: what's the difference?",
+"a": "The set point is the reading that turns the relay on and opens the valve. The differential is how far the reading must change before the relay turns off and the valve closes."
+},
+{
+"id": "m24-c4",
+"q": "The reading is above the set point. What does the controller do?",
+"a": "It opens the blowdown valve until the reading has fallen by the differential, then closes it."
+},
+{
+"id": "m24-c5",
+"q": "Why is there a flow-throttling device downstream of the probe?",
+"a": "It keeps back-pressure so the probe sees water and not steam. Flashing to steam gives wrong readings."
+},
+{
+"id": "m24-c6",
+"q": "Why is there a full-port isolation valve and a flush line at the probe?",
+"a": "The isolation valve lets you remove and clean the probe. The flush line clears sediment from the electrode chamber."
+},
+{
+"id": "m24-c7",
+"q": "Name the sampling modes the manual lists.",
+"a": "Continuous, timed sampling, sample and hold, and pulse sample."
+},
+{
+"id": "m24-c8",
+"q": "Walk through sample and hold.",
+"a": "Sample, hold the valve closed, check the reading at the end of the hold, blow down for the blowdown time if above set point, then hold and check again."
+},
+{
+"id": "m24-c9",
+"q": "On a timed system, the reading hasn't changed in a while. Is the controller broken?",
+"a": "Not necessarily. Timed and sample-and-hold readings update at the end of each sample."
+},
+{
+"id": "m24-c10",
+"q": "The reading seems wrong. What do you check first?",
+"a": "A dirty electrode or an out-of-date calibration. Clean it, then calibrate with a fresh hot sample."
+},
+{
+"id": "m24-c11",
+"q": "What is West Mechanical's recommended MegaTron set point?",
+"a": "3,500 µS/cm, as read on the MegaTron (confirm units on the controller). The water treatment vendor and boiler maker still own the real limit for each boiler."
 }
 ]
 };

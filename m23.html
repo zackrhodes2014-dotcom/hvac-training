@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>HVAC Module 23: Fisher Pneumatic Valves</title>
+<meta name="description" content="HVAC Module 23: Fisher Pneumatic Valves. Interactive lesson that works offline.">
+<meta name="theme-color" content="#0f1720">
+<meta name="application-name" content="HVAC Training">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HVAC Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="assets/module.css">
+<link rel="stylesheet" href="assets/elec.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="assets/m23.css">
+<script src="assets/cards.js"></script>
+<script src="assets/common.js"></script>
+</head>
+<body data-module="m23">
+<div id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
+<header>
+  <h1>HVAC Module 23</h1>
+  <p class="sub">Fisher Pneumatic Valves</p>
+  <p class="note">(An interactive learning module for Ian. Pneumatic control valve fundamentals for field technicians, in the textbook style of Modern Refrigeration and Air Conditioning plus general Fisher/Emerson control valve basics; all wording here is original. Site details are left for Zach&#x27;s notes.)</p>
+  <div class="meta">
+    <span class="chip">👤 Learner: Ian</span>
+    <span class="chip">📶 Level: Beginner</span>
+    <span class="chip">⏱️ About 75 min + hands-on activity</span>
+    <span class="chip">🏭 Boilers &amp; Chillers</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <details>
+    <summary>📑 Jump to a section</summary>
+    <ol>
+      <li><a href="#hook">Hook: The level that wouldn't hold</a></li>
+      <li><a href="#s1">1. What a Control Valve Is</a></li>
+      <li><a href="#s2">2. Valve Types and Flow Characteristics</a></li>
+      <li><a href="#s3">3. Pneumatic Actuators</a></li>
+      <li><a href="#s4">4. Actuator and Valve Setup</a></li>
+      <li><a href="#s5">5. Positioners</a></li>
+      <li><a href="#s6">6. I/P Transducers</a></li>
+      <li><a href="#s7">7. Instrument Air Supply</a></li>
+      <li><a href="#s8">8. Fail-Safe Positions</a></li>
+      <li><a href="#s9">9. Boiler Room and Steam Applications</a></li>
+      <li><a href="#s10">10. Inside a Level Controller (2500 Style)</a></li>
+      <li><a href="#s11">11. Calibrate a Level Controller</a></li>
+      <li><a href="#quiz">Flip-Card Quiz</a></li>
+      <li><a href="#action">Action Item: Supervised walkdown: read one pneumatic control valve</a></li>
+      <li><a href="#next">Up next: Module 24, The MegaTron Blowdown Controller</a></li>
+    </ol>
+  </details>
+</nav>
+
+<aside class="progress-panel" aria-label="Your progress">
+  <div class="pp">
+    <div class="pp-head"><h2>📈 Your progress</h2><span class="offline-chip" id="offlineChip" hidden>✓ Works offline</span></div>
+    <div id="segBar" aria-hidden="true"></div>
+    <div class="pp-stats">
+      <span class="stat" id="statSections"><b>0/11</b> sections complete</span>
+      <span class="stat" id="statItems">Overall: <b>0/13</b></span>
+      <span class="stat" id="statScore">Quiz: <b>0/15</b></span>
+      <span class="stat" id="statBest">Best score: <b>0/15</b></span>
+      <span class="stat" id="statStreak">🎛️ Streak: <b>0</b> (best 0)</span>
+    </div>
+    <div class="row">
+      <button type="button" id="resumeBtn" hidden>▶ Resume where you left off</button>
+      <button type="button" class="secondary danger" id="resetProgress">↺ Reset my progress</button>
+    </div>
+    <p class="saved" id="storageNote">Your progress is saved on this device automatically.</p>
+  </div>
+</aside>
+
+<main>
+<section id="hook" class="hook">
+  <h2>🎛️ The level that wouldn't hold</h2>
+  <p class="big">It's mid-morning in a boiler room. A condensate receiver level keeps swinging: too high, then too low, then too high again. The level controller's output looks reasonable. The valve it drives seems lazy, as if it can't make up its mind. Zach doesn't start by swapping parts. He says, "There's a chain between the controller and the water. Walk it from the air supply to the plug, and the bad link will show itself." Is it the air, the I/P, the positioner, the actuator, or the valve body? This module gives you each link, and a way to test it.</p>
+  <div class="widget" id="w-hook" data-gen="1"></div>
+</section>
+
+<section id="s1">
+  <h2>1. What a Control Valve Is</h2>
+  <p class="lede">A valve body that moves water, an actuator that moves the body's stem, and accessories that tell the actuator what to do</p>
+  <p>A <strong>control valve</strong> is not just a valve. It is a small system with three parts:</p>
+  <ul><li><strong>Body:</strong> the part the process fluid flows through. Inside are the <strong>plug</strong>, the <strong>seat ring</strong> the plug closes against, and often a <strong>cage</strong> that guides the plug and shapes the flow. Together the plug, seat, and cage are called the <strong>trim</strong>. A <strong>stem</strong> runs up from the plug through the <strong>packing</strong> to the actuator.</li><li><strong>Actuator:</strong> the muscle on top. A <strong>pneumatic</strong> actuator uses air pressure on a diaphragm or piston to push the stem against a spring or against air on the other side.</li><li><strong>Accessories:</strong> the parts that decide how much air the actuator gets: a <strong>positioner</strong>, an <strong>I/P transducer</strong> (current-to-pressure), and an air <strong>filter-regulator</strong>.</li></ul>
+  <p>Fisher is an Emerson brand and a very common name on boiler room and process valves. A few real Fisher products you may meet:</p>
+  <ul><li><strong>Bodies:</strong> <strong>Fisher easy-e</strong> sliding-stem globe valves (the ES and EZ styles), <strong>Vee-Ball</strong> rotary V-notch segmented ball valves, and <strong>Control-Disk</strong> and <strong>8580</strong> eccentric-disk rotary valves (high-performance butterfly-style).</li><li><strong>Actuators:</strong> <strong>667</strong> and <strong>657</strong> spring-and-diaphragm actuators for sliding-stem valves, and <strong>1061</strong> piston rotary actuators.</li><li><strong>Positioners and I/Ps:</strong> <strong>3582</strong> pneumatic positioner (the <strong>3582i</strong> takes a 4-20 mA signal), <strong>DVC6200</strong> digital valve controller, <strong>i2P-100</strong> and <strong>546</strong> I/P transducers.</li><li><strong>Air set:</strong> <strong>67CFR</strong> filter-regulator.</li></ul>
+  <p>These are examples, not a promise of what is on any particular site. Always read the nameplate on the unit in front of you.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>Field note from West Mechanical:</strong> On a job site the same words get used loosely. People say "the valve" for the body, the actuator, or the whole assembly. When you describe a problem to Zach, name the part: "the actuator stem isn't moving," or "the positioner output reads 12 psi but the stem is at 40 percent."</p></div>
+  <div class="widget" id="w-s1" data-gen="1"></div>
+  <div class="widget" id="w-s1-2" data-gen="1"></div>
+  <div class="widget" id="w-s1-3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s1" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s2">
+  <h2>2. Valve Types and Flow Characteristics</h2>
+  <p class="lede">Same job, different shapes: pick the body for how it moves and how tightly it must close</p>
+  <p><strong>Globe (sliding stem).</strong> The stem moves straight up and down, and the plug moves toward or away from the seat. A globe valve is the classic <strong>throttling</strong> valve: good, fine control of flow, and a good seat for shutoff. Fisher's easy-e ES and EZ valves are globe bodies. The price is a flow path with turns, which costs some pressure.</p>
+  <p><strong>Butterfly and eccentric disk (rotary).</strong> A disk turns on a shaft, a quarter turn from closed to open. Rotary valves are compact and lighter for large pipe sizes, and usually cost less than a globe of the same line size. Fisher's Control-Disk and 8580 are <strong>eccentric-disk</strong> designs, a high-performance butterfly style where the disk is offset so it clears the seat quickly as it opens.</p>
+  <p><strong>Ball and V-notch ball (rotary).</strong> A ball with a V-shaped notch (a <strong>segmented ball</strong>) turns in the seat. The V-notch gives a <strong>characterized</strong>, smooth flow change and a tight shutoff. Fisher's Vee-Ball is a V-notch segmented ball valve.</p>
+  <p><strong>Trim characteristics.</strong> The <strong>inherent characteristic</strong> describes how flow changes as the plug travels from closed to open, with the same pressure drop across the valve. Three common shapes:</p>
+  <ul><li><strong>Linear:</strong> flow changes in step with travel.</li><li><strong>Equal percentage:</strong> each equal step of travel raises flow by the same <em>percent</em> of the flow it already had. Flow changes slowly near closed and quickly near open. This is very common for heating and process loops.</li><li><strong>Quick opening:</strong> flow rises fast in the first part of travel, then levels off. Often used for on-off service.</li></ul>
+  <p>The curves in the interactive element are <strong>idealized teaching shapes</strong>. A real valve's curve depends on its trim and on the pressure drop, so check the manufacturer's data for the exact valve.</p>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>Which valve body types Ian will most often meet in the West Mechanical boiler rooms, and which are used for throttling vs. on-off.</li><li>Any trim or characteristic details that matter on the valves Ian will walk down.</li></ul></div>
+  <div class="widget" id="w-s2" data-gen="1"></div>
+  <div class="widget" id="w-s2-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s2" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s3">
+  <h2>3. Pneumatic Actuators</h2>
+  <p class="lede">Air pressure on one side of a diaphragm, a spring pushing back on the other</p>
+  <p>Most boiler room control valves use one of three actuator styles.</p>
+  <p><strong>Spring-and-diaphragm (spring-return).</strong> Air pressure acts on a flexible <strong>diaphragm</strong> inside a round casing. The diaphragm pushes on a plate and <strong>actuator stem</strong>, and a <strong>spring</strong> pushes the other way. The stem settles where air force equals spring force, so a signal of 3 to 15 psi moves the stem through its full travel. If the air is lost, the spring drives the stem to one end: that is the <strong>fail position</strong>.</p>
+  <p>There are two ways to arrange it:</p>
+  <ul><li><strong>Direct-acting:</strong> air goes to the <strong>upper</strong> casing and pushes the stem <strong>down</strong>. The spring is in the lower casing and pushes up. The Fisher <strong>657</strong> is direct-acting.</li><li><strong>Reverse-acting:</strong> air goes to the <strong>lower</strong> casing and pushes the stem <strong>up</strong> against a spring in the upper casing. The Fisher <strong>667</strong> is reverse-acting.</li></ul>
+  <p>Whether "stem down" opens or closes the valve is decided by the body, covered in Section 8.</p>
+  <p><strong>Piston, double-acting.</strong> A piston in a cylinder gets air on both sides, and the air is what pushes it each way. With no spring, losing air does not drive the valve anywhere: it tends to stay <strong>in its last position</strong>, unless the design adds a volume tank or a spring-return version. Fisher's 1061 is a piston rotary actuator that comes in double-acting and spring-return forms.</p>
+  <p><strong>Rotary actuators.</strong> Quarter-turn valves (butterfly, ball) need an actuator that turns a shaft. Rotary actuators can be spring-and-diaphragm or piston styles.</p>
+  <p><strong>Inside a Fisher 667 on a globe valve.</strong> The 667 is an <strong>actuator</strong>, not a valve. It mounts on a sliding-stem body such as an easy-e ES or EZ globe. The plug, seat, and cage belong to the <em>body</em>. The parts of the <em>actuator</em>:</p>
+  <ul><li><strong>Upper and lower diaphragm casings.</strong> The upper casing is vented. The signal air goes to the lower casing.</li><li><strong>Diaphragm</strong> and <strong>diaphragm plate:</strong> the flexible part that air presses on, and the plate that carries that force to the stem.</li><li><strong>Actuator spring</strong>, <strong>spring seat</strong>, and <strong>spring adjustor:</strong> the spring that opposes the air, the seat it sits on, and the nut that sets its compression.</li><li><strong>Actuator stem:</strong> the rod that carries the motion down toward the valve.</li><li><strong>Stem connector (split block):</strong> the clamp that joins the actuator stem to the valve stem.</li><li><strong>Yoke:</strong> the frame that holds the actuator up on the body.</li><li><strong>Travel indicator disk and scale:</strong> the pointer and scale that show where the stem is.</li></ul>
+  <p>How it works on a push-down-to-close body: air to the lower casing lifts the diaphragm and stem, so the plug lifts off the seat. Reduce the air and the spring pushes the stem back down, so the plug returns toward the seat. If the air is lost, the spring pushes the stem fully down: <strong>fail closed</strong> on a push-down-to-close body, and <strong>fail open</strong> on a push-down-to-open body.</p>
+  <p><strong>Signal range.</strong> A standard 667 works on <strong>3 to 15 psig</strong> or <strong>6 to 30 psig</strong>. The <strong>667-4</strong> (the 4-inch-travel version for sizes 70 and 87) is rated 3 to 27 psig, and size 76 is also offered at 0 to 45 psig. The range that applies to <em>your</em> actuator is on its <strong>nameplate</strong>, along with its <strong>bench set</strong> pressures. Never assume a range.</p>
+  <p>Here is the size data from Fisher's product bulletin:</p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th>Size</th><th>Effective diaphragm area (sq in)</th><th>Maximum travel (in)</th></tr></thead><tbody><tr><td>30</td><td>46</td><td>0.75</td></tr><tr><td>34</td><td>69</td><td>1.125</td></tr><tr><td>40</td><td>69</td><td>1.5</td></tr><tr><td>45</td><td>105</td><td>2</td></tr><tr><td>46</td><td>156</td><td>2</td></tr><tr><td>50</td><td>105</td><td>2</td></tr><tr><td>60</td><td>156</td><td>2</td></tr><tr><td>70</td><td>220</td><td>3</td></tr><tr><td>76</td><td>156</td><td>2</td></tr><tr><td>87</td><td>220</td><td>3</td></tr></tbody></table></div>
+  <p>The loading (signal) connection is 1/4 NPT on most sizes and 1/2 NPT on sizes 70 and 87. Standard (nitrile) diaphragms are rated for temperatures from -40 to 180°F.</p>
+  <p><strong>Pressure limits are limits, not operating pressures.</strong> The manual gives a maximum casing pressure for sizing and a maximum diaphragm casing pressure for each size. For example, size 30 is listed at 55 psig for sizing and 110 psig maximum, and sizes 70 and 87 at 50 and 60 psig. Those are numbers you stay under, not numbers to run at. Use the nameplate and the manual for the actuator in front of you.</p>
+  <p><strong>Travel stops and handwheels.</strong> A <strong>top-mounted handwheel</strong> on a 667 is an adjustable <strong>down</strong> travel stop. A <strong>side-mounted handwheel</strong> is a manual operator that can also act as an up or down stop. <strong>Casing-mounted</strong> stops also exist. Do not confuse the 667-4 with a handwheel option: the 667-4 is the long-travel version for sizes 70 and 87.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>Field note from West Mechanical:</strong> At Tyson RVAF, Zach has pointed out actuators that look like 667 series at 3 to 15 psi on several valves. Module 22 lists where he has seen each one, and which side of the diaphragm its tubing goes to. Treat "looks like a 667" as a lead to check, not a fact, until the nameplate confirms the model.</p></div>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>The actuator makes and models Ian will see most often at West Mechanical, and how to tell a 667 from a 657 from the floor.</li><li>Typical actuator sizes and spring ranges on the boiler room valves.</li></ul></div>
+  <div class="widget" id="w-s3" data-gen="1"></div>
+  <div class="widget" id="w-s3-2" data-gen="1"></div>
+  <div class="widget" id="w-s3-3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s3" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s4">
+  <h2>4. Actuator and Valve Setup</h2>
+  <p class="lede">Before you assume, read the nameplate, trace the tubing, and know the body</p>
+  <p>Three things together decide what more air does to a valve:</p>
+  <ol><li><strong>Which side of the diaphragm the signal tubing feeds.</strong></li><li><strong>The actuator's action</strong> (direct, like the 657, or reverse, like the 667).</li><li><strong>The body's plug action</strong> (push-down-to-close or push-down-to-open).</li></ol>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>Check where the tubing goes.</strong> A 667 has one loading port, and it feeds the underside of the diaphragm. A 657 is fed on top. So: read the actuator type and nameplate, confirm where the loading air goes (below means 667-style reverse, above means 657-style direct), know the body action, and check the controller, positioner, or I/P action. Do not assume that more air opens the valve. <strong>A real example from Tyson RVAF:</strong> Zach has seen most of the 667-looking actuators tubed to the bottom, which is consistent with a 667. The LPCR outlet valve's actuator looks the same but is tubed to the <em>top</em>. Per Fisher's documents, top-tubed is how a direct-acting 657-style actuator is fed (or it could be a different model). Which is it? Read the nameplate.</p></div>
+  <p><strong>Bench set.</strong> The actuator spring is set so the stem starts moving at the <strong>lower bench set</strong> pressure and finishes at the <strong>upper bench set</strong> pressure. Both numbers are on the nameplate. The Fisher manual's bench set procedure is done <em>before</em> the actuator is connected to the valve, because the published values assume no packing friction. In short, for a push-down-to-close valve:</p>
+  <ul><li>Apply about 5 psi over the upper bench set pressure, then slowly reduce it to the upper bench set pressure.</li><li>Adjust the <strong>spring adjustor</strong> until the stem first moves at that pressure.</li><li>Reduce to the lower bench set pressure and mark the end of the stem. Raise to the upper pressure again and check that the travel matches the nameplate.</li><li>For a push-down-to-open valve, first movement is checked at the <em>lower</em> bench set pressure instead.</li></ul>
+  <p><strong>Stem connector.</strong> With the plug on the seat and the loading pressure held at the lower bench set (the upper bench set for push-down-to-open), engage at least one stem diameter of thread from each stem in the split-block connector, tighten the halves evenly, then stroke the valve and align the travel scale with the indicator disk. Never rotate the plug while it is seated, and stroke with an air regulator, not with the positioner. Torque values and every step are in the Fisher manual for your actuator; follow it, not this summary.</p>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>What Zach checks first when a valve is "not stroking right" after maintenance or a rebuild.</li><li>Who does bench set and stem connector work on this site, and what Ian should and should not touch.</li></ul></div>
+  <div class="widget" id="w-s4" data-gen="1"></div>
+  <div class="widget" id="w-s4-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s4" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s5">
+  <h2>5. Positioners</h2>
+  <p class="lede">A positioner makes the stem go where the signal says, not where friction lets it</p>
+  <p>A <strong>positioner</strong> is a small instrument on the actuator. It compares the signal it receives to the stem's actual position (through a <strong>feedback linkage</strong> or sensor) and adds or vents air to the actuator until they agree. Why bother?</p>
+  <ul><li>To overcome <strong>friction</strong> from packing and the seat, so the stem doesn't lag or stick.</li><li>To get an <strong>accurate position</strong>, with less dead zone.</li><li>To enable <strong>split range</strong>: two valves responding to different parts of one signal.</li><li>To give a bigger air flow to the actuator, so it strokes faster.</li></ul>
+  <p><strong>Pneumatic vs. digital.</strong> A <strong>pneumatic positioner</strong> like the Fisher <strong>3582</strong> takes a pneumatic signal (3 to 15 psi) and drives a sliding-stem actuator. The <strong>3582i</strong> version accepts a 4-20 mA signal. A <strong>digital positioner</strong> such as the <strong>DVC6200</strong> takes an electrical signal and adds diagnostics. On 667 and 657 actuators in the 30i to 76i sizes, the DVC6200 mounts directly on an integral pad.</p>
+  <p><strong>Calibration idea.</strong> Calibration sets two points. <strong>Zero</strong> makes the stem sit at its closed end at the bottom of the signal, and <strong>span</strong> makes it reach the other end at the top. Zero shifts both ends together; span changes how far the top end goes. After a linkage or actuator change, a positioner needs recalibrating.</p>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>Which valves at West Mechanical use a positioner and which are driven directly by a controller's air output.</li><li>Who calibrates positioners and how Ian can tell a positioner problem from an actuator problem.</li></ul></div>
+  <div class="widget" id="w-s5" data-gen="1"></div>
+  <div class="widget" id="w-s5-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s5" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s6">
+  <h2>6. I/P Transducers</h2>
+  <p class="lede">An I/P turns an electrical signal into an air signal</p>
+  <p>Controllers and building automation systems often put out <strong>4-20 mA</strong>. A pneumatic actuator wants <strong>3-15 psi</strong> (or <strong>6-30 psi</strong>). An <strong>I/P transducer</strong> (current-to-pressure) converts one to the other: 4 mA becomes the bottom of the range, 20 mA becomes the top, and everything between is proportional. Fisher examples are the <strong>i2P-100</strong> (4-20 mA in, 3-15 or 6-30 psi out) and the <strong>546</strong> (an I/P with a DC input).</p>
+  <p>For the 3-15 psi range:</p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th>Signal</th><th>Output</th></tr></thead><tbody><tr><td>4 mA</td><td>3 psi</td></tr><tr><td>8 mA</td><td>6 psi</td></tr><tr><td>12 mA</td><td>9 psi</td></tr><tr><td>16 mA</td><td>12 psi</td></tr><tr><td>20 mA</td><td>15 psi</td></tr></tbody></table></div>
+  <p><strong>Placement.</strong> An I/P can sit on the actuator or be mounted nearby, with a short tube to the positioner or actuator. It needs clean supply air, and it should be kept dry and out of heavy vibration.</p>
+  <p><strong>Common failures.</strong> Wet or dirty supply air plugging the tiny nozzle, a clogged supply screen, a loose or leaking tube, a bad electrical connection, or a shifted zero. A quick check: compare the mA reading to the output gauge. Does 12 mA give about 9 psi?</p>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>Where the I/Ps are on the valves Ian will walk down, and what mA signal source drives them.</li><li>What Zach reads first (the mA, the output gauge, or the supply gauge) when an I/P is suspected.</li></ul></div>
+  <div class="widget" id="w-s6" data-gen="1"></div>
+  <div class="widget" id="w-s6-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s6" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s7">
+  <h2>7. Instrument Air Supply</h2>
+  <p class="lede">Clean, dry, oil-free air, at the right pressure</p>
+  <p>Everything pneumatic depends on <strong>instrument air</strong>. It must be <strong>clean, dry, and oil-free</strong>. Dirt plugs small ports, <strong>water</strong> corrodes parts and freezes in cold weather, and <strong>oil</strong> from a compressor fouls diaphragms and nozzles.</p>
+  <p>The air usually passes through a <strong>dryer</strong>, a <strong>filter</strong>, and a <strong>regulator</strong> (often a combined <strong>filter-regulator</strong> such as the Fisher <strong>67CFR</strong>) before it reaches the positioner or I/P. The regulator is set to the supply pressure the instrument and actuator call for. Each positioner, I/P, and actuator has its own supply requirement, and <strong>the nameplate and manual for your equipment decide the number</strong>. The supply has to sit comfortably above the top of the signal range, or the valve can't reach full stroke.</p>
+  <h3>What goes wrong.</h3>
+  <ul><li><strong>Low supply:</strong> slow or incomplete stroking.</li><li><strong>Water or oil in the filter bowl:</strong> a drain that isn't working, or a failing dryer.</li><li><strong>Regulator creep:</strong> supply climbing above its setting.</li><li><strong>Freezing:</strong> moisture ices up a regulator or tube on a cold day.</li><li><strong>Leaks:</strong> hissing at a fitting or a split tube.</li></ul>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>The instrument air system at West Mechanical sites: compressor, dryer, and where Ian can check the dew point or drain the bowls.</li><li>The usual supply pressure on the boiler room valves and what low-air alarm, if any, is set (Zach to confirm).</li></ul></div>
+  <div class="widget" id="w-s7" data-gen="1"></div>
+  <div class="widget" id="w-s7-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s7" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s8">
+  <h2>8. Fail-Safe Positions</h2>
+  <p class="lede">When the air goes away, where should the valve go?</p>
+  <p>When the signal air is lost, a spring-return valve goes to its <strong>fail position</strong>: <strong>fail open</strong>, <strong>fail closed</strong>, or (for a double-acting piston) <strong>fail last</strong>. You do not guess it. It comes from the actuator and the body together.</p>
+  <p><strong>Air-to-open and air-to-close.</strong> An <strong>air-to-open</strong> (fail closed) valve opens as the signal rises. An <strong>air-to-close</strong> (fail open) valve closes as the signal rises.</p>
+  <p><strong>Direct and reverse, two different meanings.</strong> Fisher calls the <em>actuator</em> <strong>direct-acting</strong> when air pushes the stem down (the 657) and <strong>reverse-acting</strong> when air lifts it (the 667). It also calls the <em>body</em> <strong>direct acting</strong> when it is push-down-to-close and <strong>reverse acting</strong> when it is push-down-to-open. The words only make sense when you say which part you mean.</p>
+  <p>Putting them together:</p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th>Actuator</th><th>Body</th><th>More air does</th><th>On loss of air</th></tr></thead><tbody><tr><td>657 (air on top, stem down)</td><td>push-down-to-close</td><td>closes</td><td>fails open</td></tr><tr><td>667 (air underneath, stem up)</td><td>push-down-to-close</td><td>opens</td><td>fails closed</td></tr><tr><td>657</td><td>push-down-to-open</td><td>opens</td><td>fails closed</td></tr><tr><td>667</td><td>push-down-to-open</td><td>closes</td><td>fails open</td></tr></tbody></table></div>
+  <p><strong>Picking the safe direction.</strong> Choose the fail position that keeps the plant safe if the air is lost. A <strong>fuel valve</strong> should fail closed. A <strong>cooling water</strong> valve on equipment that could overheat should fail open. A <strong>steam</strong> valve to a process often fails closed, so lost control does not overheat the process. <strong>Boiler feedwater</strong> depends on the design, so it is a decision for the engineers and the site, not a rule of thumb.</p>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>The fail positions on the main West Mechanical boiler room valves (feedwater, fuel, steam, condensate), as Zach confirms them from the nameplates and drawings.</li><li>Anything on a site that is deliberately set up as fail-last.</li></ul></div>
+  <div class="widget" id="w-s8" data-gen="1"></div>
+  <div class="widget" id="w-s8-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s8" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s9">
+  <h2>9. Boiler Room and Steam Applications</h2>
+  <p class="lede">Level, pressure, and temperature loops, and how to walk one down</p>
+  <p>Pneumatic control valves show up wherever something needs steady control:</p>
+  <ul><li><strong>Boiler feedwater level.</strong> A level controller sees the boiler water level and strokes a feed valve to put water in as fast as it leaves as steam.</li><li><strong>Condensate receiver and tank level.</strong> The same idea on a condensate tank, where the valve may control water going <em>out</em> instead.</li><li><strong>Steam pressure reducing and back-pressure control.</strong> Some pressure reducing valves are <strong>self-operated</strong> or pilot-operated and use no air. Others are pneumatic control valves. A back-pressure valve holds pressure <em>upstream</em>.</li><li><strong>Deaerator level and pressure.</strong> Water in and steam in are both controlled to keep the DA working.</li><li><strong>Temperature control.</strong> A valve on a heat exchanger steam or water line.</li></ul>
+  <p><strong>Controllers, accurately.</strong> A pneumatic level controller senses level, often with a displacer in a chamber beside the vessel, and sends a changing air signal to the valve actuator. Fisher's displacer-type level controllers are the <strong>2500/249 Level-Trol</strong>, <strong>L3</strong>, and <strong>L2</strong> families. Fisher's <strong>4150K</strong> and <strong>4160K</strong> (Wizard II) are pneumatic <em>pressure</em> controllers, with a 3-15 or 6-30 psi output and field-reversible action. At Tyson RVAF, Zach's name for the controllers on the boilers and condensate tanks is <strong>4150-style pneumatic level controllers</strong> (his field name; confirm the nameplate). Either way, the controller sends a 3-15 psig signal to the actuator on the valve.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>Field note from West Mechanical:</strong> The same kind of controller can control water <em>in</em> or water <em>out</em> depending on where it sits. At Tyson RVAF (Module 22), each of the four boilers has its own controller on the water going <em>into</em> that boiler. The LPCR has one controller, and it controls water going <em>out</em> of the tank. On the LPCR the outlet actuator looks like a 667-series one but is tubed to the top, and the three cooker HPCR three-way valves are also top-tubed with the actuator series unconfirmed. That is why you trace the tubing instead of assuming.</p></div>
+  <p><strong>A walkdown for any pneumatic valve.</strong> Start at the air and work toward the plug:</p>
+  <ol><li>Read the <strong>supply gauge</strong>. Is it near the right pressure?</li><li>Read the <strong>signal gauge</strong> (the controller or I/P output). Does it make sense for the level, pressure, or temperature?</li><li>Trace the <strong>tubing</strong>: where does it go on the actuator?</li><li><strong>Listen</strong> for hissing leaks at fittings and the actuator.</li><li>Watch the <strong>stem</strong> and the travel indicator. Does it move when the signal moves, and does it match the signal?</li><li>Compare the stem position to the process: does the valve position make sense for what you see?</li></ol>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>The first three looks Zach takes on a "lazy" or hunting valve at West Mechanical.</li><li>Which of these valves Ian may stroke, and which only Zach or a controls tech may touch.</li><li>Steam pressure reducing and back-pressure stations on site: self-operated, pilot, or pneumatic.</li></ul></div>
+  <div class="widget" id="w-s9" data-gen="1"></div>
+  <div class="widget" id="w-s9-2" data-gen="1"></div>
+  <div class="widget" id="w-s9-3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s9" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s10">
+  <h2>10. Inside a Level Controller (2500 Style)</h2>
+  <p class="lede">Level in, air signal out: follow the signal inside the case</p>
+  <p>In Section 9 the controller was a box that sends a 3-15 psig signal to the valve actuator. Here is what happens inside it. The close-up uses a <strong>Fisher 2500 with a 249 displacer sensor</strong> (the Level-Trol family) as the example, because it is Fisher's displacer-type pneumatic level controller with a nozzle, flapper, and relay. At Tyson RVAF Zach calls the controllers "4150-style" (his field name). The nameplates are unconfirmed, so treat this as the right generic picture of a nozzle-flapper-relay level controller, not a claim about the units at RVAF.</p>
+  <p><strong>The signal path, with Fisher's words:</strong></p>
+  <ol><li><strong>Level changes.</strong> A <strong>displacer</strong> (a weighted cylinder hanging in the liquid on a displacer rod) feels more or less buoyant force as the level moves. It is not a float.</li><li><strong>The torque tube twists.</strong> The change in force twists the <strong>torque tube</strong> and turns its <strong>rotary shaft</strong> in the controller case.</li><li><strong>The flapper moves.</strong> The <strong>flapper</strong> rides on the shaft. Its distance from the <strong>nozzle</strong> is the level signal.</li><li><strong>Nozzle pressure changes.</strong> Supply air (20 psig for a 3-15 psig output) bleeds in through a <strong>fixed restriction</strong> and escapes between the nozzle and the flapper. Close the gap and the <strong>nozzle pressure</strong> (the back-pressure ahead of the nozzle) rises. Open the gap and it falls.</li><li><strong>The relay answers.</strong> Nozzle pressure acts on the large diaphragm of the <strong>relay</strong> (a double-diaphragm relay with a 3 to 1 area ratio). The relay valve has an <strong>inlet end</strong> (supply) and an <strong>exhaust end</strong>. Rising nozzle pressure closes the exhaust and opens the inlet, so the <strong>output</strong> rises. Falling nozzle pressure closes the inlet and opens the exhaust, so output air escapes.</li><li><strong>Output goes to the valve actuator.</strong> You read it on the OUTPUT gauge (3-15 psig). Some of it also feeds back through the proportional valve to the Bourdon tube to hold the output at the right place for the level. That is what the PROPORTIONAL BAND adjustment controls.</li></ol>
+  <p><strong>Direct and reverse, on rising level:</strong></p>
+  <div class="table-wrap"><table class="mdtable"><thead><tr><th></th><th>Direct action</th><th>Reverse action</th></tr></thead><tbody><tr><td>Flapper</td><td>moves toward the nozzle</td><td>moves away from the nozzle</td></tr><tr><td>Nozzle pressure</td><td>rises</td><td>falls</td></tr><tr><td>Relay</td><td>inlet opens, exhaust closes</td><td>inlet closes, exhaust opens</td></tr><tr><td>Output</td><td>rises toward 15 psig</td><td>falls toward 3 psig</td></tr></tbody></table></div>
+  <p><strong>Reversing action on a 2500.</strong> On a 2500 you don't need a different controller to reverse action; flip the flapper base over (manual section 7.6). Re-check calibration after changing action: the manual's step 3 is "perform the calibration procedure." The manual's procedure also repositions the Bourdon tube (the part that carries the nozzle) as shown in its Figure 15, then loosens the hex nut, removes the flapper base from the torque tube shaft, turns it over, reinstalls it with the orientation in Figure 15 and the flapper centered over the nozzle. The manual does not describe flipping the flapper base on its own, so follow all of 7.6 and Figure 15 for your unit. Reverse-acting units from the factory carry the letter R in the type number. The animation shows the flip in a simplified way: the flapper base inverts and the nozzle side changes with it.</p>
+  <h3>Zach's words, in Fisher's words.</h3>
+  <ul><li><strong>"Float"</strong> is the <strong>displacer</strong>. A Fisher 2500 does not use a float.</li><li><strong>"Wiper"</strong> most likely means the <strong>flapper</strong>, the part that moves across the nozzle. This is inferred: the Fisher documents don't use the word wiper, so confirm with Zach.</li><li><strong>"Vent"</strong> is the <strong>relay exhaust</strong>, where air escapes when the output drops (the case also has a vent at the bottom). Which one Zach means is unconfirmed.</li></ul>
+  <p><strong>What the controller does for the valve.</strong> At the boiler, a rising level should <em>reduce</em> feed. At the LPCR, a rising level should <em>open</em> the outlet. What matters is the <em>result</em>: boiler, level up, feed down; LPCR outlet, level up, outlet opens. The controller action (direct or reverse) and the valve action (air-to-open or air-to-close) are chosen <strong>together</strong> to give that result. For a feedwater valve that means either reverse-acting with air-to-open, or direct-acting with air-to-close. For an LPCR outlet it means direct with air-to-open, or reverse with air-to-close. Which pair is at RVAF is not known.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical field note: RVAF:</strong> Zach calls the controllers at Tyson RVAF "4150-style pneumatic level controllers (confirm the nameplate)". Fisher's own 4150K/4160K are pressure controllers; Fisher's displacer-type level controllers are the 2500/249 Level-Trol, L3 and L2 families. Either way, the controller sends a 3-15 psig signal to the actuator on the valve.</p></div>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>The controller model on the nameplate at each boiler and at the LPCR, and whether it carries an R (reverse) suffix.</li><li>Feedwater valve: air-to-open or air-to-close, and whether the controller is direct or reverse.</li><li>LPCR outlet valve: air-to-open or air-to-close, direct or reverse, and which side its tubing goes to.</li><li>Which "vent" and which "wiper" Zach means.</li></ul></div>
+  <div class="widget" id="w-s10" data-gen="1"></div>
+  <div class="widget" id="w-s10-2" data-gen="1"></div>
+  <div class="widget" id="w-s10-3" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s10" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="s11">
+  <h2>11. Calibrate a Level Controller</h2>
+  <p class="lede">Zero first, then span, then check: a 12-step practice run</p>
+  <p>This is a practice run of calibrating a direct-acting Fisher 2500-style controller on a 3-15 psig range, following the Fisher manual's order. The knob names are Fisher's: <strong>SUPPLY</strong> gauge, <strong>OUTPUT</strong> gauge, <strong>RAISE LEVEL</strong> dial, <strong>PROPORTIONAL BAND</strong> dial, the <strong>flapper</strong> (coarse hex nut, fine <strong>FLAPPER ALIGNMENT SCREW</strong>), and the <strong>flexure strip base</strong> (the SPAN ADJUSTMENT). It is a teaching model, not a real controller: the numbers it shows between the documented 3 and 15 psig end points are approximate (the 9 psig midpoint is a straight-line example, not a number from the manual), and the RAISE LEVEL ranges between Table 5's two printed rows are interpolated, so treat them as approximate. Follow the Fisher manual for the unit in front of you.</p>
+  <p><strong>Zero and span.</strong> <strong>Zero</strong> is the output at the bottom of your level window: 3 psig for direct action (15 psig for reverse). The flapper sets it. <strong>Span</strong> is the link between <strong>how far the level has to move</strong> and <strong>how far the output swings</strong> across 3-15 psig.</p>
+  <ul><li><strong>Narrow span:</strong> a <em>small</em> level change gives the <em>full</em> 3-15 psig swing.</li><li><strong>Wide span:</strong> the level must move <em>a lot</em> to get the full swing.</li></ul>
+  <p>On a Fisher 2500 the knob that sets this is the <strong>PROPORTIONAL BAND</strong> adjustment (dial scale 0 to 10). The manual says it "varies the amount of process variable change required to obtain a full output pressure change." The <strong>flexure strip base</strong> is the internal SPAN ADJUSTMENT used to trim span: slide it <em>away</em> from the torque tube shaft to increase the output span, <em>toward</em> it to decrease. Sliding it also moves the zero, so you repeat zero and span until both hold.</p>
+  <div class="callout field-note"><p><span class="fn-badge">🔧</span> <strong>West Mechanical standard: always sets it at one.</strong> On the PROPORTIONAL BAND dial, 1 is the narrow end of the recommended range: about 10 percent of the displacer length gives the full 3-15 psig swing (for water-like fluid and standard hardware; the dial number is not always the exact percent). Earlier wording from Zach: "Make sure that the span is almost always at one for West Mechanical's applications." If it ever cycles in service, the manual says to broaden (increase) the band slightly: the narrowest band that does not cycle gives the best control.</p></div>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>Confirm that "span at one" means the PROPORTIONAL BAND dial at 1 (the flexure strip base has no scale, and a 2502's band knob is in percent, so it could not be set to 1).</li><li>Why West Mechanical standardizes on 1, and what to do if a loop cycles.</li><li>Whether West Mechanical allows trimming the band to finish a calibration that runs out of flexure strip travel.</li></ul></div>
+  <p><strong>The 2502 and 2500S variants.</strong> A <strong>2502</strong> controller (proportional-plus-reset) has no 0 to 10 dial: set RESET to 0.01 minutes per repeat, PROPORTIONAL BAND to zero and RAISE LEVEL to zero, adjust the <strong>nozzle</strong> at minimum level, turn RAISE LEVEL at maximum level until the output reads 15 psig (it is in calibration if the knob is between 9.0 and 10.0), and otherwise slide the <strong>calibration adjuster</strong> (away to increase span, toward to decrease). A <strong>2500S</strong> snap-acting controller switches between 0 and full supply with a differential gap instead of throttling: set RAISE LEVEL 1.0 to 1.5 (direct) or 3.5 to 4.0 (reverse), set the flapper to the switching point, and slide the flexure strip base away from the torque tube to decrease the gap or toward it to increase it. Follow the 2502 or 2500 manual for the exact procedure.</p>
+  <div class="widget" id="w-s11" data-gen="1"></div>
+  <div class="widget" id="w-s11-2" data-gen="1"></div>
+  <div class="complete-row"><button type="button" class="secondary mark-done" data-sec="s11" aria-pressed="false">Mark section complete</button></div>
+</section>
+
+<section id="quiz">
+  <div class="quiz-top">
+    <h2>🃏 Flip-Card Quiz</h2>
+    <span class="counter" id="flipCount" aria-live="polite">Cards flipped: 0/15</span>
+  </div>
+  <p class="lede">Fifteen cards. Tap to flip. Keep your streak alive.</p>
+  <p class="streak-big" id="streakBig" aria-live="polite"></p>
+  <div class="qbar" aria-hidden="true"><div id="qbarFill"></div></div>
+  <p class="scoreline" id="scoreLine" aria-live="polite"></p>
+  <p>Answer each one out loud, then tap the card to flip it. Tap <strong>Got it</strong> or <strong>Missed it</strong>. The 🎛️ streak goes up on each "Got it" and resets on a miss. Fifteen correct fills the quiz segment of your progress bar. These same cards are in <a href="study.html" style="color:var(--accent)">Flip Card Study</a>.</p>
+  <div class="cards" id="cards"></div>
+  <div class="row"><button type="button" class="secondary" id="resetCards">↺ Reset all cards</button></div>
+</section>
+
+<section id="action">
+  <h2>🛠️ Action Item: Supervised walkdown: read one pneumatic control valve</h2>
+  <p>On your next site visit, with Zach:</p>
+  <ol><li>Find one pneumatic control valve and name its <strong>body type</strong> (globe, butterfly or eccentric disk, ball).</li><li>Identify the <strong>actuator type</strong> (spring-and-diaphragm or piston) and read its nameplate.</li><li>Find the <strong>positioner and/or I/P</strong> and note its model.</li><li>Read the <strong>supply gauge</strong> and the <strong>signal gauge</strong>.</li><li>Trace the signal <strong>tubing</strong>: does it go to the top or the bottom of the diaphragm casing?</li><li>Determine the <strong>fail position</strong> from the nameplate and the action, and say it out loud before Zach confirms it.</li><li>Write it all down in the log below.</li></ol>
+  <div class="callout zach-notes"><span class="label">✏️ Zach's notes (to expand)</span><ul><li>Which valve Zach wants Ian to pick for this walkdown, and what he wants written on the log.</li></ul></div>
+  <div class="widget" id="w-action" data-gen="1"></div>
+  <label class="check-row"><input type="checkbox" id="actionDone"> Mark complete: I finished this action item with Zach.</label>
+</section>
+
+<section id="next" class="teaser">
+  <h2>Up next: Module 24, The MegaTron Blowdown Controller</h2>
+  
+  
+  <p>Nice work, Ian. You can now read a pneumatic control valve from the air supply to the plug. Next, Module 24 looks at a different kind of controller on the boiler: the one that measures the water's conductivity and runs the surface blowdown valve, with an animated walk through one blowdown cycle.</p>
+  <a class="start-next" id="startNext" href="m24.html">Start Module 24 →</a>
+</section>
+
+</main>
+<footer>HVAC Module 23 · Fisher Pneumatic Valves</footer>
+
+<script>
+var CFG={"mid": "m23", "sections": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11"], "firstId": "hook", "streakIcon": "🎛️", "appName": "HVAC Module 23"};
+</script>
+<script src="assets/core.js"></script>
+<script src="assets/elec-common.js"></script>
+<script src="assets/m23.js"></script>
+</body>
+</html>

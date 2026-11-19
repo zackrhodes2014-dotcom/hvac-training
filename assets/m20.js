@@ -158,7 +158,7 @@
   setInterval(bdDraw,120);
 
   /* S8: traps */
-  var s8=S("w-s8","Steam trap identifier","");
+  var s8=S("w-s9","Steam trap identifier","");
   EW.sorter(s8,["Thermostatic","F&T","Inverted bucket","Thermodynamic (disc)"],[
     {label:"Opens when cooler condensate or air reaches it",bin:0,why:"Thermostatic traps react to temperature."},
     {label:"Float drains water + separate air vent",bin:1,why:"Float and thermostatic: float for condensate, thermostatic vent for air."},
@@ -176,7 +176,7 @@
 
   /* S9: steam vs hot water */
   var PARTS=[["Burner and firing controls",1,1],["Steam space / water line",1,0],["Gauge glass and try cocks",1,0],["Steam traps",1,0],["Daily bottom blowdown",1,0],["Pressure (psi) operating control and high limit",1,0],["Temperature operating control and high limit",0,1],["Expansion tank",0,1],["Circulators (pumps)",0,1],["Relief valve",1,1],["LWCO",1,1],["Lots of makeup water / softener",1,0]];
-  S("w-s9","Steam vs. hot water boiler",'<div class="chips" id="cmpC"><button data-v="1">Steam boiler</button><button data-v="2">Hot water boiler</button></div><ul id="cmpL" class="clist" style="list-style:none;padding:0"></ul>');
+  S("w-s10","Steam vs. hot water boiler",'<div class="chips" id="cmpC"><button data-v="1">Steam boiler</button><button data-v="2">Hot water boiler</button></div><ul id="cmpL" class="clist" style="list-style:none;padding:0"></ul>');
   H.chipGroup($("cmpC"),function(k){var i=+k; $("cmpL").innerHTML=PARTS.map(function(p){var on=p[i]; return '<li class="tpill'+(on?" on":"")+'" style="display:block;text-align:left;margin:4px 0;'+(on?"":"opacity:.45;text-decoration:line-through")+'">'+(on?"✓ ":"✗ ")+p[0]+'</li>';}).join("");}).pick("1");
 
   /* Action: log sheet */
@@ -188,4 +188,73 @@
   EW.keep(["a6date","a6psi","a6lvl","a6stack","a6hard","a6regen","a6cap","a6gpg","a6gpd","a6bd","a6zach"],function(){
     var h=v("a6hard"); $("a6hardOut").innerHTML=!isFinite(h)?"Enter the softened-water hardness.":h<=0.5?'<span class="ok">✓ Zero soft (about 0 gpg).</span>':'<span class="no">Hardness showing ('+h+' gpg). Check salt, bridging, and regeneration.</span>';
     var d=v("a6cap")/(v("a6gpg")*v("a6gpd")); $("a6days").textContent=isFinite(d)&&d>0?"About "+fmt(d,1)+" days between regenerations.":"Enter capacity, hardness and gal/day.";});
+
+  /* ---------- S8: conductivity and automatic surface blowdown ---------- */
+  function chipsC(id,list){return '<div class="chips" id="'+id+'">'+list.map(function(t,i){return '<button data-v="'+i+'">'+t+'</button>';}).join("")+'</div>';}
+  function cardC(id,def){return '<div class="infocard" id="'+id+'" aria-live="polite">'+(def||"")+'</div>';}
+  var ION=[["Na","Sodium (Na+)","Comes from the makeup water, and from sodium-based treatment chemicals. A softener adds sodium too.","#4ea8ff"],
+           ["Ca","Calcium (Ca2+)","Makeup water. One of the two hardness ions (the scale-formers).","#ffd23f"],
+           ["Mg","Magnesium (Mg2+)","Makeup water. The other hardness ion.","#ff9a3c"],
+           ["Cl","Chloride (Cl-)","Makeup water. Stays dissolved and rides along into the boiler.","#3ecf6a"],
+           ["SO4","Sulfate (SO4 2-)","Makeup water. Can combine with calcium into hard scale if it concentrates.","#b07cff"],
+           ["HCO3","Bicarbonate (HCO3-)","Makeup water. Part of the alkalinity.","#ff5a5f"],
+           ["SiO2","Silica","Makeup water. Dissolved, and watched closely because it can bake into hard deposits.","#d2a679"]];
+  var IC={Na:6,Ca:3,Mg:2,Cl:4,SO4:2,HCO3:3,SiO2:1};
+  S("w-s8","Tap the ion: what's in the water?",
+    '<div class="svgbox"><svg id="ionSvg" viewBox="0 0 300 150" role="img" aria-label="Beaker of makeup water with dissolved ions"></svg></div>'+
+    chipsC("ionC",ION.map(function(i){return i[1].split(" (")[0];}))+cardC("ionO","Tap an ion to see where it comes from.")+
+    '<div class="row" style="margin-top:8px"><button type="button" id="ionSoft">Run it through the softener</button><button type="button" id="ionRet">Add return condensate</button><button type="button" class="secondary" id="ionReset">↺ Reset</button></div>'+
+    '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">Conductivity (EXAMPLE index)</span><span class="v" id="ionCond">–</span></div><div class="ro" id="ionHRo"><span class="k">Hardness (EXAMPLE gpg)</span><span class="v" id="ionH">–</span></div></div>'+
+    '<p class="wnote">Example numbers only. Each dot is a bundle of ions.</p>');
+  var ions=[], ionSel=-1, ionDil=0;
+  function ionInit(){ions=[];ionDil=0;var seed=7;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280;}
+    ION.forEach(function(t){for(var k=0;k<IC[t[0]];k++){ions.push({t:t[0],x:30+rnd()*240,y:22+rnd()*100,keep:true});}});}
+  function ionDraw(){var g='<rect x="14" y="8" width="272" height="130" rx="14" fill="#10242e" stroke="#5ab4ff" stroke-width="2"/>';
+    ions.forEach(function(d){if(!d.keep) return; var ti=0;ION.forEach(function(t,i){if(t[0]===d.t)ti=i;}); var on=ti===ionSel;
+      g+='<circle cx="'+d.x.toFixed(0)+'" cy="'+d.y.toFixed(0)+'" r="'+(on?8:6)+'" fill="'+ION[ti][3]+'" stroke="'+(on?"#fff":"none")+'" stroke-width="2" opacity="'+(ionDil?0.85:1)+'"/>';});
+    $("ionSvg").innerHTML=g;
+    var n=0,h=0; ions.forEach(function(d){if(d.keep){n++; if(d.t==="Ca"||d.t==="Mg")h++;}});
+    $("ionCond").textContent=n*30+" µS/cm"; $("ionH").textContent=h*3+" gpg"; EW.setBand($("ionHRo"),h?"band-y":"band-g");}
+  ionInit(); ionDraw();
+  H.chipGroup($("ionC"),function(i){ionSel=+i; $("ionO").innerHTML="<b>"+ION[ionSel][1]+":</b> "+ION[ionSel][2]; ionDraw();});
+  $("ionSoft").addEventListener("click",function(){ions.forEach(function(d){if(d.t==="Ca"||d.t==="Mg")d.t="Na";}); $("ionO").innerHTML="<b>Softener:</b> calcium and magnesium swapped for sodium, one for one. <b>Hardness drops to zero, but the number of dissolved ions (and the conductivity) stays the same.</b> It is a swap, not a removal."; ionDraw();});
+  $("ionRet").addEventListener("click",function(){ionDil++; var alive=ions.filter(function(d){return d.keep;}); for(var k=0;k<Math.ceil(alive.length*0.4);k++){alive[k*2%alive.length].keep=false; alive=ions.filter(function(d){return d.keep;});} $("ionO").innerHTML="<b>Return condensate:</b> nearly pure water, so it <b>dilutes</b> the feedwater. Conductivity falls, and so does the makeup you need."; ionDraw();});
+  $("ionReset").addEventListener("click",function(){ionInit();ionSel=-1;$("ionO").textContent="Tap an ion to see where it comes from.";ionDraw();});
+
+  var CY_FEED=350, CY_SP=3500;
+  S("w-s8-2","Cycles of concentration (EXAMPLE numbers)",
+    '<label class="lbl" for="cyS">Cycles of concentration: <b id="cySv">5</b></label><input type="range" id="cyS" min="1" max="30" value="5">'+
+    '<div class="row"><label class="check-row"><input type="checkbox" id="cyV" checked> Automatic blowdown valve enabled</label></div>'+
+    '<div class="svgbox"><svg id="cySvg" viewBox="0 0 300 150" role="img" aria-label="Boiler water tank with conductivity gauge and setpoint line"></svg></div>'+
+    '<div class="readouts" aria-live="polite"><div class="ro" id="cyRo"><span class="k">Boiler water (EXAMPLE)</span><span class="v" id="cyC">–</span></div><div class="ro"><span class="k">Blowdown (share of feedwater)</span><span class="v" id="cyB">–</span></div></div>'+
+    cardC("cyO","")+'<p class="wnote">EXAMPLE feedwater 350 µS/cm. The 3,500 µS/cm setpoint line is West Mechanical\'s recommended setpoint (as read on the MegaTron; confirm units on the controller). Not a real boiler.</p>');
+  function cyDraw(){var c=+$("cyS").value, on=$("cyV").checked, raw=CY_FEED*c, capped=on&&raw>=CY_SP, shown=capped?CY_SP:raw, over=!on&&raw>CY_SP;
+    $("cySv").textContent=c; $("cyC").textContent=Math.round(shown).toLocaleString("en-US")+" µS/cm"; $("cyB").textContent=fmt(100/c,1)+"%";
+    EW.setBand($("cyRo"),over?"band-r":capped?"band-g":null);
+    var fill=Math.min(1,shown/(CY_FEED*30)), spy=130-110*(CY_SP/(CY_FEED*30)), g='<rect x="30" y="10" width="140" height="130" rx="12" fill="#10242e" stroke="'+(over?"#ff5a5f":"#5ab4ff")+'" stroke-width="3"/>';
+    g+='<rect x="32" y="'+(140-128*Math.max(.15,fill)+0).toFixed(0)+'" width="136" height="'+(128*Math.max(.15,fill)).toFixed(0)+'" fill="'+(over?"#5a2320":"#143a4a")+'"/>';
+    var nd=Math.round(4+40*Math.min(1,shown/(CY_FEED*30))*(capped?0.6:1)); for(var k=0;k<nd;k++){g+='<circle cx="'+(40+(k*37)%120)+'" cy="'+(30+((k*53)%100))+'" r="3" fill="'+(over?"#ff8a80":"#7fd6ff")+'"/>';}
+    g+='<line x1="30" y1="'+spy.toFixed(0)+'" x2="250" y2="'+spy.toFixed(0)+'" stroke="#ffd23f" stroke-width="2" stroke-dasharray="5 3"/><text x="252" y="'+(spy+3).toFixed(0)+'" fill="#ffd23f" font-size="8">setpoint</text>';
+    g+='<rect x="200" y="30" width="16" height="100" fill="#0d0f12" stroke="#59616c"/><rect x="201" y="'+(130-98*Math.min(1,shown/(CY_FEED*30))).toFixed(0)+'" width="14" height="'+(98*Math.min(1,shown/(CY_FEED*30))).toFixed(0)+'" fill="'+(over?"#ff5a5f":"#2EC4B6")+'"/>';
+    g+='<circle cx="250" cy="110" r="10" fill="'+(capped?"#3ecf6a":"#ff5a5f")+'"/><text x="250" y="132" fill="#9AA0A6" font-size="8" text-anchor="middle">valve '+(capped?"open":"closed")+'</text>';
+    $("cySvg").innerHTML=g;
+    $("cyO").innerHTML=over?"<b>Past the setpoint with the valve disabled.</b> Risks: 🫧 foaming, 💧 carryover into the steam header, and 🧱 scale on the tubes.":capped?"<b>At the setpoint the valve opens.</b> Hot salty water leaves, the dots thin out, and the reading falls back. The boiler holds near the setpoint.":"Below the setpoint: the valve stays closed and the salts keep concentrating as steam leaves.";}
+  $("cyS").addEventListener("input",cyDraw); $("cyV").addEventListener("change",cyDraw); cyDraw();
+
+  S("w-s8-3","Condensate return and blowdown (EXAMPLE numbers)",
+    '<label class="lbl" for="crS">Condensate return: <b id="crSv">0</b>%</label><input type="range" id="crS" min="0" max="90" step="5" value="0">'+
+    '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">Feedwater (EXAMPLE)</span><span class="v" id="crF">–</span></div><div class="ro"><span class="k">Cycles</span><span class="v" id="crC">–</span></div><div class="ro" id="crBRo"><span class="k">Blowdown</span><span class="v" id="crB">–</span></div></div>'+
+    '<p class="lbl" style="margin:8px 0 0">Blowdown, with this return</p><div class="bar alt"><i id="crBar" style="width:0;transition:width .2s"></i></div><p class="lbl" style="margin:6px 0 0">Blowdown, with 0% return</p><div class="bar"><i style="width:20%"></i></div>'+
+    '<p class="wnote">Simplified EXAMPLE: makeup water 700 µS/cm, 3,500 µS/cm setpoint (West Mechanical recommended), returned condensate treated as nearly zero conductivity. Real boilers also have deaerator steam, chemicals, and varying return.</p>');
+  function crDraw(){var r=+$("crS").value/100, feed=700*(1-r), cyc=3500/feed, bd=100/cyc;
+    $("crSv").textContent=Math.round(r*100); $("crF").textContent=Math.round(feed)+" µS/cm"; $("crC").textContent=fmt(cyc,0); $("crB").textContent="about "+fmt(bd,0)+"%"; $("crBar").style.width=Math.min(100,bd)+"%"; EW.setBand($("crBRo"),bd<=10?"band-g":null);}
+  $("crS").addEventListener("input",crDraw); crDraw();
+
+  var CT=[["Conductivity","How well water carries electric current. Dissolved ions carry it, so more dissolved salts means a higher reading."],["TDS","Total dissolved solids: the salts dissolved in the water, in ppm. Roughly conductivity times a factor that isn't one fixed number."],
+    ["µS/cm (microsiemens)","The unit conductivity is read in. Also written µmho/cm."],["Cycles of concentration","How many times saltier the boiler water is than the feedwater. Blowdown as a share of feedwater is about 1 divided by cycles."],
+    ["Setpoint","The reading at which the controller opens the blowdown valve."],["Differential","How far the reading must fall below the setpoint before the valve closes again."],
+    ["Skimmer line","The surface blowdown line that takes water from just under the water line."],["Carryover","Boiler water carried into the steam lines, often from foaming."],
+    ["Priming","Water thrown into the steam outlet, usually from a high water level, low pressure, or a sudden big steam demand."],["Foaming","Bubbles that stop popping at the surface and fill the steam space with foam."]];
+  S("w-s8-4","Term chips: tap for a definition",chipsC("ctC",CT.map(function(t){return t[0];}))+cardC("ctO","Tap a term."));
+  H.chipGroup($("ctC"),function(i){var t=CT[+i]; $("ctO").innerHTML="<b>"+t[0]+":</b> "+t[1];});
 })();

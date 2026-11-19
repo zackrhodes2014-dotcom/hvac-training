@@ -1,0 +1,21 @@
+/* Module 23: Fisher Pneumatic Valves */
+.infocard{background:var(--panel2);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:10px;padding:10px 12px;margin-top:10px;min-height:48px}
+.infocard a{font-weight:700}
+.chain{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px}
+.chain button{margin:0;min-height:56px;padding:4px 2px;font-size:.72rem;font-weight:700;border-radius:10px;background:var(--panel2);color:var(--text);border:1px solid var(--border);line-height:1.15}
+.chain button.lit{background:var(--accent);color:#05211e;border-color:var(--accent)}
+.chain b{display:block;font-size:1.1rem}
+.chain-arrow{text-align:center;color:var(--muted);font-size:.75rem;margin-top:2px}
+.cut svg{display:block;width:100%;height:auto}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.seg button{margin:0;flex:1 1 140px;min-height:44px;padding:6px 10px;border-radius:10px;background:var(--panel2);color:var(--text);border:1px solid var(--border);font-weight:700;font-size:.88rem}
+.seg button[aria-pressed=true]{background:var(--accent);color:#05211e;border-color:var(--accent)}
+.callout.tubing{margin-top:12px}
+.callout.tubing b.t{display:block;font-size:1.05rem;margin-bottom:4px}
+.bar{height:16px;border-radius:8px;background:#0d0f12;border:1px solid var(--border);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.bar.alt i{background:#ffd166}
+.mini{font-size:.82rem;color:var(--muted)}
+.hint{margin-top:10px;font-weight:700}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+section li,section p,.callout,.infocard{overflow-wrap:anywhere}

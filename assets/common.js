@@ -9,6 +9,8 @@
   var NS=LEGACY_NS;
   /* Boilers & Chillers moved after Electrical and was renumbered: old ids -> new ids (one-time migration below). */
   var RENUM={m6:"m20",m7:"m21",m8:"m22"}, RENUM_FLAG="m6-m8>m20-m22";
+  /* Module 20 gained a new Section 8 (conductivity): old sections 8 and 9 became 9 and 10. */
+  var M20SEC_FLAG="m20:s8-s9>s9-s10";
   var MODULES=[
     {id:"m1", num:1, title:"Foundations of Refrigeration and Air Conditioning", group:"ref", file:"m1.html", sections:6, action:false, oldPrefix:"hvac1:"},
     {id:"m4", num:4, title:"Energy and Matter", group:"ref", file:"m4.html", sections:6, action:true, oldPrefix:"hvac4:"},
@@ -20,9 +22,11 @@
     {id:"m17", num:17, title:"Electrical Control Systems", group:"elec", file:"m17.html", sections:6, action:true},
     {id:"m18", num:18, title:"Electrical Troubleshooting", group:"elec", file:"m18.html", sections:4, action:true},
     {id:"m19", num:19, title:"Servicing Electric Motors and Controls", group:"elec", file:"m19.html", sections:5, action:true},
-    {id:"m20", num:20, title:"Boiler Room Fundamentals", group:"mech", file:"m20.html", sections:9, action:true, was:"m6"},
+    {id:"m20", num:20, title:"Boiler Room Fundamentals", group:"mech", file:"m20.html", sections:10, action:true, was:"m6"},
     {id:"m21", num:21, title:"Chiller Fundamentals", group:"mech", file:"m21.html", sections:9, action:true, was:"m7"},
-    {id:"m22", num:22, title:"West Mechanical Field Notes", group:"mech", file:"m22.html", sections:13, action:true, was:"m8"}
+    {id:"m22", num:22, title:"West Mechanical Field Notes", group:"mech", file:"m22.html", sections:13, action:true, was:"m8"},
+    {id:"m23", num:23, title:"Fisher Pneumatic Valves", group:"mech", file:"m23.html", sections:11, action:true},
+    {id:"m24", num:24, title:"The MegaTron Blowdown Controller", group:"mech", file:"m24.html", sections:7, action:true}
   ];
   var GROUPS=[{id:"ref",title:"Refrigeration Fundamentals"},{id:"elec",title:"Electrical"},{id:"mech",title:"Boilers & Chillers"}];
   var byId={}; MODULES.forEach(function(m,i){m.index=i; byId[m.id]=m;});
@@ -36,7 +40,7 @@
   /* The profile is bound when the page loads, so in-memory state from one profile can never be written into another. */
   var pagePid=activeProfile();
   function keyFor(pid){return PPREFIX+(validPid(pid)?pid:pagePid);}
-  function blank(){return {v:1,migrated:false,renumbered:RENUM_FLAG,last:null,lastAt:0,modules:{},study:{cards:{},sel:null},ui:{}};}
+  function blank(){return {v:1,migrated:false,renumbered:RENUM_FLAG,m20sec:M20SEC_FLAG,last:null,lastAt:0,modules:{},study:{cards:{},sel:null},ui:{}};}
   function read(pid){
     var raw=lsGet(keyFor(pid||pagePid));
     var o=null; try{o=raw?JSON.parse(raw):null;}catch(e){o=null;}
@@ -129,6 +133,28 @@
     });
   }
   renumber();
+  /* One-time, flagged per profile: shift saved Module 20 section marks (s8 -> s9, s9 -> s10) for the inserted conductivity section. */
+  function shiftM20(){
+    if(!canStore) return;
+    ["ian","landon","admin"].forEach(function(pid){
+      if(lsGet(keyFor(pid))==null) return;
+      var o=read(pid); if(o.m20sec===M20SEC_FLAG) return;
+      var m=o.modules.m20;
+      if(m&&m["progress:v1"]){
+        try{
+          var P=JSON.parse(m["progress:v1"]);
+          if(P&&P.v===1){
+            var map={s8:"s9",s9:"s10"};
+            if(P.sections){var ns={}; Object.keys(P.sections).forEach(function(k){ns[map[k]||k]=P.sections[k];}); P.sections=ns;}
+            if(P.last&&map[P.last]) P.last=map[P.last];
+            m["progress:v1"]=JSON.stringify(P);
+          }
+        }catch(e){}
+      }
+      o.m20sec=M20SEC_FLAG; write(o,pid);
+    });
+  }
+  shiftM20();
   /* The safety-card unlock was removed: drop any stored safety ticks ("safety:<n>") from every profile. */
   (function purgeSafety(){ if(!canStore) return;
     ["ian","landon","admin"].forEach(function(pid){ var raw=lsGet(keyFor(pid)); if(!raw||raw.indexOf('"safety:')<0) return;

@@ -39,20 +39,20 @@
   var SOFT=[[195,-2],[218,-2],[186,18]];
   /* equipment: key -> [x,y,w,h,color,label,info,link] */
   var EQ={
-    da:[200,12,13,28,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank (laid on its side) with its long axis perpendicular to the boiler row, just above the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off.",RV.fill],
-    lpcr:[183,48,36,18,HC.purple,"LPCR","<b>LPCR</b>, low pressure condensate return: a horizontal tank (laid on its side) with its long axis parallel to the boiler row, at the left end of the boiler room. Holds about <b>40 psi</b>; a back-pressure PRV opens above that and vents to the roof.",RV.lpcr],
-    b1:[232,30,16,40,HC.green,"B1","<b>Boiler 1</b> of four, in a row across the boiler room.",RV.boilers],
-    b2:[256,30,16,40,HC.green,"B2","<b>Boiler 2</b> of four.",RV.boilers],
-    b3:[280,30,16,40,HC.green,"B3","<b>Boiler 3</b> of four.",RV.boilers],
-    b4:[304,30,16,40,HC.green,"B4","<b>Boiler 4</b> of four.",RV.boilers],
+    da:[200,12,13,28,HC.blue,"DA","<b>Deaerator (DA) tank</b>, a horizontal tank (laid on its side) with its long axis perpendicular to the boiler row, just above the LPCR. Heats makeup and return water with steam so dissolved oxygen and CO₂ vent off. The water line coming in from the softeners has a <b>4150-style pneumatic level controller</b>, and a <b>pneumatic controller on the DA's steam inlet</b> controls steam into the DA.",RV.fill],
+    lpcr:[183,48,36,18,HC.purple,"LPCR","<b>LPCR</b>, low pressure condensate return: a horizontal tank (laid on its side) with its long axis parallel to the boiler row, at the left end of the boiler room. Holds about <b>40 psi</b>; a back-pressure PRV opens above that and vents to the roof. The LPCR has one <b>4150-style pneumatic level controller</b>, and it controls water going <i>out</i> of the tank. Its outlet valve's actuator looks like a 667-series one (model TBD, 3-15 psi) but is tubed to the <b>top</b> of the diaphragm: top-tubed is how a direct-acting 657-style actuator is fed, so check the nameplate.",RV.lpcr],
+    b1:[232,30,16,40,HC.green,"B1","<b>Boiler 1</b> of four, in a row across the boiler room. Each boiler has its own <b>4150-style pneumatic level controller</b> controlling the water going <i>into</i> that boiler.",RV.boilers],
+    b2:[256,30,16,40,HC.green,"B2","<b>Boiler 2</b> of four, with its own 4150-style pneumatic level controller on the water going into it.",RV.boilers],
+    b3:[280,30,16,40,HC.green,"B3","<b>Boiler 3</b> of four, with its own 4150-style pneumatic level controller on the water going into it.",RV.boilers],
+    b4:[304,30,16,40,HC.green,"B4","<b>Boiler 4</b> of four, with its own 4150-style pneumatic level controller on the water going into it.",RV.boilers],
     hpcr:[324,36,24,30,HC.orange,"HPCR","<b>Boiler-room HPCR</b>, high pressure condensate return tank, at the far right end of the boiler room. Takes HP condensate from the cookers and LPCR pump discharge, and feeds the boilers.",RV.fill],
     c1:[72,118,38,40,HC.red,"Cooker 1","<b>Tyson cooker 1</b>, the middle cooker of the three in the row along the top wall of the main building.",RV.loads],
     c2:[130,118,38,40,HC.red,"Cooker 2","<b>Tyson cooker 2</b>, the right-hand cooker of the three.",RV.loads],
     c3:[28,118,38,40,HC.red,"Cooker 3","<b>Tyson cooker 3</b>, the left-hand cooker of the three.",RV.loads],
-    y1:[112,127,14,22,HC.yellow,"1","<b>Cooker 1 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 1 (the middle cooker, on its right): that cooker's own HPCR tank, its three-way valve, and its back-pressure steam regulator.",RV.cooker],
-    y2:[170,127,14,22,HC.yellow,"2","<b>Cooker 2 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 2 (the right-hand cooker, just right of it).",RV.cooker],
+    y1:[112,127,14,22,HC.yellow,"1","<b>Cooker 1 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 1 (the middle cooker, on its right): that cooker's own HPCR tank (with a 4150-style pneumatic level controller), its three-way valve (actuator tubed to the top, series unconfirmed, may differ from 667-style, 3-15 psi), and its back-pressure steam regulator.",RV.cooker],
+    y2:[170,127,14,22,HC.yellow,"2","<b>Cooker 2 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 2 (the right-hand cooker, just right of it). Its HPCR tank has a 4150-style pneumatic level controller; its three-way valve actuator is tubed to the top (series unconfirmed, may differ from 667-style, 3-15 psi).",RV.cooker],
     hydro:[94,228,52,28,HC.hydro,"Hydrolyzer","<b>Hydrolyzer</b>, a steam load in the main building, lower-middle area (south side, well below the cooker row), where Zach marked it. Steam comes off the steam header to it. Its condensate return isn't confirmed yet: Zach isn't sure whether it goes back as high or low pressure condensate.",RV.loads],
-    y3:[12,127,14,22,HC.yellow,"3","<b>Cooker 3 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 3 (the left-hand cooker, just left of it, by the wall).",RV.cooker]
+    y3:[12,127,14,22,HC.yellow,"3","<b>Cooker 3 HPCR + 3-way + back-pressure regulator</b>, directly beside cooker 3 (the left-hand cooker, just left of it, by the wall). Its HPCR tank has a 4150-style pneumatic level controller; its three-way valve actuator is tubed to the top (series unconfirmed, may differ from 667-style, 3-15 psi).",RV.cooker]
   };
   /* pipe routes (schematic): key -> [path for drawing, path for moving dots, color, dashed] */
   var PIPE={
@@ -75,7 +75,7 @@
   var HK=[
     {t:"Makeup → 3 softeners → DA (blue)",lit:["s1","s2","s3","da"],p:["makeup","soft"],a:RV.fill,i:"Makeup water comes in through the boiler-room wall to the <b>three water softeners</b> in the top-left corner of the boiler room. A softened-water header then carries it into the top of the <b>deaerator</b> (blue)."},
     {t:"DA → boiler-room HPCR (orange)",lit:["da","hpcr"],p:["da2hp"],a:RV.fill,i:"From the DA, water heads to the <b>boiler-room HPCR</b> (orange) at the far right end of the boiler room."},
-    {t:"HPCR → boilers B1–B4 (green)",lit:["hpcr","b1","b2","b3","b4"],p:["feed"],a:RV.boilers,i:"The HPCR feeds the <b>four boilers</b> (green): the feedwater line runs along the <b>bottom side</b> of the boiler row, then branches up into the <b>left side of each boiler</b>. Each boiler has its own Fisher level controller and actuated feed valve."},
+    {t:"HPCR → boilers B1–B4 (green)",lit:["hpcr","b1","b2","b3","b4"],p:["feed"],a:RV.boilers,i:"The HPCR feeds the <b>four boilers</b> (green): the feedwater line runs along the <b>bottom side</b> of the boiler row, then branches up into the <b>left side of each boiler</b>. Each boiler has its own 4150-style pneumatic level controller and actuated feed valve, controlling water into that boiler."},
     {t:"Steam out to the cookers (red) + hydrolyzer (tan)",lit:["b1","b2","b3","b4","c1","c2","c3","hydro","hyret"],p:["steam","hydro"],a:RV.loads,i:"Steam leaves the boilers on the steam header for the <b>three Tyson cookers</b> (red) and the <b>hydrolyzer</b> (tan) in the lower-middle of the main building. The hydrolyzer's condensate return (dashed) is <b>not confirmed</b>: high or low pressure is still a question for Zach."},
     {t:"Cooker HP condensate → cooker HPCR + 3-way + back-pressure regulator (yellow)",lit:["c1","c2","c3","y1","y2","y3"],p:[],a:RV.cooker,i:"High pressure condensate leaving a cooker goes to <b>that cooker's own HPCR station</b> (yellow): the HPCR tank, the three-way valve, and a <b>back-pressure steam regulator</b>."},
     {t:"3-way: recirculate, or send HP condensate to the boiler-room HPCR (orange)",lit:["y1","y2","y3","hpcr"],p:["recirc","hpret"],a:RV.cooker,i:"Each three-way valve either <b>recirculates</b> to that cooker's HPCR tank or <b>sends</b> the condensate back to the <b>boiler-room HPCR</b> (orange)."},
@@ -147,6 +147,7 @@
     ["Back-pressure valve","Controls pressure upstream: holds pressure in the tank and piping behind it, opening to relieve if pressure climbs above set point."],
     ["Three-way valve","At each Tyson RVAF cooker: recirculate back to that cooker's HPCR tank, or send to the boiler-room HPCR."],
     ["Fisher level controller","Watches the level in a boiler or tank and tells a valve to open or close."],
+    ["4150-style level controller","Zach's field name for the pneumatic level controllers at Tyson RVAF (confirm the nameplate): one on each boiler (water in), one on each cooker HPCR, one on the LPCR (water out), and one on the water line from the softeners into the DA. Fisher's own 4150K/4160K are pressure controllers; Fisher's displacer-type level controllers are the 2500/249 Level-Trol, L3 and L2 families. Either way the controller sends a 3-15 psig signal to the valve actuator."],
     ["Actuated valve","A valve with an actuator, the air-powered motor on top that strokes it open or closed. The muscle."],
     ["Pneumatic","Works on instrument air, not an electrical signal."],
     ["Flash","Hot condensate dropping to a lower pressure partly boils into steam. Wastes heat and can cause water hammer."],
@@ -171,7 +172,7 @@
   pathExplorer("w-s7",[["Softeners","Removes hardness.","On rounds: is it actually making soft water, not just full of salt?"],
     ["Deaerator","Removes dissolved gases.","Read the DA gauge and thermometer on site; don't assume a textbook number."],
     ["Boiler-room HPCR","Deaerated water meets high pressure condensate coming home from the cookers.","Where cooker HP condensate rejoins the boiler-feed path."],
-    ["The four boilers","Fed from the boiler-room HPCR; steam leaves for the hydrolyzer and three cookers.","Each holds its own water line with a Fisher level controller."]],"Tyson RVAF order: softeners → deaerator → boiler-room HPCR → the four boilers.");
+    ["The four boilers","Fed from the boiler-room HPCR; steam leaves for the hydrolyzer and three cookers.","Each holds its own water line with its own 4150-style pneumatic level controller (water into that boiler)."]],"Tyson RVAF order: softeners → deaerator → boiler-room HPCR → the four boilers.");
 
   /* ---------- A2: HPCR vs LPCR ---------- */
   S("w-s2","Two return tanks",
@@ -268,7 +269,7 @@
       var open=opts.level?clamp((L-40)/30,0,1):1, moving=!stopped&&open>0.02;
       if(opts.level){ L=clamp(L+0.35-(moving?open*0.9:0),0,100); $(p+"L").value=Math.round(L); $(p+"Lv").textContent=Math.round(L); }
       var g='<rect x="10" y="30" width="60" height="100" rx="8" fill="#16283a" stroke="#5ab4ff"/><rect x="12" y="'+(128-(opts.level?L:60)*0.96)+'" width="56" height="'+((opts.level?L:60)*0.96)+'" fill="#5ab4ff" opacity=".4"/><text x="40" y="148" fill="#EDEAE4" font-size="10" text-anchor="middle">'+(opts.level?"LPCR":"Tank")+'</text>';
-      if(opts.level){ g+='<rect x="76" y="10" width="54" height="26" rx="4" fill="#262b33" stroke="#9AA0A6"/><text x="103" y="21" fill="#EDEAE4" font-size="7" text-anchor="middle">Fisher pneumatic</text><text x="103" y="31" fill="#2EC4B6" font-size="8" text-anchor="middle">air '+Math.round(open*100)+'%</text>'+
+      if(opts.level){ g+='<rect x="76" y="10" width="54" height="26" rx="4" fill="#262b33" stroke="#9AA0A6"/><text x="103" y="21" fill="#EDEAE4" font-size="7" text-anchor="middle">4150-style pneum.</text><text x="103" y="31" fill="#2EC4B6" font-size="8" text-anchor="middle">air '+Math.round(open*100)+'%</text>'+
         '<path d="M98 80 H118 L114 90 H102 Z" fill="#262b33" stroke="#9AA0A6"/><line x1="108" y1="36" x2="108" y2="80" stroke="#cfe8ff" stroke-dasharray="3 3"/><text x="108" y="104" fill="#9AA0A6" font-size="7" text-anchor="middle">outlet '+(open<0.02?"closed":Math.round(open*100)+"%")+'</text>'; }
       var fc=moving?"#5ab4ff":"#26323f", dash='stroke-dasharray="8 5" stroke-dashoffset="'+(RM?0:-(t*2)%13)+'"';
       g+='<path d="M70 115 H150 M150 115 V75 H170 M150 115 V140 H170" stroke="'+(moving?"#5ab4ff":"#26323f")+'" stroke-width="5" fill="none"/>';
@@ -281,7 +282,7 @@
       $(p+"Svg").innerHTML=g;
       var msg;
       if(stopped) msg='<span class="no">The running pump stopped. Nothing is moving the water, so the tank fills and condensate has nowhere useful to go.</span> That is why the second pump exists. No automatic start sequence has been described here, so: get Zach. The swap button shows the standby pump taking over, as Zach directs.';
-      else if(opts.level&&open<0.02) msg="Level below the band: the Fisher controller keeps the outlet valve closed. One pump still runs, so the path is already alive.";
+      else if(opts.level&&open<0.02) msg="Level below the band: the 4150-style controller keeps the outlet valve closed. One pump still runs, so the path is already alive.";
       else msg='<span class="ok">Pump '+(run?"B":"A")+' running, Pump '+(run?"A":"B")+' on standby. Discharge: '+(dis==="send"?opts.sendLabel:"Recirculate")+'.</span>';
       $(p+"Out").innerHTML=msg;
     }
@@ -292,7 +293,7 @@
     setInterval(draw,150); draw();
   }
   pumpTrainer("w-s5",{title:"Two-pump trainer",sendLabel:"Send onward",sendShort:"onward",note:"A general idea. How lead/lag and the discharge are chosen are site details: don't assume an automatic changeover until Zach shows you one."});
-  pumpTrainer("w-s12",{title:"LPCR pumping trainer",level:true,sendLabel:"Send to HPCR",sendShort:"boiler-room HPCR",note:"Tyson RVAF: a Fisher pneumatic level controller opens the actuated outlet valve as the LPCR fills; the valve feeds two pumps; one pump is always running; the pumps recirculate or send to the HPCR. Level numbers here are illustrative."});
+  pumpTrainer("w-s12",{title:"LPCR pumping trainer",level:true,sendLabel:"Send to HPCR",sendShort:"boiler-room HPCR",note:"Tyson RVAF: the LPCR's one 4150-style pneumatic level controller (water out) opens the actuated outlet valve as the LPCR fills; the valve feeds two pumps; one pump is always running; the pumps recirculate or send to the HPCR. Level numbers here are illustrative."});
 
   /* ---------- RVAF 1: plant flow diagram, rendered from the Mermaid source in the markdown ---------- */
   var src=($("mermaidSrc")||{}).textContent||"";
@@ -322,15 +323,15 @@
   }
   function route2(a,b){var k=a+">"+b; if(k==="LPCR>BRHPCR"){var A=POS.LPCR,B=POS.BRHPCR; return "M"+(A[0]-A[2]/2)+" "+A[1]+" H8 V"+B[1]+" H"+(B[0]-B[2]/2);} return route(a,b);}
   var INFO={Fill:["Fill / makeup water comes in and goes to the softeners first.",RV.fill],Softeners:["Ion exchange takes out hardness so it doesn't bake onto the tubes as scale.",RV.fill],
-    DA:["Heats the water with steam so dissolved oxygen and CO₂ come out a vent. Read the gauge on site.",RV.fill],BRHPCR:["Feeds the four boilers. Deaerated water and high pressure condensate from the cookers meet here.",RV.fill],
-    Boilers:["Four boilers, each with a Fisher level controller and actuated fill valve. Typical set point around 115 psi: read the gauge.",RV.boilers],Steam:["Steam goes out to the hydrolyzer and the three Tyson cookers.",RV.loads],
+    DA:["Heats the water with steam so dissolved oxygen and CO₂ come out a vent. The water line from the softeners has a 4150-style pneumatic level controller, and a pneumatic controller on the DA's steam inlet controls steam into the DA. Read the gauge on site.",RV.fill],BRHPCR:["Feeds the four boilers. Deaerated water and high pressure condensate from the cookers meet here.",RV.fill],
+    Boilers:["Four boilers, each with its own 4150-style pneumatic level controller and actuated fill valve (water into that boiler). Typical set point around 115 psi: read the gauge.",RV.boilers],Steam:["Steam goes out to the hydrolyzer and the three Tyson cookers.",RV.loads],
     Hydro:["The hydrolyzer is a steam load. Its return path hasn't been described: walk this one with Zach.",RV.loads],
-    LPCR:["Cooker LP condensate comes home here. Held near 40 psi by a back-pressure PRV; a Fisher pneumatic level controller and two pumps move it out.",RV.lpcr],
+    LPCR:["Cooker LP condensate comes home here. Held near 40 psi by a back-pressure PRV; the LPCR's one 4150-style pneumatic level controller (water out) and two pumps move it out.",RV.lpcr],
     Roof:["The back-pressure PRV vents to the roof to hold the LPCR near 40 psi. Burn hazard: stay clear of vent outlets.",RV.lpcr],
-    TW:["Three-way valve at each cooker: Recirculate back to that cooker's HPCR, or Send to the boiler-room HPCR.",RV.cooker],
-    PUMPS:["Fisher outlet valve and two LPCR pumps: one is always running; they recirculate or send condensate to the HPCR.",RV.pumps]};
+    TW:["Three-way valve at each cooker: Recirculate back to that cooker's HPCR, or Send to the boiler-room HPCR. Its actuator is tubed to the top (3-15 psi); series unconfirmed, may differ from 667-style.",RV.cooker],
+    PUMPS:["Fisher outlet valve (667-like actuator, model TBD, tubed to the top, 3-15 psi) and two LPCR pumps: one is always running; they recirculate or send condensate to the HPCR.",RV.pumps]};
   [1,2,3].forEach(function(n){INFO["C"+n]=["Tyson cooker "+n+": high pressure condensate goes to its own HPCR tank; LP condensate returns to the boiler-room LPCR.",RV.loads];
-    INFO["C"+n+"HP"]=["Cooker "+n+" HPCR tank: Fisher level controller + actuated valve; the three-way valve recirculates or sends to the boiler-room HPCR.",RV.cooker];});
+    INFO["C"+n+"HP"]=["Cooker "+n+" HPCR tank: 4150-style pneumatic level controller + actuated valve; the three-way valve recirculates or sends to the boiler-room HPCR. The three-way valve's actuator is tubed to the top; actuator series unconfirmed (may differ from 667-style).",RV.cooker];});
   if($("w-flow")){
     S("w-flow","Tyson RVAF plant map (tap any block)",
       '<div class="svgbox flow"><svg id="flSvg" viewBox="0 0 360 492" role="img" aria-label="Tyson RVAF flow: fill water, steam to loads, condensate returns"></svg></div>'+
@@ -382,14 +383,14 @@
     for(var i=0;i<4;i++){var o=clamp((50-BL[i])/20,0,1); opens.push(o); BL[i]=clamp(BL[i]-0.25+(o>0&&fp>bp?o*1.1:0),0,100);}
     var g='';
     if(fbSel==="all"){ for(i=0;i<4;i++){var x=15+i*78; g+='<rect x="'+x+'" y="15" width="64" height="120" rx="8" fill="#1a2430" stroke="#59616c"/><text x="'+(x+32)+'" y="30" fill="#EDEAE4" font-size="10" text-anchor="middle">Boiler '+(i+1)+'</text><rect x="'+(x+24)+'" y="40" width="16" height="70" fill="#0f1114" stroke="#9AA0A6"/><rect x="'+(x+25)+'" y="'+(110-BL[i]*0.7)+'" width="14" height="'+(BL[i]*0.7)+'" fill="#5ab4ff" opacity=".6"/><text x="'+(x+32)+'" y="126" fill="'+(opens[i]>0.02?"#2EC4B6":"#9AA0A6")+'" font-size="9" text-anchor="middle">valve '+(opens[i]<0.02?"closed":Math.round(opens[i]*100)+"%")+'</text>';}
-      $("fbOut").innerHTML="Each boiler's Fisher controller holds its own water line. Valve positions should make sense for the level you see.";
+      $("fbOut").innerHTML="Each boiler's own 4150-style controller holds its own water line. Valve positions should make sense for the level you see.";
     } else { var L=BL[fbSel], o2=opens[fbSel]; $("fbL").value=Math.round(L); $("fbLv").textContent=Math.round(L);
       g+='<rect x="30" y="10" width="34" height="140" rx="6" fill="#0f1114" stroke="#9AA0A6" stroke-width="2"/><rect x="32" y="'+(148-L*1.36)+'" width="30" height="'+(L*1.36)+'" fill="#5ab4ff" opacity=".55"/><line x1="24" y1="80" x2="70" y2="80" stroke="#2EC4B6" stroke-dasharray="4 3"/>';
-      g+='<rect x="100" y="20" width="80" height="34" rx="6" fill="#262b33" stroke="#9AA0A6"/><text x="140" y="35" fill="#EDEAE4" font-size="9" text-anchor="middle">Fisher controller</text><text x="140" y="47" fill="#2EC4B6" font-size="9" text-anchor="middle">Boiler '+(fbSel+1)+'</text>';
+      g+='<rect x="100" y="20" width="80" height="34" rx="6" fill="#262b33" stroke="#9AA0A6"/><text x="140" y="35" fill="#EDEAE4" font-size="9" text-anchor="middle">4150-style ctrl</text><text x="140" y="47" fill="#2EC4B6" font-size="9" text-anchor="middle">Boiler '+(fbSel+1)+'</text>';
       g+='<circle cx="250" cy="45" r="26" fill="#0f1114" stroke="#9AA0A6"/><text x="250" y="44" fill="#ff9f43" font-size="12" text-anchor="middle" font-weight="800">'+bp+'</text><text x="250" y="57" fill="#9AA0A6" font-size="8" text-anchor="middle">steam psi</text>';
       g+='<circle cx="250" cy="115" r="26" fill="#0f1114" stroke="'+(fp>bp?"#2EC4B6":"#ff6b5b")+'"/><text x="250" y="114" fill="#cfe8ff" font-size="12" text-anchor="middle" font-weight="800">'+fp+'</text><text x="250" y="127" fill="#9AA0A6" font-size="8" text-anchor="middle">feed psi</text>';
       g+='<path d="M224 115 H150 L140 105 L130 115 H64" stroke="'+(o2>0.02&&fp>bp?"#5ab4ff":"#26323f")+'" stroke-width="5" fill="none"/><text x="140" y="140" fill="#9AA0A6" font-size="9" text-anchor="middle">actuated fill valve '+(o2<0.02?"closed":Math.round(o2*100)+"% open")+'</text>';
-      $("fbOut").innerHTML=o2>0.02&&fp<=bp?'<span class="no">⚠️ No flow into boiler: the valve is open but feed pressure is not above boiler pressure. The level keeps falling.</span>':o2>0.02?'<span class="ok">Level low: the Fisher controller opens the fill valve and the level recovers.</span>':"Level in band: fill valve closed; steam leaving pulls the level down slowly.";
+      $("fbOut").innerHTML=o2>0.02&&fp<=bp?'<span class="no">⚠️ No flow into boiler: the valve is open but feed pressure is not above boiler pressure. The level keeps falling.</span>':o2>0.02?'<span class="ok">Level low: the 4150-style controller opens the fill valve and the level recovers.</span>':"Level in band: fill valve closed; steam leaving pulls the level down slowly.";
     }
     $("fbL").disabled=fbSel==="all"; $("fbSvg").innerHTML=g;}
   H.chipGroup($("fbPick"),function(x){fbSel=x==="all"?"all":+x;}).pick("0");
@@ -461,10 +462,10 @@
   setInterval(lpTick,200); lpTick();
 
   /* ---------- RVAF 8 + Action: walkdown checklist ---------- */
-  var STOPS=[["sof","Softeners","In service? Salt bridged? Hardness (if Zach has you test)"],["da","Deaerator","Pressure and temperature on the gauges"],["hp","Boiler-room HPCR","Level; incoming lines from cookers and LPCR pumps"],
-    ["b1","Boiler 1","Water level / steam psi"],["b2","Boiler 2","Water level / steam psi"],["b3","Boiler 3","Water level / steam psi"],["b4","Boiler 4","Water level / steam psi"],
-    ["c1","Cooker 1","HPCR level; three-way position",1],["c2","Cooker 2","HPCR level; three-way position",1],["c3","Cooker 3","HPCR level; three-way position",1],
-    ["hy","Hydrolyzer","Pointed out with Zach",2],["lpp","LPCR pressure","Near 40 psi? Roof vent path unusual?"],["lpu","LPCR pumps","Which pump is running? Discharge?",3]];
+  var STOPS=[["sof","Softeners","In service? Salt bridged? Hardness (if Zach has you test)"],["da","Deaerator","Pressure and temperature; softener water-line level controller; steam-inlet controller"],["hp","Boiler-room HPCR","Level; incoming lines from cookers and LPCR pumps"],
+    ["b1","Boiler 1","Water level / steam psi; its level controller + fill valve"],["b2","Boiler 2","Water level / steam psi; its level controller + fill valve"],["b3","Boiler 3","Water level / steam psi; its level controller + fill valve"],["b4","Boiler 4","Water level / steam psi; its level controller + fill valve"],
+    ["c1","Cooker 1","HPCR level + level controller; three-way position; its actuator tubing (top?)",1],["c2","Cooker 2","HPCR level + level controller; three-way position; its actuator tubing (top?)",1],["c3","Cooker 3","HPCR level + level controller; three-way position; its actuator tubing (top?)",1],
+    ["hy","Hydrolyzer","Pointed out with Zach",2],["lpp","LPCR pressure","Near 40 psi? Roof vent path unusual?"],["lpu","LPCR pumps","LPCR level controller (water out); outlet valve actuator tubed to top; which pump is running? Discharge?",3]];
   function walkdown(id,p,doneTarget){
     var h='<div class="mapthumb" aria-hidden="true"><svg id="'+p+'Map" viewBox="0 0 340 40"></svg></div>';
     STOPS.forEach(function(s){h+='<div class="wd-row" id="'+p+'-row-'+s[0]+'"><span class="wd-l">'+s[1]+'</span>';
