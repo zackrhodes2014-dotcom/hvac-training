@@ -24,7 +24,7 @@
     {id:"m19", num:19, title:"Servicing Electric Motors and Controls", group:"elec", file:"m19.html", sections:5, action:true},
     {id:"m20", num:20, title:"Boiler Room Fundamentals", group:"mech", file:"m20.html", sections:10, action:true, was:"m6"},
     {id:"m21", num:21, title:"Chiller Fundamentals", group:"mech", file:"m21.html", sections:9, action:true, was:"m7"},
-    {id:"m22", num:22, title:"West Mechanical Field Notes", group:"mech", file:"m22.html", sections:13, action:true, was:"m8"},
+    {id:"m22", num:22, title:"West Mechanical Field Notes", group:"mech", file:"m22.html", sections:14, action:true, was:"m8"},
     {id:"m23", num:23, title:"Fisher Pneumatic Valves", group:"mech", file:"m23.html", sections:11, action:true},
     {id:"m24", num:24, title:"The MegaTron Blowdown Controller", group:"mech", file:"m24.html", sections:7, action:true}
   ];

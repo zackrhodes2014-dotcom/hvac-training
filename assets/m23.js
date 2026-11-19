@@ -364,28 +364,28 @@
     var ly=170-120*(0.15+0.7*t); g+='<rect x="8" y="'+ly+'" width="42" height="'+(188-ly)+'" fill="rgba(90,180,255,.35)"/><line x1="8" y1="'+ly+'" x2="50" y2="'+ly+'" stroke="#7fd6ff" stroke-width="1.5"/>';
     g+='<rect x="20" y="52" width="18" height="96" rx="4" fill="#9aa5b1" stroke="#fff" stroke-width="1"/><line x1="29" y1="30" x2="29" y2="52" stroke="#cfd8e3" stroke-width="2"/>';
     g+='<text x="29" y="200" fill="#9AA0A6" font-size="7" text-anchor="middle">displacer</text><text x="29" y="210" fill="#9AA0A6" font-size="7" text-anchor="middle">in the level</text>';
-    g+='<path d="M38 100 H72" stroke="#cfd8e3" stroke-width="5"/><text x="55" y="118" fill="#9AA0A6" font-size="6.5" text-anchor="middle">torque tube</text>';
     /* case */
     g+='<rect x="66" y="6" width="230" height="308" rx="10" fill="#141b24" stroke="#59616c" stroke-width="2"/>';
     /* shaft and flapper */
+    g+='<path d="M38 104 H92 V'+(restY+9)+'" stroke="#cfd8e3" stroke-width="5" fill="none"/>';
     var rot=(t*28)-14; g+='<circle cx="92" cy="'+(restY-0)+'" r="9" fill="#2a3340" stroke="#cfd8e3" stroke-width="2"/><path d="M86 '+restY+' h12" stroke="#ffd23f" stroke-width="2" transform="rotate('+rot.toFixed(0)+' 92 '+restY+')"/>';
-    g+='<text x="92" y="'+(restY+22)+'" fill="#9AA0A6" font-size="6.5" text-anchor="middle">torque tube shaft</text>';
+    g+='<text x="72" y="24" fill="#9AA0A6" font-size="6.5">torque tube shaft</text><line x1="92" y1="27" x2="92" y2="'+(restY-9)+'" stroke="#9AA0A6" stroke-width=".7" stroke-dasharray="2 2"/>';
     g+='<path d="M92 '+restY+' L164 '+flY.toFixed(1)+'" stroke="#ffd23f" stroke-width="4" stroke-linecap="round"/>';
-    g+='<text x="128" y="'+(Math.max(restY,flY)+(r>0.5?-8:14)).toFixed(0)+'" fill="#ffd23f" font-size="7" text-anchor="middle">flapper'+(r>0.5?" (base flipped)":"")+'</text>';
+    g+='<text x="128" y="'+(r>0.5?Math.min(restY,flY)-8:Math.max(restY,flY)+14).toFixed(0)+'" fill="#ffd23f" font-size="7" text-anchor="middle">flapper'+(r>0.5?" (base flipped)":"")+'</text>';
     /* nozzle */
     var bodyEnd=tipY-16*dir; g+='<path d="M160 '+tipY+' L168 '+tipY+' L166 '+bodyEnd+' L162 '+bodyEnd+' Z" fill="#2EC4B6" stroke="#fff" stroke-width="1"/><text x="'+(r>0.5?138:138)+'" y="'+(bodyEnd+(dir>0?-3:9))+'" fill="#2EC4B6" font-size="7" text-anchor="middle">nozzle</text>';
     var nb=Math.round(1+4*(gap/18)); for(var k=0;k<nb;k++){g+='<path d="M'+(163+k*1.2)+' '+(tipY+(flY-tipY)*0.5)+' l'+(10+k*2)+' '+(-6*dir*(k%2?1:-1)*0.5)+'" stroke="#cfd8e3" stroke-width="1" opacity=".7"/>';}
-    g+='<text x="196" y="'+(restY+8)+'" fill="#cfd8e3" font-size="6.5">bleed</text>';
+    g+='<text x="206" y="80" fill="#cfd8e3" font-size="6.5">bleed</text>';
     /* supply, restriction, nozzle pressure line */
     g+='<path d="M284 16 V262" stroke="#ffb020" stroke-width="3" fill="none"/><text x="280" y="12" fill="#ffb020" font-size="7" text-anchor="end">SUPPLY 20 psig</text>';
     g+='<path d="M284 40 H258 l-4 -5 l-8 10 l-8 -10 l-4 5 H200" stroke="#ffb020" stroke-width="2" fill="none"/><text x="236" y="30" fill="#ffb020" font-size="6.5" text-anchor="middle">fixed restriction</text>';
     g+='<path d="M200 40 V178 H214" stroke="#2EC4B6" stroke-width="2.5" fill="none"/><path d="M200 '+(tipY-8*dir).toFixed(0)+' H166" stroke="#2EC4B6" stroke-width="2" fill="none"/>';
-    g+='<text x="196" y="108" fill="#2EC4B6" font-size="6.5" text-anchor="end">nozzle pressure</text>';
+    g+='<text x="205" y="132" fill="#2EC4B6" font-size="6.5">nozzle pressure</text>';
     /* relay */
     g+='<rect x="214" y="164" width="68" height="110" rx="6" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/><text x="248" y="160" fill="#cfd8e3" font-size="7.5" text-anchor="middle">relay</text>';
     g+='<line x1="218" y1="'+dy.toFixed(1)+'" x2="278" y2="'+dy.toFixed(1)+'" stroke="#e8c07d" stroke-width="4"/><text x="220" y="'+(dy-5).toFixed(0)+'" fill="#e8c07d" font-size="6">large diaphragm</text>';
-    g+='<line x1="236" y1="'+(dy+44).toFixed(1)+'" x2="260" y2="'+(dy+44).toFixed(1)+'" stroke="#e8c07d" stroke-width="3"/><text x="262" y="'+(dy+47).toFixed(0)+'" fill="#e8c07d" font-size="6">small (1:3)</text><line x1="248" y1="'+dy.toFixed(1)+'" x2="248" y2="'+(dy+44).toFixed(1)+'" stroke="#cfd8e3" stroke-width="2"/>';
-    g+='<rect x="268" y="236" width="14" height="12" fill="#ffb020" fill-opacity="'+(0.18+0.82*inlet).toFixed(2)+'" stroke="#ffb020"/><text x="266" y="246" fill="#ffb020" font-size="6.5" text-anchor="end">INLET '+Math.round(inlet*100)+'%</text>';
+    g+='<line x1="236" y1="'+(dy+44).toFixed(1)+'" x2="260" y2="'+(dy+44).toFixed(1)+'" stroke="#e8c07d" stroke-width="3"/><text x="248" y="'+(dy+56).toFixed(0)+'" fill="#e8c07d" font-size="6" text-anchor="middle">small (1:3)</text><line x1="248" y1="'+dy.toFixed(1)+'" x2="248" y2="'+(dy+44).toFixed(1)+'" stroke="#cfd8e3" stroke-width="2"/>';
+    g+='<rect x="268" y="236" width="14" height="12" fill="#ffb020" fill-opacity="'+(0.18+0.82*inlet).toFixed(2)+'" stroke="#ffb020"/><text x="280" y="266" fill="#ffb020" font-size="6.5" text-anchor="end">INLET '+Math.round(inlet*100)+'%</text>';
     g+='<rect x="216" y="204" width="14" height="12" fill="#9aa5b1" fill-opacity="'+(0.18+0.82*exh).toFixed(2)+'" stroke="#9aa5b1"/><text x="232" y="214" fill="#cfd8e3" font-size="6.5">EXHAUST '+Math.round(exh*100)+'%</text>';
     if(exh>0.15&&falling){for(var q=0;q<4;q++){g+='<circle cx="'+(208-q*7)+'" cy="'+(204-q*4)+'" r="'+(2+q*0.8)+'" fill="#9aa5b1" opacity="'+(0.7-q*0.15)+'"/>';} g+='<text x="190" y="190" fill="#9aa5b1" font-size="6.5" text-anchor="end">hiss: the &quot;vent&quot;</text>';}
     /* gauges */

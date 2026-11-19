@@ -439,6 +439,46 @@ window.HVAC_CARDS={
 "id": "m22-c8",
 "q": "How is water level controlled on the four boilers, and about what steam set point should you expect on a typical West Mechanical site?",
 "a": "Each of the four boilers has its own 4150-style pneumatic level controller with an actuated fill valve, controlling water going into that boiler (the LPCR's controller controls water going out). Typical boiler steam set points are around 115 psi; always read the actual gauge."
+},
+{
+"id": "m22-c9",
+"q": "What kind of level sensor does the Cleaver-Brooks Level Master use?",
+"a": "A continuous-reading probe in a water column with a 2-inch stainless float carrying a magnet (magnetostrictive technology). It reports level in inches above the low-water cut-off mark. It is not a conductance or capacitance probe. [LM p.1-2; LMB p.2]"
+},
+{
+"id": "m22-c10",
+"q": "Which Level Master setting makes it send a 4-20 mA signal to the feedwater valve?",
+"a": "Commissioning item Display Format = Modulating (the other choice is On/Off). The signal comes out on terminals 14 (+) and 15 (−). [LM p.4-5, Fig 2-5 p.2-7]"
+},
+{
+"id": "m22-c11",
+"q": "On the Level Master's 4-20 mA feed-valve signal, what do 20 mA and 4 mA mean?",
+"a": "20 mA at the \"Pump On\" (low water) point = valve open; 4 mA at the \"Pump Off\" point = valve closed. It straight-lines in between (default table). Low water means more feed. [LM p.5-4, p.6-2]"
+},
+{
+"id": "m22-c12",
+"q": "How do you set the Siemens SKD62UA to take a 4-20 mA signal?",
+"a": "Move DIP switch 3 to ON (OFF = 0-10 Vdc). Keep DIP 1 OFF for direct acting (4 mA = 0%, 20 mA = 100%). [TI Fig 13 p.9, Fig 14 p.10]"
+},
+{
+"id": "m22-c13",
+"q": "What does the SKD62UA do if it loses power or the signal?",
+"a": "A return spring drives it to 0% stroke (stem fully retracted) in about 15 seconds. A normally closed valve closes; a normally open valve opens, so the valve body decides what that means. [TI p.2, p.7; VF p.8]"
+},
+{
+"id": "m22-c14",
+"q": "Give the main SKD62UA numbers.",
+"a": "24 Vac, 17 VA; stroke 3/4 in (20 mm); force 1000 N; runs open in 30 s, closes in 15 s; input 0-10 Vdc, 4-20 mA or 0-1000 ohm; UL listed. [TI p.2, p.3]"
+},
+{
+"id": "m22-c15",
+"q": "Which part of the Level Master + SKD62UA pairing is the safety shutoff for low water?",
+"a": "The Level Master's LWCO relays (terminals 19-21, wired in series with the boiler limits). The SKD62UA only moves the valve. [LM p.1-2, p.2-6, Fig 2-5]"
+},
+{
+"id": "m22-c16",
+"q": "What must be done after a power outage, and how often should the water column be blown down?",
+"a": "A successful column blowdown is required after a power outage. Blow down the column daily (or more often); the controller reminds you at least every 24 hours (setting 4 to 24 h). [LM p.4-9, p.4-11]"
 }
 ],
 "m23": [

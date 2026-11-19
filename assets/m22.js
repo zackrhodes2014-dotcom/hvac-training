@@ -442,7 +442,6 @@
 
   /* ---------- RVAF 6: LPCR pressure + back-pressure PRV ---------- */
   S("w-s11","LPCR pressure trainer",
-    '<div class="callout safety"><strong>🔥 Roof vent = burn hazard.</strong> Stay clear of vent outlets, and don\'t treat a quiet vent line as cold or safe.</div>'+
     '<div class="svgbox"><svg id="lpSvg" viewBox="0 0 320 170" role="img" aria-label="LPCR tank, back-pressure PRV and roof vent"></svg></div>'+
     '<label class="lbl" for="lpIn">Incoming LP condensate: <b id="lpInv">medium</b></label><input type="range" id="lpIn" min="0" max="4" value="2">'+
     '<div class="readouts"><div class="ro" id="lpRo"><span class="k">LPCR pressure</span><span class="v" id="lpP">–</span></div><div class="ro"><span class="k">Back-pressure PRV</span><span class="v" id="lpV" style="font-size:1rem">–</span></div></div>'+
@@ -492,4 +491,313 @@
   }
   walkdown("w-s13","wd",function(){return document.querySelector('.mark-done[data-sec="'+RV.walk+'"]');});
   walkdown("w-action","aw",function(){return $("actionDone");});
+})();
+
+/* ---------- A6: Level Master + SKD62UA (electronic boiler water level control) ----------
+   Facts come from LM = Cleaver-Brooks 750-281 (06-09), TI = Siemens 155-717, VF = Siemens 155-159P25.
+   Level numbers are the Sensitivity Table 1 example (LM Table 3-3 p.3-4), not a site setting. */
+(function(){
+  "use strict";
+  var $=EW.$, fmt=EW.fmt, S=EW.slot, each=EW.each;
+  var RM=H.reduceMotion&&H.reduceMotion();
+  function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+  function card(id,def){return '<div class="infocard" id="'+id+'" aria-live="polite">'+(def||"Tap one.")+'</div>';}
+  function chips(id,list){return '<div class="chips" id="'+id+'">'+list.map(function(t,i){return '<button data-v="'+i+'">'+t+'</button>';}).join("")+'</div>';}
+  function seg(id,list){return '<div class="seg" id="'+id+'" role="group">'+list.map(function(t){return '<button data-v="'+t[0]+'">'+t[1]+'</button>';}).join("")+'</div>';}
+  function chipInfo(boxId,outId,list){H.chipGroup($(boxId),function(i){var t=list[+i];$(outId).innerHTML="<b>"+t[0]+":</b> "+t[1];});}
+  if(!$("w-s14")) return;
+
+  /* ---- hook: what is the same, what is different ---- */
+  var CMP=[["Sensor","<b>Fisher pneumatic (A3):</b> a pneumatic level controller with its sensing element in the liquid. <b>Level Master:</b> a 2 in stainless float with a magnet riding a probe in a water column (magnetostrictive), reporting inches above the low-water cut-off mark. [LM p.1-2; LMB p.2-3]"],
+           ["Signal","<b>Fisher:</b> a 3-15 psig air signal in tubing. <b>Level Master:</b> a 4-20 mA signal on terminals 14 (+) and 15 (−), set with Display Format = Modulating. [LM Fig 2-5 p.2-7; p.4-5]"],
+           ["Muscle","<b>Fisher:</b> an air-driven diaphragm actuator. <b>SKD62UA:</b> an electrohydraulic actuator on 24 Vac (a pump, a piston, a return spring). No air supply. [TI p.1, 2, 6]"],
+           ["Fail position","<b>Both use a spring.</b> The SKD62UA return spring drives it to 0% stroke (stem retracted) in about 15 s on loss of power or signal. Whether that is open or closed depends on the valve body: normally closed closes, normally open opens. [TI p.7; VF p.8]"],
+           ["Same logic","Rising level means less feedwater; low water means the valve opens more. At RVAF it is the pneumatic signal; here it is 20 mA at low water and 4 mA at higher water. [LM p.5-4, 6-2]"]];
+  S("w-s14","What's the same as the Fisher setup?",chips("cmC",CMP.map(function(c){return c[0];}))+card("cmO","Tap a chip to compare the Fisher pneumatic setup with the Level Master + SKD62UA pairing.")+'<p class="wnote">Zach just installed a Level Master + Siemens SKD62UA; this is the current pairing.</p>');
+  chipInfo("cmC","cmO",CMP);
+
+  /* ---- shared level model: Sensitivity Table 1 example ---- */
+  var T={hiAlm:5.5,hiWrn:4.5,pOff:1.5,pOn:0.75,loWrn:0.3,lwco:0};
+  function pctOf(L){return L<=T.pOn?100:(L>=T.pOff?0:(T.pOff-L)/(T.pOff-T.pOn)*100);}
+  function maOf(p){return 4+16*p/100;}
+  function ly(L){return 160-clamp(L,0,6)/6*140;}
+  function column(L,x,showInside){
+    var y=ly(L), g='';
+    g+='<rect x="'+x+'" y="20" width="40" height="150" rx="5" fill="#10242e" stroke="#5ab4ff" stroke-width="2"/>';
+    g+='<rect x="'+(x+2)+'" y="'+y.toFixed(1)+'" width="36" height="'+(168-y).toFixed(1)+'" fill="rgba(90,180,255,.33)"/><line x1="'+(x+2)+'" y1="'+y.toFixed(1)+'" x2="'+(x+38)+'" y2="'+y.toFixed(1)+'" stroke="#7fd6ff" stroke-width="1.5"/>';
+    g+='<line x1="'+(x+20)+'" y1="12" x2="'+(x+20)+'" y2="168" stroke="#9aa5b1" stroke-width="2"/><rect x="'+(x+8)+'" y="'+(y-6).toFixed(1)+'" width="24" height="12" rx="3" fill="#e5e8eb" stroke="#2EC4B6" stroke-width="2"/><text x="'+(x+20)+'" y="'+(y+3).toFixed(1)+'" fill="#0f1720" font-size="6" text-anchor="middle">float</text>';
+    g+='<rect x="'+(x+8)+'" y="2" width="24" height="11" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="'+(x+20)+'" y="10" fill="#cfd8e3" font-size="5.5" text-anchor="middle">sensor</text>';
+    [[T.hiAlm,"HW alarm 5.5"],[T.hiWrn,"HW warn 4.5"],[T.pOff,"Pump Off 1.5"],[T.pOn,"Pump On 0.75"],[T.loWrn,"Low warn 0.3"],[T.lwco,"LWCO 0"]].forEach(function(m){var yy=ly(m[0]);
+      g+='<line x1="'+(x+40)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+46)+'" y2="'+yy.toFixed(1)+'" stroke="#ffd23f"/><text x="'+(x+48)+'" y="'+(yy+2).toFixed(1)+'" fill="#ffd23f" font-size="5.8">'+m[1]+'</text>';});
+    return g;
+  }
+  function alarmOf(L){return L<=T.lwco?"lwsd":L<T.loWrn?"lowwrn":L>T.hiAlm?"hialm":L>T.hiWrn?"hiwrn":"ok";}
+  function bargraph(L,x,y0){ /* 8 LEDs, bottom to top: red, orange, 4 green, orange, red (illustrative) */
+    var a=alarmOf(L), g='';
+    var gc=a==="ok"?clamp(Math.ceil((L-T.loWrn)/((T.hiWrn-T.loWrn)/4)),1,4):0;
+    var leds=[[a==="lwsd","#ff4d4d"],[a==="lwsd"||a==="lowwrn","#ff9f1c"],[gc>=1,"#3ecf6a"],[gc>=2,"#3ecf6a"],[gc>=3,"#3ecf6a"],[gc>=4,"#3ecf6a"],[a==="hiwrn"||a==="hialm","#ff9f1c"],[a==="hialm","#ff4d4d"]];
+    leds.forEach(function(l,i){g+='<circle cx="'+x+'" cy="'+(y0-i*10)+'" r="3.6" fill="'+(l[0]?l[1]:"#26323f")+'" stroke="#59616c" stroke-width=".6"/>';});
+    return g;
+  }
+  function gauge(cx,cy,rad,frac,col,lab,dim){var a=-135+270*clamp(frac,0,1),x2=cx+(rad-6)*Math.sin(a*Math.PI/180),y2=cy-(rad-6)*Math.cos(a*Math.PI/180);
+    return '<circle cx="'+cx+'" cy="'+cy+'" r="'+rad+'" fill="#0d0f12" stroke="#59616c" stroke-width="2"/>'+(dim?'':'<line x1="'+cx+'" y1="'+cy+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+col+'" stroke-width="2.5"/>')+'<circle cx="'+cx+'" cy="'+cy+'" r="2.5" fill="#fff"/><text x="'+(cx-rad+3)+'" y="'+(cy+rad-5)+'" fill="#9AA0A6" font-size="6">4</text><text x="'+(cx+rad-9)+'" y="'+(cy+rad-5)+'" fill="#9AA0A6" font-size="6">20</text><text x="'+cx+'" y="'+(cy+rad+10)+'" fill="'+col+'" font-size="7.5" text-anchor="middle">'+lab+'</text>';}
+
+  /* ---- A6.1 water column cutaway ---- */
+  var WC={L:1.29,inside:false};
+  S("w-s14-2","Water column cutaway: float, probe, display",
+    '<div class="svgbox"><svg id="wcSvg" viewBox="0 0 300 180" role="img" aria-label="Water column with a magnetostrictive float on a probe, and the Level Master display"></svg></div>'+
+    '<label class="lbl" for="wcL" style="margin-top:8px">Water level: <b id="wcLv">1.29</b> in above the LWCO mark (example)</label><input type="range" id="wcL" min="0" max="6" step="0.01" value="1.29" aria-label="Water level">'+
+    '<div class="row"><button type="button" class="secondary" id="wcIn" aria-pressed="false">What\'s inside? (24 VDC and RS-485)</button><button type="button" class="secondary" id="wcPt">Probe type</button></div>'+
+    card("wcO","Slide the level: the float rides the probe and the display shows inches above the low water cut-off (LWCO) mark.")+
+    '<p class="wnote">Level numbers: Sensitivity Table 1 example, not a site setting. Display and bargraph are drawn after LM Fig 1-1 and Fig 4-10 (illustrative).</p>');
+  function wcDraw(){
+    var L=WC.L,a=alarmOf(L),g=column(L,6,false);
+    g+='<rect x="108" y="14" width="124" height="108" rx="8" fill="#141b24" stroke="#59616c" stroke-width="2"/>';
+    var l2=a==="lwsd"?"LW Shutdown":a==="lowwrn"?"Low Lvl Wrn":a==="hiwrn"?"High Lvl Wrn":a==="hialm"?"High Water Alarm":"Boiler Off";
+    g+='<rect x="116" y="22" width="84" height="30" rx="3" fill="#0b2a1e" stroke="#2EC4B6"/><text x="120" y="35" fill="#9dffcf" font-size="8" font-family="monospace">'+L.toFixed(2)+'" &gt;LWCO</text><text x="120" y="47" fill="#9dffcf" font-size="7.5" font-family="monospace">'+l2+'</text>';
+    g+=bargraph(L,216,106);
+    g+='<circle cx="124" cy="68" r="4" fill="#3ecf6a"/><text x="132" y="71" fill="#9AA0A6" font-size="6">POWER ON / ERROR</text>';
+    g+='<rect x="116" y="82" width="22" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="127" y="90" fill="#cfd8e3" font-size="5" text-anchor="middle">MODE</text><rect x="142" y="82" width="26" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="155" y="90" fill="#cfd8e3" font-size="4.6" text-anchor="middle">BLOW DOWN</text><rect x="172" y="82" width="28" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="186" y="90" fill="#cfd8e3" font-size="4.6" text-anchor="middle">MENU/RESET</text>';
+    g+='<text x="170" y="116" fill="#cfd8e3" font-size="7" text-anchor="middle">Level Master controller</text>';
+    var cy=a==="lwsd"?"#ff4d4d":a==="ok"?"#2EC4B6":"#ff9f1c";
+    if(WC.inside){g+='<path d="M64 100 H108" stroke="#ffb020" stroke-width="2" stroke-dasharray="4 3" fill="none"/><text x="86" y="95" fill="#ffb020" font-size="6" text-anchor="middle">24 VDC</text><path d="M64 112 H108" stroke="#2EC4B6" stroke-width="2" fill="none"/><text x="86" y="124" fill="#2EC4B6" font-size="6" text-anchor="middle">RS-485</text><text x="170" y="136" fill="#cfd8e3" font-size="6" text-anchor="middle">120 VAC in; controller makes 24 VDC for the sensor</text>';}
+    $("wcSvg").innerHTML=g; $("wcLv").textContent=L.toFixed(2);
+    $("wcSvg").setAttribute("data-l",L.toFixed(2));
+  }
+  $("wcL").addEventListener("input",function(){WC.L=+$("wcL").value;wcDraw();});
+  $("wcIn").addEventListener("click",function(){WC.inside=!WC.inside;$("wcIn").setAttribute("aria-pressed",String(WC.inside));wcDraw();$("wcO").innerHTML=WC.inside?"<b>Inside:</b> the controller takes 120 VAC and makes 24 VDC for the sensor; a five-conductor shielded RS-485 cable carries the sensor data back (run in separate conduit from ignition wiring). [LM p.1-2, 2-4, 2-6; LMB p.2]":"Cables hidden.";});
+  $("wcPt").addEventListener("click",function(){$("wcO").innerHTML="<b>Probe type:</b> magnetostrictive float, not conductance and not capacitance. A 2 in stainless float with a magnet rides a probe; there are no levers or switches and the float is non-contact. [LMB p.2-3; LM p.1-2]";});
+  wcDraw();
+
+  /* ---- A6.2 condition explorer ---- */
+  var CND=[["Power-up self-start","Cleaver-Brooks Copyright @YYYY → Waiting on Sensor","LEDs cycle; green POWER ON; the on-board alarm beeps.","LWCO contact stays de-energized during the self-start.","mA at 14/15: not documented.","LM p.2-10"],
+    ["Low-water warning","Low Lvl Wrn Timer x Sec → x.xx\" >LWCO  Low Lvl Wrn","Lower orange LED; the alarm beeps.","General alarm relay (23, 24) energized.","mA: not documented (the animation assumes it holds at 20 mA).","LM p.2-10"],
+    ["LWCO trip (LW Shutdown)","LWCO countdown, then LW Shutdown","Lower red LED, and the red LED above MENU/RESET.","LWCO relay (19-21) de-energized: the burner circuit opens; alarm relay on. Manual-reset models stay open until reset.","mA: not documented.","LM p.2-10, 2-11"],
+    ["High-water warning","High Lvl Wrn (after the timer)","Upper orange LED.","General alarm relay energized.","mA: 4 expected (valve closed); not explicitly documented.","LM p.2-11; Table 3-3 p.3-4"],
+    ["High-water alarm","High Water Alarm","Upper red LED. Stays on the LCD until MENU/RESET.","High water alarm relay (25, 26) and general alarm relay energized.","mA: 4 expected; not explicitly documented.","LM p.2-11"],
+    ["Sensor wiring fault","Error message; Waiting on Sensor","POWER ON/ERROR flashes green and red alternately; sensor board LED red.","Alarm relay energized; LWCO relay de-energized.","mA: not documented.","LM p.2-11, 2-12"],
+    ["Stuck float","Slow Float → Float Check Fail → Req Col Blowdown","Burner running: no float movement for half the test time, then the full time.","LWCO contacts open at Float Check Fail; a proper blowdown is required to restart. Not enabled for 2 hours after a cold start.","n/a","LM Fig 4-7 to 4-9 p.4-5"],
+    ["Column blowdown test","Perform Blowdown screens → 90 s countdown → Blowdown Successful","Red low-water LED at the bottom as the float falls.","BLOWDOWN switch bypasses the LWCO while held; below LWCO for more than 30 s opens the contacts anyway.","n/a","LM p.4-9 to 4-11"],
+    ["ALWCO check","Perform ALWCO screens","Operator present; level dropped below the auxiliary LWCO.","Boiler shut down by the auxiliary LWCO: LW Shutdown; reset after level is restored.","n/a","LM p.4-11, 4-12"]];
+  S("w-s14-3","What the Level Master does: tap a condition",chips("cdC",CND.map(function(c){return c[0];}))+'<div class="infocard" id="cdO" aria-live="polite">Tap a condition to see the LCD text, LEDs, relays, and the manual page.</div><p class="wnote">Sensitivity Table 1 example levels (not a site setting): High Water Alarm 5.5 in, High Water Warning 4.5, Pump Off 1.5, Pump On 0.75, Low Water Warning 0.3, LWCO 0. Alarm/Warning Timer default 5 s.</p>');
+  H.chipGroup($("cdC"),function(i){var c=CND[+i];$("cdO").innerHTML="<b>"+c[0]+"</b><pre class=\"lcd\">"+c[1]+"</pre><p><b>LEDs:</b> "+c[2]+"</p><p><b>Relays:</b> "+c[3]+"</p><p><b>"+c[4]+"</b></p><p class=\"mini\">"+c[5]+"</p>";});
+
+  /* ---- A6.3 centerpiece: level to mA to valve ---- */
+  var X={L:1.125,nc:true,dip1:"off",dip3:"on",fmt:"mod",burner:true,lost:false,pump:false,speed:10,cur:0.5,target:0.5,mismatch:false,note:""};
+  function sig(){ /* returns {ma, tag} */
+    var a=alarmOf(X.L),p=pctOf(X.L);
+    if(!X.burner||X.fmt==="onoff") return {ma:null,tag:""};
+    if(a==="lowwrn") return {ma:20,tag:"assumed hold; not documented"};
+    if(a==="lwsd") return {ma:null,tag:"not documented"};
+    if(a==="hiwrn"||a==="hialm") return {ma:4,tag:"4 mA expected; not explicitly documented"};
+    return {ma:maOf(p),tag:""};
+  }
+  function compute(){
+    var s=sig(); X.mismatch=false; X.note="";
+    if(X.lost){X.target=0;X.note="Signal or 24 Vac lost: the return spring drives the stem to 0%.";return;}
+    if(X.dip3==="off"&&s.ma!=null){X.mismatch=true;X.note="DIP 3 OFF = 0-10 Vdc: type mismatch against a mA signal (inferred effect; the manual only defines the selection). Actuator held.";return;}
+    if(s.ma==null){X.note=!X.burner?"Boiler off: the display needs burner status (terminal 22); the 14/15 output is not documented in this state. Actuator held.":X.fmt==="onoff"?"On/Off mode: the pump contactor (terminals 27, 28) is used; 14/15 is not the feed signal here. Actuator not driven.":"mA at LWCO shutdown: not documented. Actuator held.";return;}
+    var f=(s.ma-4)/16; X.target=X.dip1==="off"?f:1-f; if(s.tag)X.note="mA at this alarm: "+s.tag+".";
+  }
+  S("w-s14-4","See it run: level → mA → SKD62UA → valve (EXAMPLE numbers)",
+    '<div class="svgbox"><svg id="lmSvg" viewBox="0 0 300 360" role="img" aria-label="Water column, Level Master display, mA gauge, SKD62UA actuator and valve"></svg></div>'+
+    '<label class="lbl" for="lmL" style="margin-top:8px">Level: <b id="lmLv">1.13</b> in above LWCO (0 to 6)</label><input type="range" id="lmL" min="0" max="6" step="0.01" value="1.125" aria-label="Level">'+
+    '<div class="row"><button type="button" class="secondary" id="lmC1">0.75 in (Pump On)</button><button type="button" class="secondary" id="lmC2">1.125 in (midpoint)</button><button type="button" class="secondary" id="lmC3">1.5 in (Pump Off)</button><button type="button" class="secondary" id="lmC4">Low 0.2</button><button type="button" class="secondary" id="lmC5">LWCO 0</button><button type="button" class="secondary" id="lmC6">High 5.0</button></div>'+
+    '<p class="lbl" style="margin:8px 0 0">Valve body</p>'+seg("lmBody",[["nc","Normally closed (NC)"],["no","Normally open (NO)"]])+
+    '<p class="lbl" style="margin:8px 0 0">SKD62UA DIP 1 (direction) and DIP 3 (signal)</p>'+seg("lmD1",[["off","DIP 1 OFF: direct"],["on","DIP 1 ON: reverse"]])+seg("lmD3",[["on","DIP 3 ON: 4-20 mA"],["off","DIP 3 OFF: 0-10 Vdc"]])+
+    '<p class="lbl" style="margin:8px 0 0">Level Master Display Format and burner</p>'+seg("lmFm",[["mod","Modulating (4-20 mA)"],["onoff","On/Off (pump)"]])+seg("lmBu",[["on","Burner running"],["off","Burner off"]])+
+    '<p class="lbl" style="margin:8px 0 0">Power and speed</p>'+seg("lmPw",[["ok","Power and signal OK"],["lost","Power / signal lost"]])+seg("lmSp",[["10","Animation ×10"],["1","Real time"]])+
+    '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">Output</span><span class="v" id="lmPct">–</span></div><div class="ro"><span class="k">Signal 14(+)/15(−)</span><span class="v" id="lmMa">–</span></div><div class="ro"><span class="k">Stem</span><span class="v" id="lmStem">–</span></div><div class="ro"><span class="k">Valve</span><span class="v" id="lmOpen">–</span></div></div>'+
+    '<div class="infocard" id="lmCap" aria-live="polite"></div>'+
+    '<p class="wnote">Signal locked on 4-20 mA (West Mechanical standard); other ranges may be available; check the manual. Level numbers: Sensitivity Table 1 example, not a site setting. Pump, bypass and piston motion: illustrative (Siemens names the parts but gives no oil-flow narrative). Full-stroke times are 30 s opening and 15 s closing; the animation runs ×10 faster. mA at alarm conditions: not documented unless noted.</p>');
+  function lmDraw(){
+    compute();
+    var L=X.L,a=alarmOf(L),p=pctOf(L),s=sig(),g=column(L,6,false);
+    var open=X.nc?X.cur:1-X.cur;
+    /* Level Master face */
+    g+='<rect x="100" y="14" width="106" height="100" rx="8" fill="#141b24" stroke="#59616c" stroke-width="2"/>';
+    var l2=a==="lwsd"?"LW Shutdown":a==="lowwrn"?"Low Lvl Wrn":a==="hiwrn"?"High Lvl Wrn":a==="hialm"?"High Water Alarm":(!X.burner?"Boiler Off":(X.fmt==="mod"?"Output "+p.toFixed(1)+"%":(X.pump?"Pump On":"Pump Off")));
+    g+='<rect x="106" y="20" width="78" height="30" rx="3" fill="#0b2a1e" stroke="#2EC4B6"/><text x="110" y="33" fill="#9dffcf" font-size="7.6" font-family="monospace">'+L.toFixed(2)+'" &gt;LWCO</text><text x="110" y="45" fill="#9dffcf" font-size="7" font-family="monospace">'+l2+'</text>';
+    g+=bargraph(L,194,100);
+    g+='<text x="108" y="62" fill="#cfd8e3" font-size="6">LWCO relay (19-21): '+(a==="lwsd"?'<tspan fill="#ff4d4d">OPEN</tspan>':'closed')+'</text>';
+    g+='<text x="108" y="72" fill="#cfd8e3" font-size="6">General alarm (23,24): '+(a==="ok"?'off':'<tspan fill="#ff9f1c">on</tspan>')+'</text>';
+    g+='<text x="108" y="82" fill="#cfd8e3" font-size="6">HW alarm (25,26): '+(a==="hialm"?'<tspan fill="#ff4d4d">on</tspan>':'off')+'</text>';
+    g+='<text x="108" y="94" fill="#ffb020" font-size="6.2">14(+) 15(−): '+(s.ma==null?'no feed signal':s.ma.toFixed(2)+' mA')+'</text>';
+    g+='<text x="108" y="108" fill="#9AA0A6" font-size="5.6">Level Master</text>';
+    /* mA gauge */
+    g+=gauge(254,52,32,s.ma==null?0:(s.ma-4)/16,"#ffb020",s.ma==null?"no signal":s.ma.toFixed(2)+" mA",s.ma==null);
+    g+='<text x="254" y="102" fill="#9AA0A6" font-size="6" text-anchor="middle">4-20 mA control out</text>';
+    if(X.fmt==="onoff") g+='<text x="254" y="116" fill="#cfd8e3" font-size="6.5" text-anchor="middle">27, 28: pump '+(X.pump?"ON":"OFF")+'</text>';
+    /* wire from LM to SKD */
+    g+='<path d="M150 114 V176 H80 V190" stroke="'+(s.ma==null||X.lost?"#59616c":"#ffb020")+'" stroke-width="2" fill="none" stroke-dasharray="'+(X.lost?"3 3":"0")+'"/><text x="154" y="146" fill="#9AA0A6" font-size="6">Y / M</text>';
+    if(X.lost) g+='<text x="86" y="186" fill="#ff4d4d" font-size="6.5">signal lost</text>';
+    /* SKD62UA cutaway */
+    var tr=24*X.cur;
+    g+='<rect x="38" y="192" width="84" height="76" rx="5" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/><text x="80" y="279" fill="#cfd8e3" font-size="7" text-anchor="middle">SKD62UA (illustrative)</text>';
+    g+='<rect x="46" y="'+(200+tr).toFixed(1)+'" width="68" height="7" fill="#e8c07d" stroke="#fff" stroke-width=".6"/>';
+    var sy0=207+tr, sy1=266, n=7, zig='M60 '+sy0.toFixed(1); for(var i=1;i<=n;i++){zig+=' L'+(i%2?66:54)+' '+(sy0+(sy1-sy0)*i/(n+1)).toFixed(1);} zig+=' L60 '+sy1; g+='<path d="'+zig+'" stroke="#9aa5b1" stroke-width="1.4" fill="none"/><text x="52" y="262" fill="#9AA0A6" font-size="5">spring</text>';
+    g+='<rect x="24" y="206" width="12" height="20" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="30" y="236" fill="#9AA0A6" font-size="5" text-anchor="middle">pump</text>';
+    var byp=X.cur>X.target+0.002; g+='<rect x="124" y="226" width="10" height="12" rx="2" fill="'+(byp||X.lost?"#3ecf6a":"#2a3340")+'" stroke="#cfd8e3"/><text x="136" y="246" fill="#9AA0A6" font-size="5" text-anchor="end">bypass</text>';
+    g+='<line x1="88" y1="'+(207+tr).toFixed(1)+'" x2="88" y2="'+(312+tr).toFixed(1)+'" stroke="#e5e8eb" stroke-width="4"/>';
+    g+='<text x="96" y="'+(228+tr).toFixed(0)+'" fill="#9AA0A6" font-size="5.5">stem</text>';
+    g+='<rect x="102" y="196" width="14" height="6" fill="#ff5a5f" fill-opacity="'+(X.cur>0.001?0.9:0.15)+'"/><text x="125" y="202" fill="#9AA0A6" font-size="5.5">pos. '+X.cur.toFixed(2)+'</text>';
+    /* valve body */
+    var seat=X.nc?312:342, ptop=X.nc?312+tr:312+tr; /* plug top follows the stem */
+    g+='<rect x="38" y="296" width="84" height="58" rx="5" fill="#2b2118" stroke="#d2a679" stroke-width="1.5"/>';
+    g+='<line x1="60" y1="'+seat+'" x2="116" y2="'+seat+'" stroke="#d2a679" stroke-width="3"/><text x="40" y="'+(seat+(X.nc?-3:12))+'" fill="#d2a679" font-size="5.5">seat</text>';
+    g+='<rect x="76" y="'+ptop.toFixed(1)+'" width="24" height="6" rx="1" fill="#ff5a5f" stroke="#fff" stroke-width=".8"/>';
+    g+='<path d="M16 326 H36" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><path d="M124 326 H144" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><text x="80" y="292" fill="#cfd8e3" font-size="7" text-anchor="middle">'+(X.nc?"NC valve":"NO valve")+": "+Math.round(open*100)+'% open</text>';
+    /* right column: DIP bank and notes */
+    g+='<text x="214" y="200" fill="#cfd8e3" font-size="7">DIP switches</text>';
+    var dips=[["1",X.dip1==="on"],["2",false],["3",X.dip3==="on"],["4",false]];
+    dips.forEach(function(d,i){var x=160+i*30;g+='<rect x="'+x+'" y="206" width="22" height="32" rx="3" fill="#0d0f12" stroke="#59616c"/><rect x="'+(x+4)+'" y="'+(d[1]?210:224)+'" width="14" height="10" rx="2" fill="'+(d[1]?"#3ecf6a":"#59616c")+'"/><text x="'+(x+11)+'" y="248" fill="#9AA0A6" font-size="6" text-anchor="middle">'+d[0]+'</text>';});
+    g+='<text x="160" y="262" fill="#9AA0A6" font-size="5.8">1: OFF direct / ON reverse</text><text x="160" y="272" fill="#9AA0A6" font-size="5.8">3: ON = 4-20 mA, OFF = 0-10 Vdc</text>';
+    g+='<text x="160" y="290" fill="#cfd8e3" font-size="6.2">Stroke 0-20 mm: '+(X.cur*20).toFixed(1)+' mm</text><text x="160" y="302" fill="#cfd8e3" font-size="6.2">Open 30 s / close 15 s</text>';
+    g+='<text x="160" y="316" fill="'+(X.lost?"#ff4d4d":X.mismatch?"#ffb020":"#9AA0A6")+'" font-size="6">'+(X.lost?"SPRING RETURN to 0%":X.mismatch?"TYPE MISMATCH (held)":(Math.abs(X.cur-X.target)>0.005?(X.cur<X.target?"opening…":"closing…"):"at position"))+'</text>';
+    var svg=$("lmSvg"); svg.innerHTML=g;
+    svg.setAttribute("data-pct",p.toFixed(1)); svg.setAttribute("data-ma",s.ma==null?"none":s.ma.toFixed(2)); svg.setAttribute("data-target",X.target.toFixed(3)); svg.setAttribute("data-stroke",X.cur.toFixed(3)); svg.setAttribute("data-open",open.toFixed(3)); svg.setAttribute("data-state",a); svg.setAttribute("data-lost",X.lost?"1":"0"); svg.setAttribute("data-mismatch",X.mismatch?"1":"0");
+    $("lmLv").textContent=L.toFixed(2);
+    $("lmPct").textContent=(a==="ok"&&X.burner&&X.fmt==="mod")?p.toFixed(1)+"%":(X.fmt==="onoff"?(X.pump?"Pump On":"Pump Off"):"–");
+    $("lmMa").textContent=s.ma==null?"none":s.ma.toFixed(2)+" mA"; $("lmStem").textContent=(X.cur*20).toFixed(1)+" mm ("+Math.round(X.cur*100)+"%)"; $("lmOpen").textContent=Math.round(open*100)+"% open";
+    var why;
+    if(X.lost) why="<b>Power or signal lost.</b> The return spring drives the SKD62UA to 0% stroke (stem retracted) in about 15 s: "+(X.nc?"a normally closed valve closes.":"a normally open valve opens.")+" Compare low water: the Level Master sends 20 mA and the valve opens. [TI p.2, 7; VF p.8]";
+    else if(a==="lwsd") why="<b>Below the LWCO point:</b> after the Alarm/Warning Timer (default 5 s) the LWCO relay de-energizes and the burner circuit opens. The LWCO relays, not the actuator, are the safety shutoff. [LM p.2-10, 2-11]";
+    else if(a==="lowwrn") why="<b>Low water warning:</b> lower orange LED and the general alarm relay. mA here is not documented; the animation assumes the valve stays wide open.";
+    else if(a==="hiwrn"||a==="hialm") why="<b>"+(a==="hialm"?"High water alarm":"High water warning")+":</b> upper "+(a==="hialm"?"red":"orange")+" LED; feed is shut off (4 mA expected, not explicitly documented). [LM p.2-11]";
+    else if(!X.burner) why="<b>Boiler off:</b> the display shows <i>Boiler Off</i>. Modulating output needs the burner status input (terminal 22). [LM Fig 4-10 p.4-6; p.4-5]";
+    else if(X.fmt==="onoff") why="<b>On/Off format:</b> the display shows Pump On / Pump Off and the contactor is on terminals 27, 28. This is the other documented mode, not the West Mechanical standard.";
+    else if(X.mismatch) why="<b>DIP 3 is OFF:</b> the actuator expects 0-10 Vdc, but the Level Master sends mA. Move DIP 3 to ON for 4-20 mA. [TI Fig 13 p.9]";
+    else if(L<=T.pOn){var feeding=(X.nc&&X.dip1==="off")||(!X.nc&&X.dip1==="on"); why="<b>Low water, normal band:</b> 20 mA at or below the Pump On level. "+(X.dip1==="off"?"With DIP 1 OFF, 20 mA = 100% stroke (stem extended). ":"With DIP 1 ON (reverse), 20 mA = 0% stroke. ")+"The "+(X.nc?"NC":"NO")+" valve is "+Math.round(open*100)+"% open"+(feeding?" (feed on).":": that is backwards for feedwater, so a NO valve needs DIP 1 ON. [TI p.10, 11]");}
+    else if(L>=T.pOff) why="<b>Higher water, normal band:</b> 4 mA at or above the Pump Off level."+(X.dip1==="off"?" With DIP 1 OFF, 4 mA = 0% stroke (stem retracted).":" With DIP 1 ON, 4 mA = 100% stroke.")+" The valve is "+Math.round(open*100)+"% open.";
+    else why="<b>Rising water:</b> between Pump On and Pump Off the output follows a straight line: mA = 4 + 16 × (percent ÷ 100) (derived from LM p.5-4; example). The stem and plug follow, at 15 s full-stroke closing time.";
+    $("lmCap").innerHTML=why+(X.note&&!X.lost?'<div class="mini" style="margin-top:6px">'+X.note+'</div>':'');
+  }
+  function lmStep(dt){
+    var d=X.target-X.cur; if(Math.abs(d)<0.0005){X.cur=X.target;return false;}
+    var rate=(d>0?1/30:1/15)*X.speed*dt; if(RM)rate=1;
+    X.cur=Math.abs(d)<=rate?X.target:X.cur+(d>0?rate:-rate); return true;
+  }
+  var lmTimer=null;
+  function lmKick(){lmDraw(); if(lmTimer)return; lmTimer=setInterval(function(){var moved=lmStep(0.1); lmDraw(); if(!moved){clearInterval(lmTimer);lmTimer=null;}},100);}
+  function lmSet(v){X.L=clamp(v,0,6); if(X.L<=T.pOn)X.pump=true; else if(X.L>=T.pOff)X.pump=false; $("lmL").value=X.L; lmKick();}
+  $("lmL").addEventListener("input",function(){lmSet(+$("lmL").value);});
+  [["lmC1",0.75],["lmC2",1.125],["lmC3",1.5],["lmC4",0.2],["lmC5",0],["lmC6",5]].forEach(function(c){$(c[0]).addEventListener("click",function(){lmSet(c[1]);});});
+  H.chipGroup($("lmBody"),function(v){X.nc=v==="nc";lmKick();}).pick("nc");
+  H.chipGroup($("lmD1"),function(v){X.dip1=v;lmKick();}).pick("off");
+  H.chipGroup($("lmD3"),function(v){X.dip3=v;lmKick();}).pick("on");
+  H.chipGroup($("lmFm"),function(v){X.fmt=v;lmKick();}).pick("mod");
+  H.chipGroup($("lmBu"),function(v){X.burner=v==="on";lmKick();}).pick("on");
+  H.chipGroup($("lmPw"),function(v){X.lost=v==="lost";lmKick();}).pick("ok");
+  H.chipGroup($("lmSp"),function(v){X.speed=+v;lmKick();}).pick("10");
+  X.cur=0.5; X.target=0.5; lmDraw();
+
+  /* ---- A6.4 SKD62UA parts, DIP bank, manual override, calibration ---- */
+  var SKP=[["1 Pressure cylinder","The cylinder the piston works in. (TI Fig 7 p.6)"],["2 Piston","Pushed out against the return spring; its stem is the valve stem. (TI Fig 7 p.6)"],["3 Oscillating pump","Drives the piston. Siemens gives the name but no oil-flow narrative, so the motion shown is illustrative. (TI Fig 7)"],["4 Return spring","On loss of signal or power it returns the actuator to 0% stroke, stem fully retracted, in about 15 s. It is under high compression: do not disassemble. (TI p.5, 7)"],["5 Bypass valve","Lets the spring push the piston back. Illustrative: inferred from the part names. (TI Fig 7)"],["6 Valve stem retainer","Holds the actuator stem to the valve stem. (TI Fig 7)"],["7 Manual override knob","Turn clockwise (red indicator shows): each 360° = 3/32 in (2.5 mm). The valve cannot be commanded to 0% in manual. Return fully counter-clockwise to go back to automatic. (TI p.11, 12)"],["8 Position indicator","Shows 0 to 1 (stroke 0 to 20 mm). (TI Fig 9 p.6)"]];
+  var K={ma:12,d1:"off",d3:"on",turns:0,cal:null,cur:0.5};
+  S("w-s14-5","The SKD62UA: parts, DIP switches, override, calibration",
+    '<div class="svgbox"><svg id="skdSvg" viewBox="0 0 300 200" role="img" aria-label="SKD62UA cutaway with the official part numbers"></svg></div>'+
+    chips("skdC",SKP.map(function(p){return p[0];}))+card("skdO","Tap a part for its official name. Move the signal knob to move the piston and stem.")+
+    '<label class="lbl" for="skdMa" style="margin-top:10px">Signal knob: <b id="skdMav">12.0</b> mA</label><input type="range" id="skdMa" min="4" max="20" step="0.1" value="12" aria-label="Signal">'+
+    '<div class="row"><button type="button" class="secondary" id="skdD1" aria-pressed="false">DIP 1: OFF (direct)</button><button type="button" class="secondary" id="skdD3" aria-pressed="true">DIP 3: ON (4-20 mA)</button></div>'+
+    '<div class="row"><button type="button" class="secondary" id="skdTurn">Turn override knob one turn (clockwise)</button><button type="button" class="secondary" id="skdBack">Return knob (counter-clockwise)</button><button type="button" class="secondary" id="skdCal">Stroke calibration sweep</button></div>'+
+    '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">Position indicator</span><span class="v" id="skdPos">–</span></div><div class="ro"><span class="k">Stem</span><span class="v" id="skdMm">–</span></div><div class="ro"><span class="k">LED</span><span class="v" id="skdLed" style="font-size:1rem">–</span></div></div>'+
+    '<p class="wnote" id="skdNote" aria-live="polite"></p><p class="wnote">Geometry follows TI Fig 7 (illustrative). Override and DIP behaviour from TI p.9, 10, 11, 12.</p>');
+  var skSel=-1;
+  function skdStroke(){
+    var f=(K.ma-4)/16; var sg=K.d1==="off"?f:1-f;
+    if(K.d3==="off") return {s:K.cur,mis:true};
+    var s=sg; if(K.turns>0) s=clamp(sg+K.turns*2.5/20,2.5/20,1);
+    return {s:s,mis:false};
+  }
+  function skdDraw(){
+    var r=K.cal!=null?{s:K.cal,mis:false}:skdStroke(); K.cur=r.s; var tr=r.s*30, g='';
+    var parts=function(i,x,y,w,h,fill){var on=skSel===i;return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+fill+'" fill-opacity="'+(on?.6:.2)+'" stroke="'+(on?"#fff":fill)+'" stroke-width="'+(on?2.5:1)+'"/>';};
+    g+=parts(0,70,14,100,106,"#4ea8ff");
+    g+=parts(1,76,(22+tr),88,10,"#e8c07d");
+    g+=parts(2,28,30,28,34,"#b07cff");
+    var sy0=32+tr+10,sy1=116,zig='M110 '+sy0; for(var i=1;i<=7;i++)zig+=' L'+(i%2?120:100)+' '+(sy0+(sy1-sy0)*i/8); zig+=' L110 '+sy1; g+='<path d="'+zig+'" stroke="'+(skSel===3?"#fff":"#9aa5b1")+'" stroke-width="'+(skSel===3?3:1.6)+'" fill="none"/>';
+    g+=parts(4,176,50,30,24,"#3ecf6a");
+    g+=parts(5,100,122,48,14,"#ff9a3c");
+    g+=parts(6,176,18,36,20,r.mis?"#ffb020":(K.turns>0?"#ff5a5f":"#9aa5b1"));
+    g+=parts(7,176,88,40,22,"#ff5a5f");
+    g+='<line x1="124" y1="'+(32+tr+10)+'" x2="124" y2="186" stroke="#e5e8eb" stroke-width="5"/><rect x="108" y="'+(176)+'" width="32" height="8" fill="#ff5a5f" transform="translate(0,'+(tr*0.2).toFixed(1)+')"/>';
+    var lab=[[120,"1"],[120,"2"],[42,"3"],[110,"4"],[191,"5"],[124,"6"],[194,"7"],[196,"8"]];
+    g+='<text x="82" y="30" fill="#fff" font-size="8">1</text><text x="82" y="'+(40+tr).toFixed(0)+'" fill="#fff" font-size="8">2</text><text x="38" y="26" fill="#fff" font-size="8">3</text><text x="126" y="90" fill="#fff" font-size="8">4</text><text x="188" y="48" fill="#fff" font-size="8">5</text><text x="150" y="133" fill="#fff" font-size="8">6</text><text x="188" y="32" fill="#fff" font-size="8">7</text><text x="188" y="102" fill="#fff" font-size="8">8</text>';
+    g+='<text x="150" y="196" fill="#9AA0A6" font-size="6.5" text-anchor="middle">position '+r.s.toFixed(2)+' (0 to 1)</text>';
+    $("skdSvg").innerHTML=g; $("skdSvg").setAttribute("data-stroke",r.s.toFixed(3)); $("skdSvg").setAttribute("data-turns",K.turns);
+    $("skdMav").textContent=K.ma.toFixed(1); $("skdPos").textContent=r.s.toFixed(2); $("skdMm").textContent=(r.s*20).toFixed(1)+" mm";
+    $("skdLed").textContent=K.cal!=null?"Green flashing (calibrating)":(r.mis?"Green on (signal type mismatch, inferred)":"Green on (normal)");
+    $("skdNote").innerHTML=r.mis?"DIP 3 OFF = 0-10 Vdc: a mA signal is the wrong type, so the actuator is shown held. Move DIP 3 ON for 4-20 mA. [TI Fig 13 p.9]":K.turns>0?"Manual override: red indicator showing; control is not accurate, and the valve cannot be commanded to 0% in manual. Return the knob fully counter-clockwise (red indicator gone) before relying on automatic. [TI p.11, 12]":(K.d1==="off"?"DIP 1 OFF = direct: 4 mA = stroke 0% (stem retracted), 20 mA = 100% (extended). [TI Fig 9, 14]":"DIP 1 ON = reverse: 4 mA = stroke 100%, 20 mA = 0%. [TI Fig 14 p.10]");
+    $("skdD1").textContent="DIP 1: "+(K.d1==="off"?"OFF (direct)":"ON (reverse)"); $("skdD1").setAttribute("aria-pressed",String(K.d1==="on"));
+    $("skdD3").textContent="DIP 3: "+(K.d3==="on"?"ON (4-20 mA)":"OFF (0-10 Vdc)"); $("skdD3").setAttribute("aria-pressed",String(K.d3==="on"));
+  }
+  H.chipGroup($("skdC"),function(i){skSel=+i;$("skdO").innerHTML="<b>"+SKP[skSel][0]+":</b> "+SKP[skSel][1];skdDraw();});
+  $("skdMa").addEventListener("input",function(){K.ma=+$("skdMa").value;skdDraw();});
+  $("skdD1").addEventListener("click",function(){K.d1=K.d1==="off"?"on":"off";skdDraw();});
+  $("skdD3").addEventListener("click",function(){K.d3=K.d3==="on"?"off":"on";skdDraw();});
+  $("skdTurn").addEventListener("click",function(){K.turns=Math.min(8,K.turns+1);skdDraw();});
+  $("skdBack").addEventListener("click",function(){K.turns=0;skdDraw();});
+  $("skdCal").addEventListener("click",function(){
+    var seq=[0,1,skdStroke().s],i=0; $("skdNote").textContent="Calibrating: runs to 0%, then 100%, stores the values, then goes to the signal position (green steady). [TI p.8]";
+    function nextS(){if(i>=seq.length){K.cal=null;skdDraw();return;} K.cal=seq[i++]; skdDraw(); setTimeout(nextS,RM?0:700);}
+    nextS();});
+  skdDraw();
+
+  /* ---- A6.5 fail-position check ---- */
+  var FQ=[["Normally closed valve, DIP 1 OFF (direct). Low water: the Level Master sends 20 mA. Where is the valve?","open","20 mA = 100% stroke (stem extended), and an NC valve is open at 100%. [LM p.5-4; TI Fig 9; VF p.8]"],
+          ["Same NC valve. Water is high and the Level Master sends 4 mA. Where is the valve?","closed","4 mA = 0% stroke, and an NC valve is closed at 0%."],
+          ["Same NC valve. The 24 Vac supply fails. Where does it end up?","closed","The return spring drives the stem to 0% (about 15 s): NC closes. [TI p.2, 7]"],
+          ["A normally open valve with DIP 1 OFF. The signal is lost. Where does it end up?","open","0% stroke on an NO valve is open, so it opens on a failure. [TI p.10, 11; VF p.8]"],
+          ["A normally open valve, DIP 1 ON (reverse). Low water, 20 mA. Where is the valve?","open","Reverse: 20 mA = 0% stroke, and an NO valve is open at 0%, so it feeds on low water."],
+          ["A normally open valve left on DIP 1 OFF. Low water, 20 mA. Where is the valve?","closed","20 mA = 100% stroke closes an NO valve: it runs backwards. Set DIP 1 ON. [TI p.10, 11]"]];
+  var fi=0,fs=0;
+  S("w-s14-6","Fail-position check: where does the valve end up?",'<div id="fqBox"></div>');
+  function fqDraw(){
+    if(fi>=FQ.length){$("fqBox").innerHTML='<div class="infocard"><b>Score: '+fs+'/'+FQ.length+'.</b> Key point: a failed signal at 0 mA is not the same as low water. At low water the Level Master sends 20 mA and the valve opens; on a failure the SKD62UA goes to 0% and the valve body decides what that means.</div><div class="row"><button type="button" class="secondary" id="fqAgain">↺ Again</button></div>'; $("fqAgain").addEventListener("click",function(){fi=0;fs=0;fqDraw();}); return;}
+    var q=FQ[fi]; $("fqBox").innerHTML='<p><b>Question '+(fi+1)+' of '+FQ.length+'.</b> '+q[0]+'</p><div class="seg" id="fqOpts"><button data-v="open">Open</button><button data-v="closed">Closed</button></div><p class="ch-fb" id="fqFb" aria-live="polite"></p><div class="row"><button type="button" class="secondary" id="fqNext" disabled>Next →</button></div>';
+    var done=false; each($("fqOpts").querySelectorAll("button"),function(b){b.addEventListener("click",function(){if(done)return;done=true;var ok=b.getAttribute("data-v")===q[1];if(ok)fs++;b.classList.add(ok?"right":"wrong");$("fqFb").className="ch-fb show "+(ok?"good":"bad");$("fqFb").innerHTML=(ok?"✓ ":"✗ It is "+q[1]+". ")+q[2];$("fqNext").disabled=false;});});
+    $("fqNext").addEventListener("click",function(){fi++;fqDraw();});
+  }
+  fqDraw();
+
+  /* ---- A6.6 matcher ---- */
+  S("w-s14-7","Wiring and settings matcher",'<div id="mtBox"></div><p class="lbl" style="margin:14px 0 0"><b>The valve is NO: what must change?</b></p>'+chips("noC",["DIP 1 → ON (reverse)","DIP 3 → OFF","Display Format → On/Off"])+card("noO","Pick one."));
+  EW.sorter($("mtBox"),["Set on the Level Master","Set on the SKD62UA","Wiring between them"],[
+    {label:"Display Format: Modulating",bin:0,why:"Display Format is a Level Master commissioning item: Modulating gives the 4-20 mA output. [LM p.4-5]"},
+    {label:"Sensitivity Table",bin:0,why:"The Level Master's Sensitivity Table sets the alarm and pump levels. [LM p.3-2]"},
+    {label:"DIP 3 ON = 4-20 mA",bin:1,why:"DIP 3 is on the SKD62UA: ON = 4-20 mA, OFF = 0-10 Vdc. The Level Master sends mA. [TI Fig 13 p.9]"},
+    {label:"DIP 1 OFF = direct acting",bin:1,why:"DIP 1 is on the SKD62UA: OFF = direct (4 mA = 0%, 20 mA = 100%). [TI Fig 14 p.10]"},
+    {label:"Stroke calibration",bin:1,why:"The SKD62UA runs its stroke calibration (calibration slot) at commissioning. [TI p.8]"},
+    {label:"Terminals 14 (+) / 15 (−) to Y / M",bin:2,why:"The pairing is inferred: neither document shows this exact pair wired together. Zach to confirm. [LM p.2-9; TI Fig 19 p.13]"},
+    {label:"24 Vac G / G0 from a Class 2 transformer",bin:2,why:"The SKD62UA's 24 Vac comes from a Class 2 isolating transformer, not an auto-transformer. [TI p.13]"},
+    {label:"Shielded cable, ground one end",bin:2,why:"Level Master Fig 2-6 shows shielded analog cables grounded at one end. [LM p.2-8]"}]);
+  H.chipGroup($("noC"),function(i){$("noO").innerHTML=+i===0?"<b>✓ DIP 1 → ON (reverse).</b> A normally open valve opens at 0% stroke; with DIP 1 ON, 20 mA = 0% so low water opens it. [TI p.10, 11]":+i===1?"<b>✗</b> DIP 3 OFF selects 0-10 Vdc; the Level Master sends mA, so that would be a type mismatch.":"<b>✗</b> On/Off is the pump-contactor mode on terminals 27, 28, not the 4-20 mA signal West Mechanical uses.";});
+
+  /* ---- A6 walkdown ---- */
+  S("w-s14-8","Walkdown checklist: Level Master + SKD62UA",
+    EW.fld("lmwL","Display line 1: level (in above LWCO)","")+EW.fld("lmwO","Display Output (%)","")+
+    '<div class="readouts"><div class="ro"><span class="k">Expected mA = 4 + 16 × %/100</span><span class="v" id="lmwE">–</span></div><div class="ro"><span class="k">Expected stem (0 to 1)</span><span class="v" id="lmwS">–</span></div></div>'+
+    EW.fld("lmwM","Measured mA at terminals 14 / 15","")+EW.fld("lmwP","Position indicator (0 to 1)","")+
+    '<div class="grid2">'+EW.sel("lmwV","Valve tag",[["","?"],["NC","Normally closed"],["NO","Normally open"]])+EW.sel("lmwD1","DIP 1",[["","?"],["off","OFF (direct)"],["on","ON (reverse)"]])+'</div>'+
+    EW.sel("lmwD3","DIP 3",[["","?"],["on","ON (4-20 mA)"],["off","OFF (0-10 Vdc)"]])+EW.txt("lmwB","Last successful blowdown (date/time)","")+EW.txt("lmwW","Who checked it","Zach")+
+    '<p class="hint" id="lmwH" aria-live="polite"></p>'+EW.chk("lmwZ","Zach checked this")+'<label class="check-row"><input type="checkbox" id="lmwDone"> Mark complete</label>');
+  function lmwCalc(){
+    var o=parseFloat($("lmwO").value),m=parseFloat($("lmwM").value),h="";
+    if(isFinite(o)){var e=4+16*o/100;$("lmwE").textContent=e.toFixed(2)+" mA";$("lmwS").textContent=(o/100).toFixed(2);
+      if(isFinite(m)) h=Math.abs(m-e)<=0.2?"✓ Measured mA matches the display within 0.2 mA.":"✗ Measured "+m.toFixed(2)+" mA vs expected "+e.toFixed(2)+": check the Display Format, wiring on 14/15, and that you are on the control pair (not the 12/13 level re-transmit).";}
+    else {$("lmwE").textContent="–";$("lmwS").textContent="–";}
+    if($("lmwV").value==="NO"&&$("lmwD1").value==="off") h+=" A normally open valve with DIP 1 OFF runs backwards: ask Zach.";
+    if($("lmwD3").value==="off") h+=" DIP 3 should be ON for mA.";
+    $("lmwH").textContent=h.trim();
+  }
+  EW.keep(["lmwL","lmwO","lmwM","lmwP","lmwV","lmwD1","lmwD3","lmwB","lmwW","lmwZ"],lmwCalc);
+  (function(){var dn=$("lmwDone"),t=document.querySelector('.mark-done[data-sec="s14"]');if(!t)return;
+    function sync(){dn.checked=t.getAttribute("aria-pressed")==="true";}
+    dn.addEventListener("change",function(){var cur=t.getAttribute("aria-pressed")==="true";if(cur!==dn.checked)t.click();setTimeout(sync,0);});
+    t.addEventListener("click",function(){setTimeout(sync,50);});setTimeout(sync,0);})();
+
+  /* ---- terms ---- */
+  var TM=[["Level Master","Cleaver-Brooks microprocessor-based primary safety water level control for steam boilers: controller, magnetostrictive level sensor, water column. [LM p.1-2]"],["LWCO","Low water cut-off. The Level Master's redundant LWCO relays (19-21) sit in series with the boiler limits and open the burner circuit on low water. [LM p.2-6, Fig 2-5]"],["ALWCO","Auxiliary LWCO: an external second low-water cut-off. The Level Master has an auxiliary LWCO check routine to test it. [LM p.1-2, 4-11]"],["SKD62UA","Siemens electrohydraulic spring-return linear actuator, 24 Vac, 3/4 in (20 mm) stroke, UL listed, Advanced Features. [TI p.1, 2, 3]"],["Electrohydraulic actuator","An actuator that uses an electric pump to pressurize oil and push a piston against a return spring. [TI Fig 7 p.6]"],["4-20 mA","A current-loop signal. On this pairing: 20 mA at the Pump On (low water) level = valve open, 4 mA at the Pump Off level = valve closed. [LM p.5-4, 6-2]"],["Spring return","On loss of signal or power the SKD62UA spring drives it to 0% stroke in about 15 s; the valve body decides if that is open or closed. [TI p.7]"],["Water column","The cast-iron chamber on the boiler that holds the level sensor, sight glass and blowdown connection, with a casting mark for the LWCO point. [LM p.1-2, 1-3]"],["Display Format","The Level Master commissioning item that selects On/Off (pump) or Modulating (4-20 mA). [LM p.4-5]"]];
+  S("w-s14-9","Term chips: tap for a definition",chips("lmTC",TM.map(function(t){return t[0];}))+card("lmTO","Tap a term."));
+  chipInfo("lmTC","lmTO",TM);
 })();
