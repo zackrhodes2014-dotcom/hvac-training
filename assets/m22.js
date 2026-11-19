@@ -525,10 +525,10 @@
     var y=ly(L), g='';
     g+='<rect x="'+x+'" y="20" width="40" height="150" rx="5" fill="#10242e" stroke="#5ab4ff" stroke-width="2"/>';
     g+='<rect x="'+(x+2)+'" y="'+y.toFixed(1)+'" width="36" height="'+(168-y).toFixed(1)+'" fill="rgba(90,180,255,.33)"/><line x1="'+(x+2)+'" y1="'+y.toFixed(1)+'" x2="'+(x+38)+'" y2="'+y.toFixed(1)+'" stroke="#7fd6ff" stroke-width="1.5"/>';
-    g+='<line x1="'+(x+20)+'" y1="12" x2="'+(x+20)+'" y2="168" stroke="#9aa5b1" stroke-width="2"/><rect x="'+(x+8)+'" y="'+(y-6).toFixed(1)+'" width="24" height="12" rx="3" fill="#e5e8eb" stroke="#2EC4B6" stroke-width="2"/><text x="'+(x+20)+'" y="'+(y+3).toFixed(1)+'" fill="#0f1720" font-size="6" text-anchor="middle">float</text>';
+    g+='<line x1="'+(x+20)+'" y1="12" x2="'+(x+20)+'" y2="168" stroke="#9aa5b1" stroke-width="2"/><rect x="'+(x+6)+'" y="'+(y-7).toFixed(1)+'" width="28" height="14" rx="3" fill="#e5e8eb" stroke="#2EC4B6" stroke-width="2"/><text x="'+(x+20)+'" y="'+(y+3.5).toFixed(1)+'" fill="#0f1720" font-size="8" text-anchor="middle">float</text>';
     g+='<rect x="'+(x+8)+'" y="2" width="24" height="11" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="'+(x+20)+'" y="10" fill="#cfd8e3" font-size="5.5" text-anchor="middle">sensor</text>';
     [[T.hiAlm,"HW alarm 5.5"],[T.hiWrn,"HW warn 4.5"],[T.pOff,"Pump Off 1.5"],[T.pOn,"Pump On 0.75"],[T.loWrn,"Low warn 0.3"],[T.lwco,"LWCO 0"]].forEach(function(m){var yy=ly(m[0]);
-      g+='<line x1="'+(x+40)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+46)+'" y2="'+yy.toFixed(1)+'" stroke="#ffd23f"/><text x="'+(x+48)+'" y="'+(yy+2).toFixed(1)+'" fill="#ffd23f" font-size="5.8">'+m[1]+'</text>';});
+      g+='<line x1="'+(x+40)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+46)+'" y2="'+yy.toFixed(1)+'" stroke="#ffd23f"/><text x="'+(x+48)+'" y="'+(yy+(m[0]===T.lwco?12:m[0]===T.loWrn?5:2)).toFixed(1)+'" fill="#ffd23f" font-size="5.8">'+m[1]+'</text>';});
     return g;
   }
   function alarmOf(L){return L<=T.lwco?"lwsd":L<T.loWrn?"lowwrn":L>T.hiAlm?"hialm":L>T.hiWrn?"hiwrn":"ok";}
@@ -557,7 +557,7 @@
     g+='<rect x="116" y="22" width="84" height="30" rx="3" fill="#0b2a1e" stroke="#2EC4B6"/><text x="120" y="35" fill="#9dffcf" font-size="8" font-family="monospace">'+L.toFixed(2)+'" &gt;LWCO</text><text x="120" y="47" fill="#9dffcf" font-size="7.5" font-family="monospace">'+l2+'</text>';
     g+=bargraph(L,216,106);
     g+='<circle cx="124" cy="68" r="4" fill="#3ecf6a"/><text x="132" y="71" fill="#9AA0A6" font-size="6">POWER ON / ERROR</text>';
-    g+='<rect x="116" y="82" width="22" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="127" y="90" fill="#cfd8e3" font-size="5" text-anchor="middle">MODE</text><rect x="142" y="82" width="26" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="155" y="90" fill="#cfd8e3" font-size="4.6" text-anchor="middle">BLOW DOWN</text><rect x="172" y="82" width="28" height="12" rx="2" fill="#2a3340" stroke="#59616c"/><text x="186" y="90" fill="#cfd8e3" font-size="4.6" text-anchor="middle">MENU/RESET</text>';
+    g+='<rect x="116" y="80" width="22" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="127" y="95" fill="#cfd8e3" font-size="7.5" text-anchor="middle">MODE</text><rect x="142" y="80" width="26" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="155" y="90" fill="#cfd8e3" font-size="7.5" text-anchor="middle">BLOW</text><text x="155" y="99" fill="#cfd8e3" font-size="7.5" text-anchor="middle">DOWN</text><rect x="172" y="80" width="28" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="186" y="90" fill="#cfd8e3" font-size="7.5" text-anchor="middle">MENU/</text><text x="186" y="99" fill="#cfd8e3" font-size="7.5" text-anchor="middle">RESET</text>';
     g+='<text x="170" y="116" fill="#cfd8e3" font-size="7" text-anchor="middle">Level Master controller</text>';
     var cy=a==="lwsd"?"#ff4d4d":a==="ok"?"#2EC4B6":"#ff9f1c";
     if(WC.inside){g+='<path d="M64 100 H108" stroke="#ffb020" stroke-width="2" stroke-dasharray="4 3" fill="none"/><text x="86" y="95" fill="#ffb020" font-size="6" text-anchor="middle">24 VDC</text><path d="M64 112 H108" stroke="#2EC4B6" stroke-width="2" fill="none"/><text x="86" y="124" fill="#2EC4B6" font-size="6" text-anchor="middle">RS-485</text><text x="170" y="136" fill="#cfd8e3" font-size="6" text-anchor="middle">120 VAC in; controller makes 24 VDC for the sensor</text>';}
@@ -633,20 +633,22 @@
     if(X.lost) g+='<text x="86" y="186" fill="#ff4d4d" font-size="6.5">signal lost</text>';
     /* SKD62UA cutaway */
     var tr=24*X.cur;
-    g+='<rect x="38" y="192" width="84" height="76" rx="5" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/><text x="80" y="279" fill="#cfd8e3" font-size="7" text-anchor="middle">SKD62UA (illustrative)</text>';
+    g+='<rect x="38" y="192" width="84" height="76" rx="5" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/>';
     g+='<rect x="46" y="'+(200+tr).toFixed(1)+'" width="68" height="7" fill="#e8c07d" stroke="#fff" stroke-width=".6"/>';
-    var sy0=207+tr, sy1=266, n=7, zig='M60 '+sy0.toFixed(1); for(var i=1;i<=n;i++){zig+=' L'+(i%2?66:54)+' '+(sy0+(sy1-sy0)*i/(n+1)).toFixed(1);} zig+=' L60 '+sy1; g+='<path d="'+zig+'" stroke="#9aa5b1" stroke-width="1.4" fill="none"/><text x="52" y="262" fill="#9AA0A6" font-size="5">spring</text>';
-    g+='<rect x="24" y="206" width="12" height="20" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="30" y="236" fill="#9AA0A6" font-size="5" text-anchor="middle">pump</text>';
-    var byp=X.cur>X.target+0.002; g+='<rect x="124" y="226" width="10" height="12" rx="2" fill="'+(byp||X.lost?"#3ecf6a":"#2a3340")+'" stroke="#cfd8e3"/><text x="136" y="246" fill="#9AA0A6" font-size="5" text-anchor="end">bypass</text>';
+    var sy0=207+tr, sy1=266, n=7, zig='M60 '+sy0.toFixed(1); for(var i=1;i<=n;i++){zig+=' L'+(i%2?66:54)+' '+(sy0+(sy1-sy0)*i/(n+1)).toFixed(1);} zig+=' L60 '+sy1; g+='<path d="'+zig+'" stroke="#9aa5b1" stroke-width="1.4" fill="none"/><text x="92" y="262" fill="#9AA0A6" font-size="6.5">spring</text>';
+    g+='<rect x="12" y="206" width="12" height="20" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="18" y="236" fill="#9AA0A6" font-size="6.5" text-anchor="middle">pump</text>';
+    var byp=X.cur>X.target+0.002; g+='<rect x="124" y="226" width="10" height="12" rx="2" fill="'+(byp||X.lost?"#3ecf6a":"#2a3340")+'" stroke="#cfd8e3"/><text x="124" y="250" fill="#9AA0A6" font-size="6.5">bypass</text>';
     g+='<line x1="88" y1="'+(207+tr).toFixed(1)+'" x2="88" y2="'+(312+tr).toFixed(1)+'" stroke="#e5e8eb" stroke-width="4"/>';
-    g+='<text x="96" y="'+(228+tr).toFixed(0)+'" fill="#9AA0A6" font-size="5.5">stem</text>';
+    g+='<text x="93" y="'+(228+tr).toFixed(0)+'" fill="#9AA0A6" font-size="6.5">stem</text>';
     g+='<rect x="102" y="196" width="14" height="6" fill="#ff5a5f" fill-opacity="'+(X.cur>0.001?0.9:0.15)+'"/><text x="125" y="202" fill="#9AA0A6" font-size="5.5">pos. '+X.cur.toFixed(2)+'</text>';
     /* valve body */
     var seat=X.nc?312:342, ptop=X.nc?312+tr:312+tr; /* plug top follows the stem */
     g+='<rect x="38" y="296" width="84" height="58" rx="5" fill="#2b2118" stroke="#d2a679" stroke-width="1.5"/>';
     g+='<line x1="60" y1="'+seat+'" x2="116" y2="'+seat+'" stroke="#d2a679" stroke-width="3"/><text x="40" y="'+(seat+(X.nc?-3:12))+'" fill="#d2a679" font-size="5.5">seat</text>';
     g+='<rect x="76" y="'+ptop.toFixed(1)+'" width="24" height="6" rx="1" fill="#ff5a5f" stroke="#fff" stroke-width=".8"/>';
-    g+='<path d="M16 326 H36" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><path d="M124 326 H144" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><text x="80" y="292" fill="#cfd8e3" font-size="7" text-anchor="middle">'+(X.nc?"NC valve":"NO valve")+": "+Math.round(open*100)+'% open</text>';
+    g+='<path d="M16 326 H36" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><path d="M124 326 H144" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/>';
+    g+='<text x="80" y="279" fill="#cfd8e3" font-size="7" text-anchor="middle" stroke="#0f1720" stroke-width="2.5" paint-order="stroke">SKD62UA (illustrative)</text>';
+    g+='<text x="80" y="292" fill="#cfd8e3" font-size="7" text-anchor="middle"'+' stroke="#0f1720" stroke-width="2.5" paint-order="stroke"'+'>'+(X.nc?"NC valve":"NO valve")+": "+Math.round(open*100)+'% open</text>';
     /* right column: DIP bank and notes */
     g+='<text x="214" y="200" fill="#cfd8e3" font-size="7">DIP switches</text>';
     var dips=[["1",X.dip1==="on"],["2",false],["3",X.dip3==="on"],["4",false]];

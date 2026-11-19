@@ -119,10 +119,10 @@
     var seg=null; SK.segs.forEach(function(s){if(i>=s.start&&i<=s.end)seg=s;});
     $("skSch").innerHTML=skim({valveOpen:open,flow:open?phase:null,glow:open?1:0.3,ring:(e.s==="BLOW"&&SK.mode==="sh"&&e.ring!=null)?e.ring:null,fresh:clamp(1-(e.A-3000)/1200,0,1)});
     var g='<rect x="'+XL+'" y="'+YT+'" width="'+(XR-XL)+'" height="'+(YB-YT)+'" fill="#0d0f12" stroke="#59616c"/>';
-    function hline(v,col,lab,dash){var y=yv(v);return '<line x1="'+XL+'" y1="'+y+'" x2="'+XR+'" y2="'+y+'" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="'+(dash||"5 3")+'"/><text x="'+(XL+3)+'" y="'+(y-3)+'" fill="'+col+'" font-size="7.5">'+lab+'</text>';}
+    function hline(v,col,lab,dash,below){var y=yv(v);return '<line x1="'+XL+'" y1="'+y+'" x2="'+XR+'" y2="'+y+'" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="'+(dash||"5 3")+'"/><text x="'+(XL+3)+'" y="'+(below?y+9:y-3)+'" fill="'+col+'" font-size="7.5">'+lab+'</text>';}
     g+=hline(SK.SP,"#ffd23f","Set point "+num(SK.SP)+(SK.SP===3500?" (West Mechanical recommended)":" EXAMPLE"));
-    g+=hline(SK.SP-SK.D,"#4ea8ff","Set point minus differential "+num(SK.SP-SK.D)+" EXAMPLE");
-    if(SK.al){g+=hline(4000,"#ff5a5f","High alarm 4,000 EXAMPLE","2 3")+hline(2500,"#ff5a5f","Low alarm 2,500 EXAMPLE","2 3");}
+    g+=hline(SK.SP-SK.D,"#4ea8ff","Set point minus differential "+num(SK.SP-SK.D)+" EXAMPLE",null,true);
+    if(SK.al){g+=hline(4000,"#ff5a5f","High alarm 4,000 EXAMPLE","2 3")+hline(2500,"#ff5a5f","Low alarm 2,500 EXAMPLE","2 3",true);}
     function xt(k){return XL+(XR-XL)*k/n;}
     var pa="",ga="";
     for(var k=0;k<=i;k++){pa+=(k?"L":"M")+xt(k).toFixed(1)+" "+yv(tl[k].P).toFixed(1); ga+=(k?"L":"M")+xt(k).toFixed(1)+" "+yv(tl[k].A).toFixed(1);}

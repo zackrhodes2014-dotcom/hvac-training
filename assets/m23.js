@@ -147,8 +147,7 @@
     /* stem + plug */
     var seated=(cut.body==="pdtc"), plugTop=seated?236-L*(1-down):254+L*down;
     g+='<line id="cutStem" x1="150" y1="'+(yd+4)+'" x2="150" y2="'+plugTop+'" stroke="#e5e8eb" stroke-width="6"/>';
-    g+='<rect x="136" y="'+(150+L*down)+'" width="28" height="14" rx="2" fill="#ff9a3c"/><text x="172" y="'+(161+L*down)+'" fill="#ff9a3c" font-size="8">stem connector</text>'+
-       '<path d="M208 '+(157+L*down)+' l10 -5 v10 z" fill="#ffd23f"/><text x="220" y="'+(160+L*down)+'" fill="#ffd23f" font-size="8"></text>';
+    g+='<rect x="136" y="'+(150+L*down)+'" width="28" height="14" rx="2" fill="#ff9a3c"/><path d="M164 '+(157+L*down)+' H208" stroke="#ff9a3c" stroke-width="1" stroke-dasharray="2 2"/><text x="212" y="'+(160+L*down)+'" fill="#ff9a3c" font-size="8">stem connector</text>';
     /* body */
     g+='<rect x="124" y="196" width="52" height="14" fill="#2a3340" stroke="#6b7a8c"/>'+
        '<rect x="60" y="210" width="180" height="92" rx="8" fill="#1c2430" stroke="#9a7b5a" stroke-width="2"/>'+
@@ -383,10 +382,10 @@
     g+='<text x="205" y="132" fill="#2EC4B6" font-size="6.5">nozzle pressure</text>';
     /* relay */
     g+='<rect x="214" y="164" width="68" height="110" rx="6" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/><text x="248" y="160" fill="#cfd8e3" font-size="7.5" text-anchor="middle">relay</text>';
-    g+='<line x1="218" y1="'+dy.toFixed(1)+'" x2="278" y2="'+dy.toFixed(1)+'" stroke="#e8c07d" stroke-width="4"/><text x="220" y="'+(dy-5).toFixed(0)+'" fill="#e8c07d" font-size="6">large diaphragm</text>';
+    g+='<line x1="218" y1="'+dy.toFixed(1)+'" x2="278" y2="'+dy.toFixed(1)+'" stroke="#e8c07d" stroke-width="4"/><text x="248" y="'+(dy-5).toFixed(0)+'" fill="#e8c07d" font-size="6" text-anchor="middle">large diaph.</text>';
     g+='<line x1="236" y1="'+(dy+44).toFixed(1)+'" x2="260" y2="'+(dy+44).toFixed(1)+'" stroke="#e8c07d" stroke-width="3"/><text x="248" y="'+(dy+56).toFixed(0)+'" fill="#e8c07d" font-size="6" text-anchor="middle">small (1:3)</text><line x1="248" y1="'+dy.toFixed(1)+'" x2="248" y2="'+(dy+44).toFixed(1)+'" stroke="#cfd8e3" stroke-width="2"/>';
     g+='<rect x="268" y="236" width="14" height="12" fill="#ffb020" fill-opacity="'+(0.18+0.82*inlet).toFixed(2)+'" stroke="#ffb020"/><text x="280" y="266" fill="#ffb020" font-size="6.5" text-anchor="end">INLET '+Math.round(inlet*100)+'%</text>';
-    g+='<rect x="216" y="204" width="14" height="12" fill="#9aa5b1" fill-opacity="'+(0.18+0.82*exh).toFixed(2)+'" stroke="#9aa5b1"/><text x="232" y="214" fill="#cfd8e3" font-size="6.5">EXHAUST '+Math.round(exh*100)+'%</text>';
+    g+='<rect x="216" y="204" width="14" height="12" fill="#9aa5b1" fill-opacity="'+(0.18+0.82*exh).toFixed(2)+'" stroke="#9aa5b1"/><text x="232" y="214" fill="#cfd8e3" font-size="6.5">EXH '+Math.round(exh*100)+'%</text>';
     if(exh>0.15&&falling){for(var q=0;q<4;q++){g+='<circle cx="'+(208-q*7)+'" cy="'+(204-q*4)+'" r="'+(2+q*0.8)+'" fill="#9aa5b1" opacity="'+(0.7-q*0.15)+'"/>';} g+='<text x="190" y="190" fill="#9aa5b1" font-size="6.5" text-anchor="end">hiss: the &quot;vent&quot;</text>';}
     /* gauges */
     function gauge(cx,cy,rad,frac,col,lab,sub){var a=-135+270*clamp(frac,0,1), x2=cx+(rad-6)*Math.sin(a*Math.PI/180), y2=cy-(rad-6)*Math.cos(a*Math.PI/180);
@@ -452,7 +451,7 @@
   function exOut(){return exOutAt(X.L);}
   S("w-s11","Calibrate a level controller: 12 steps (teaching model)",
     '<div class="seg" id="exScen" role="group"><button data-v="d">Practice: direct (no R)</button><button data-v="r">Practice: reverse (R suffix)</button></div>'+
-    '<div class="svgbox" style="margin-top:8px"><svg id="exSvg" viewBox="0 0 300 190" role="img" aria-label="Vessel with displacer and level window, SUPPLY gauge and OUTPUT gauge"></svg></div>'+
+    '<div class="svgbox" style="margin-top:8px"><svg id="exSvg" viewBox="0 0 300 200" role="img" aria-label="Vessel with displacer and level window, SUPPLY gauge and OUTPUT gauge"></svg></div>'+
     '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">RAISE LEVEL dial</span><span class="v" id="exRd">–</span></div><div class="ro"><span class="k">PROPORTIONAL BAND dial</span><span class="v" id="exPd">–</span></div><div class="ro"><span class="k">Action</span><span class="v" id="exAc" style="font-size:1rem">–</span></div></div>'+
     '<label class="lbl" for="exL" style="margin-top:8px">Vessel level: <b id="exLv">40</b>% of the displacer length</label><input type="range" id="exL" min="0" max="100" step="0.5" value="40">'+
     '<div class="row"><button type="button" class="secondary" id="exMin">Window min (40%)</button><button type="button" class="secondary" id="exMid">Window mid (45%)</button><button type="button" class="secondary" id="exMax">Window max (50%)</button></div>'+
@@ -460,8 +459,8 @@
     '<p class="wnote">Teaching model: 3 and 15 psig are the documented end points; other output values and the RAISE LEVEL ranges between Table 5\'s printed rows are approximate examples. The span window is an example 40% to 50% of the displacer.</p>');
   var EXS=[
    ["Read the nameplate","Find the type, the action, and the output range. (Example nameplate; reverse-acting units carry the suffix R in the type number.)",
-    function(){return '<p class="mini">Nameplate (EXAMPLE): Fisher '+(X.rev?"2500R":"2500")+' · 249 sensor · 3-15 psig</p>'+EW.sel("exT","Type",[["","?"],["2500","2500"],["2502","2502"],["2500S","2500S"]])+EW.sel("exA","Action",[["","?"],["direct","Direct"],["reverse","Reverse (R)"]])+EW.sel("exR","Output range",[["","?"],["3-15","3-15 psig"],["6-30","6-30 psig"]]);},
-    function(){var t=$("exT").value,a=$("exA").value,r=$("exR").value; if(!t||!a||!r)return [false,"Pick all three."]; if(t!=="2500")return [false,"The nameplate here says 2500. A 2502 has reset; a 2500S snaps."]; if(a!==(X.rev?"reverse":"direct"))return [false,"Check the type number: reverse-acting units carry the suffix R (manual 3.4)."]; if(r!=="3-15")return [false,"The nameplate says 3-15 psig."]; return [true,"Right: a 2500, "+(X.rev?"reverse":"direct")+", 3-15 psig."];}],
+    function(){return '<p class="mini">Nameplate (EXAMPLE): Fisher '+(X.rev?"2500R":"2500")+' · 249 sensor · 3-15 psig</p>'+EW.sel("exT","Type",[["","?"],["2500","2500"],["2500S","2500S (snap-acting)"]])+EW.sel("exA","Action",[["","?"],["direct","Direct"],["reverse","Reverse (R)"]])+EW.sel("exR","Output range",[["","?"],["3-15","3-15 psig"],["6-30","6-30 psig"]]);},
+    function(){var t=$("exT").value,a=$("exA").value,r=$("exR").value; if(!t||!a||!r)return [false,"Pick all three."]; if(t!=="2500")return [false,"The nameplate here says 2500, the proportional controller. A 2500S is the snap-acting version."]; if(a!==(X.rev?"reverse":"direct"))return [false,"Check the type number: reverse-acting units carry the suffix R (manual 3.4)."]; if(r!=="3-15")return [false,"The nameplate says 3-15 psig."]; return [true,"Right: a 2500, "+(X.rev?"reverse":"direct")+", 3-15 psig."];}],
    ["Set the supply pressure","The SUPPLY gauge must read 20 psig for a 3-15 psig output (35 psig for 6-30). Loosen the locknut on the 67CFR filter-regulator, turn the adjusting screw (clockwise increases), then retighten the locknut.",
     function(){return '<div class="row"><button type="button" id="exLoose">'+(X.loosened?"Retighten locknut":"Loosen locknut")+'</button><button type="button" class="secondary" id="exSm">↺ Screw counter-clockwise (−0.5)</button><button type="button" class="secondary" id="exSp">↻ Screw clockwise (+0.5)</button></div><p class="mini">SUPPLY: <b id="exSv">'+fmt(X.supply,1)+'</b> psig · locknut '+(X.loosened?"LOOSE":"tight")+'</p>';},
     function(){if(X.loosened)return [false,"Retighten the locknut when you are done."]; if(Math.abs(X.supply-20)>0.5)return [false,"SUPPLY reads "+fmt(X.supply,1)+" psig; it needs 20 (±0.5) for a 3-15 psig output."]; return [true,"Supply is 20 psig and the locknut is tight."];}],
@@ -501,8 +500,8 @@
     var g='';
     var L=X.L, lv=170-130*(L/100);
     g+='<rect x="8" y="20" width="60" height="160" rx="6" fill="#10242e" stroke="#5ab4ff" stroke-width="2"/><rect x="10" y="'+lv.toFixed(1)+'" width="56" height="'+(178-lv).toFixed(1)+'" fill="rgba(90,180,255,.33)"/><line x1="10" y1="'+lv.toFixed(1)+'" x2="66" y2="'+lv.toFixed(1)+'" stroke="#7fd6ff" stroke-width="2"/>';
-    var wTop=170-130*0.5, wBot=170-130*0.4; g+='<rect x="8" y="'+wTop+'" width="60" height="'+(wBot-wTop)+'" fill="#ffd23f" fill-opacity=".22" stroke="#ffd23f" stroke-dasharray="3 2"/><text x="72" y="'+(wTop+8)+'" fill="#ffd23f" font-size="7">span window</text><text x="72" y="'+(wTop+17)+'" fill="#ffd23f" font-size="7">(example)</text>';
-    g+='<rect x="26" y="46" width="24" height="100" rx="4" fill="#9aa5b1" stroke="#fff"/><text x="38" y="186" fill="#9AA0A6" font-size="7" text-anchor="middle">displacer</text>';
+    var wTop=170-130*0.5, wBot=170-130*0.4; g+='<rect x="8" y="'+wTop+'" width="60" height="'+(wBot-wTop)+'" fill="#ffd23f" fill-opacity=".22" stroke="#ffd23f" stroke-dasharray="3 2"/><text x="72" y="'+(wBot+10)+'" fill="#ffd23f" font-size="7">span window</text><text x="72" y="'+(wBot+20)+'" fill="#ffd23f" font-size="7">(example)</text>';
+    g+='<rect x="26" y="46" width="24" height="100" rx="4" fill="#9aa5b1" stroke="#fff"/><text x="38" y="193" fill="#9AA0A6" font-size="7" text-anchor="middle">displacer</text>';
     function gauge(cx,cy,rad,val,max,col,lab){var a=-135+270*clamp(val/max,0,1);var x2=cx+(rad-6)*Math.sin(a*Math.PI/180),y2=cy-(rad-6)*Math.cos(a*Math.PI/180);return '<circle cx="'+cx+'" cy="'+cy+'" r="'+rad+'" fill="#0d0f12" stroke="#59616c" stroke-width="2"/><line x1="'+cx+'" y1="'+cy+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+col+'" stroke-width="2.5"/><circle cx="'+cx+'" cy="'+cy+'" r="2.5" fill="#fff"/><text x="'+cx+'" y="'+(cy+rad+10)+'" fill="'+col+'" font-size="7.5" text-anchor="middle">'+lab+'</text>';}
     var o=exOut(), tg=(X.ol==="b");
     g+=gauge(150,70,34,X.supply,40,"#ffb020","SUPPLY "+fmt(X.supply,1)+" psig");
@@ -542,8 +541,5 @@
   $("exL").addEventListener("input",function(){X.L=+$("exL").value;exDraw();});
   $("exMin").addEventListener("click",function(){exSetL(40);}); $("exMid").addEventListener("click",function(){exSetL(45);}); $("exMax").addEventListener("click",function(){exSetL(50);});
 
-  var VAR=[["2502 (proportional-plus-reset)","No 0 to 10 dial: set RESET to 0.01 minutes per repeat, PROPORTIONAL BAND to zero and RAISE LEVEL to zero. At minimum level, adjust the nozzle until the output is 3 psig or less. At maximum level, turn RAISE LEVEL until the output reads 15 psig: it is in calibration if the knob is between 9.0 and 10.0. Otherwise slide the calibration adjuster: away from the pivot to increase span, toward it to decrease. For startup: PROPORTIONAL BAND to 200 percent, RESET to 0.05, then narrow the band until it cycles and broaden it slightly. The 2502's band knob is in percent, so a setting of 1 would not mean the same thing as on a 2500."],
-           ["2500S (snap-acting)","Output switches between 0 and full supply with a differential gap, instead of throttling. Set RAISE LEVEL to 1.0 to 1.5 (direct) or 3.5 to 4.0 (reverse). At minimum level, move the flapper until the output switches, then back until it switches off. Raise the level until it switches again: that should be at the maximum. If not, slide the flexure strip base: away from the torque tube to decrease the differential gap, toward it to increase it. A slight PROPORTIONAL BAND change is the last resort. Follow the 2500 manual for the full procedure."]];
-  S("w-s11-2","Variants: 2502 and 2500S",chips("vaC",VAR.map(function(v){return v[0];}))+card("vaO","Tap a variant."));
-  chipInfo("vaC","vaO",VAR);
+
 })();

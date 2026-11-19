@@ -315,3 +315,73 @@
     cards:cardsFor,moduleOfCard:moduleOfCard,study:study,setLast:setLast,resetModule:resetModule,resetAll:resetAll,esc:esc,
     canStore:canStore,isStandalone:isStandalone};
 })();
+
+/* Phone legibility: raise tiny SVG labels toward ~9 px on screen, but only as far as they fit without
+   colliding with other labels or leaving the drawing. Original sizes are kept in data-fs0. */
+(function(){
+  var TARGET=9, FLOORS=[9,8.5,8,7.5,7,6.5,6,5.5,5];
+  var timers=new WeakMap(), busy=false;
+  function rect(t){return t.getBoundingClientRect();}
+  function hit(a,b){
+    var ox=Math.min(a.right,b.right)-Math.max(a.left,b.left), oy=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
+    return ox>1.5 && oy>0.22*Math.min(a.height,b.height);
+  }
+  function rel(r,b){
+    var ox=Math.min(r.right,b.right)-Math.max(r.left,b.left), oy=Math.min(r.bottom,b.bottom)-Math.max(r.top,b.top);
+    if(ox<=1.5||oy<=1.5) return 0;
+    if(r.left>=b.left-1.5&&r.right<=b.right+1.5&&r.top>=b.top-1.5&&r.bottom<=b.bottom+1.5) return 1;
+    return 2;
+  }
+  function fit(svg){
+    if(busy) return; var sr=svg.getBoundingClientRect(); if(!sr.width||!svg.viewBox||!svg.viewBox.baseVal.width) return;
+    var all=[].slice.call(svg.querySelectorAll('text')).filter(function(t){return t.textContent.trim();});
+    var ts=all.filter(function(t){return t.getClientRects().length;});
+    if(!ts.length) return;
+    busy=true;
+    try{
+      all.forEach(function(t){ t.style.fontSize=''; if(t.getAttribute('data-fs0')==null) t.setAttribute('data-fs0',parseFloat(getComputedStyle(t).fontSize)||12); });
+      all.forEach(function(t){t.style.fontSize=t.getAttribute('data-fs0')+'px';});
+      var info=ts.map(function(t){var m=t.getScreenCTM(),k=m?Math.sqrt(m.a*m.a+m.b*m.b):1;return {t:t,k:k,f0:parseFloat(t.getAttribute('data-fs0'))};});
+      var sbr=svg.getBoundingClientRect(), boxes=[].slice.call(svg.querySelectorAll('rect,circle,ellipse')).map(function(e){return e.getBoundingClientRect();}).filter(function(b){return b.width>4&&b.height>4&&b.width*b.height<0.6*sbr.width*sbr.height;});
+      info.forEach(function(o){var r=rect(o.t);o.rel=boxes.map(function(b){return rel(r,b);});});
+      var small=info.filter(function(o){return o.f0*o.k<TARGET-0.05;}).sort(function(a,b){return a.f0*a.k-b.f0*b.k;});
+      small.forEach(function(o){
+        var now=o.f0*o.k, picked=false;
+        for(var i=0;i<FLOORS.length;i++){
+          var px=FLOORS[i]; if(px<=now+0.3) break;
+          o.t.style.fontSize=(px/o.k)+'px';
+          var r=rect(o.t), sb=svg.getBoundingClientRect(), bad=false;
+          if(r.left<sb.left-1||r.right>sb.right+1||r.top<sb.top-1||r.bottom>sb.bottom+1) bad=true;
+          for(var q=0;q<boxes.length&&!bad;q++){ if(rel(r,boxes[q])!==o.rel[q]||o.rel[q]===2) bad=true; }
+          for(var j=0;j<info.length&&!bad;j++){ if(info[j].t===o.t) continue; if(hit(r,rect(info[j].t))) bad=true; }
+          if(!bad){picked=true;break;}
+        }
+        if(!picked) o.t.style.fontSize=o.f0+'px';
+      });
+      svg._fitMap=all.map(function(t){return [t.getAttribute('font-size')||'',t.style.fontSize];});
+    }catch(e){}
+    busy=false;
+  }
+  function reapply(svg){
+    var m=svg._fitMap; if(!m) return;
+    var ts=[].slice.call(svg.querySelectorAll('text')).filter(function(t){return t.textContent.trim();});
+    if(ts.length!==m.length) return;
+    busy=true;
+    ts.forEach(function(t,i){ if((t.getAttribute('font-size')||'')===m[i][0] && !t.style.fontSize) t.style.fontSize=m[i][1]; });
+    busy=false;
+  }
+  function schedule(svg,ms){ if(timers.get(svg)) return; timers.set(svg,setTimeout(function(){timers.delete(svg);fit(svg);},ms||120)); }
+  function init(){
+    var svgs=[].slice.call(document.querySelectorAll('main svg, .wrap svg, svg')); var seen=[];
+    svgs=svgs.filter(function(s){if(seen.indexOf(s)>=0)return false;seen.push(s);return !s.closest('svg:not(:scope)')||true;});
+    var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)schedule(e.target,60);});},{rootMargin:'200px'}):null;
+    var mo=new MutationObserver(function(ms){ if(busy) return; ms.forEach(function(m){var s=m.target.nodeType===1?m.target.closest('svg'):m.target.parentNode&&m.target.parentNode.closest&&m.target.parentNode.closest('svg'); if(s){reapply(s);schedule(s,250);}});});
+    svgs.forEach(function(s){ if(io) io.observe(s); mo.observe(s,{childList:true,characterData:true,subtree:true}); });
+    var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){svgs.forEach(function(s){schedule(s,50);});},200);});
+    document.addEventListener('toggle',function(){svgs.forEach(function(s){schedule(s,150);});},true);
+    // widgets mount after this script; catch late additions
+    new MutationObserver(function(ms){ms.forEach(function(m){[].forEach.call(m.addedNodes,function(n){if(n.nodeType!==1)return;var l=n.tagName==='svg'?[n]:[].slice.call(n.querySelectorAll('svg'));l.forEach(function(s){if(seen.indexOf(s)<0){seen.push(s);svgs.push(s);if(io)io.observe(s);mo.observe(s,{childList:true,characterData:true,subtree:true});schedule(s,150);}});});});}).observe(document.body,{childList:true,subtree:true});
+    svgs.forEach(function(s){schedule(s,400);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(init,50);}); else setTimeout(init,50);
+})();
