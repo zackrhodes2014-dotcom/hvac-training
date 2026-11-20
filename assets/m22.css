@@ -73,3 +73,4 @@
 pre.lcd{background:#0b2a1e;color:#9dffcf;border:1px solid var(--accent);border-radius:6px;padding:6px 8px;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem}
 h4{font-size:1rem;margin:16px 0 6px;color:var(--accent2)}
 section li,section p,.callout,.infocard,.table-wrap td{overflow-wrap:anywhere}
+.photo-credit{font-size:.72rem;line-height:1.35;color:#9AA0A6;margin:6px 2px 2px}

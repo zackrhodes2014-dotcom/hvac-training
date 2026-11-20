@@ -521,16 +521,57 @@
   function pctOf(L){return L<=T.pOn?100:(L>=T.pOff?0:(T.pOff-L)/(T.pOff-T.pOn)*100);}
   function maOf(p){return 4+16*p/100;}
   function ly(L){return 160-clamp(L,0,6)/6*140;}
-  function column(L,x,showInside){
-    var y=ly(L), g='';
-    g+='<rect x="'+x+'" y="20" width="40" height="150" rx="5" fill="#10242e" stroke="#5ab4ff" stroke-width="2"/>';
-    g+='<rect x="'+(x+2)+'" y="'+y.toFixed(1)+'" width="36" height="'+(168-y).toFixed(1)+'" fill="rgba(90,180,255,.33)"/><line x1="'+(x+2)+'" y1="'+y.toFixed(1)+'" x2="'+(x+38)+'" y2="'+y.toFixed(1)+'" stroke="#7fd6ff" stroke-width="1.5"/>';
-    g+='<line x1="'+(x+20)+'" y1="12" x2="'+(x+20)+'" y2="168" stroke="#9aa5b1" stroke-width="2"/><rect x="'+(x+6)+'" y="'+(y-7).toFixed(1)+'" width="28" height="14" rx="3" fill="#e5e8eb" stroke="#2EC4B6" stroke-width="2"/><text x="'+(x+20)+'" y="'+(y+3.5).toFixed(1)+'" fill="#0f1720" font-size="8" text-anchor="middle">float</text>';
-    g+='<rect x="'+(x+8)+'" y="2" width="24" height="11" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="'+(x+20)+'" y="10" fill="#cfd8e3" font-size="5.5" text-anchor="middle">sensor</text>';
-    [[T.hiAlm,"HW alarm 5.5"],[T.hiWrn,"HW warn 4.5"],[T.pOff,"Pump Off 1.5"],[T.pOn,"Pump On 0.75"],[T.loWrn,"Low warn 0.3"],[T.lwco,"LWCO 0"]].forEach(function(m){var yy=ly(m[0]);
-      g+='<line x1="'+(x+40)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+46)+'" y2="'+yy.toFixed(1)+'" stroke="#ffd23f"/><text x="'+(x+48)+'" y="'+(yy+(m[0]===T.lwco?12:m[0]===T.loWrn?5:2)).toFixed(1)+'" fill="#ffd23f" font-size="5.8">'+m[1]+'</text>';});
+  /* ---- real-photo layer ----
+     Photos (assets/m22/, background removed): Cleaver-Brooks Level Master water column (brochure CB-7940), Level Master CBLME-M controller (NJT Automation),
+     Siemens SKD62UA actuator and Flowrite VF 599 two-way valve (Siemens product photos via SupplyHouse). The teal outlines are traced from the photo silhouettes
+     (contour trace of each photo); moving parts are placed in photo-pixel coordinates and mapped to the drawing with one scale per photo. */
+  var PH={
+    col:{f:"lm_column.webp",w:432,h:1078,sil:"M267 21 L221 34 L207 45 L207 210 L217 218 L247 223 L251 231 L252 246 L247 251 L247 326 L233 329 L242 340 L225 342 L226 338 L222 334 L224 330 L215 326 L213 313 L208 312 L202 315 L202 319 L195 321 L197 329 L181 338 L183 363 L180 371 L167 371 L149 376 L138 383 L125 384 L113 399 L105 402 L73 403 L37 389 L29 397 L33 414 L67 432 L108 432 L130 424 L138 427 L132 441 L137 447 L134 916 L129 919 L129 923 L134 925 L131 944 L128 944 L127 932 L114 935 L113 957 L109 961 L88 963 L72 960 L39 940 L27 941 L23 957 L44 978 L69 990 L93 994 L128 990 L136 1003 L143 1001 L149 989 L189 993 L192 995 L193 1009 L197 1012 L202 1008 L203 992 L209 988 L230 1001 L246 999 L278 1003 L292 993 L315 987 L320 972 L338 968 L358 954 L368 931 L368 812 L378 802 L382 785 L376 730 L376 688 L382 646 L376 593 L376 550 L382 491 L378 476 L368 468 L368 392 L359 376 L359 339 L347 334 L347 322 L341 315 L333 315 L327 321 L327 329 L320 332 L299 331 L294 326 L295 250 L290 246 L294 233 L304 228 L339 221 L340 48 L338 44 Z",body:"M341 315 L333 315 L327 321 L326 330 L299 331 L294 326 L295 310 L247 310 L247 326 L239 328 L242 340 L225 342 L222 329 L213 322 L213 313 L205 313 L202 319 L197 320 L197 329 L186 335 L186 993 L192 995 L193 1004 L202 1004 L203 992 L209 988 L230 1001 L246 999 L254 1002 L280 1002 L292 993 L309 990 L318 984 L320 972 L338 968 L355 957 L368 931 L368 812 L375 807 L381 791 L376 688 L382 634 L376 593 L376 550 L382 491 L378 476 L368 468 L368 392 L359 376 L359 339 L347 334 L347 322 Z",y0:782,k:39.5,ax:258,gx:172,gw:26,gy0:497,gy1:866},
+    ctl:{f:"lm_controller.webp",w:700,h:691,sil:"M40 5 L648 5 L667 72 L667 677 L13 677 L13 72 Z",lcd:[159,334,288,54],lcdd:"M159 340 L161 382 L174 387 L184 388 L422 385 L435 378 L443 378 L443 368 L447 367 L447 364 L444 363 L444 355 L447 348 L444 335 L200 335 L161 337 Z",ledx:549,ledy:[473,445,411,384,357,328,292,264],pw:[155,515],btn:[[143,608],[255,608],[457,608]]},
+    skd:{f:"skd62ua.webp",w:340,h:500,sil:"M242 8 L180 9 L142 15 L125 21 L115 32 L115 43 L101 50 L93 58 L92 74 L67 83 L69 99 L35 122 L12 146 L24 263 L39 354 L48 362 L154 402 L165 443 L160 450 L160 462 L166 466 L171 464 L173 477 L206 491 L237 485 L257 472 L285 354 L305 336 L313 316 L323 75 L327 68 L326 57 L321 49 L302 39 L301 26 L292 18 L273 12 Z",ax:214,ry:445,tv:32},
+    vf:{f:"vf599.webp",w:658,h:759,sil:"M323 13 L318 17 L320 36 L315 56 L314 88 L297 94 L287 108 L288 159 L294 166 L277 190 L277 219 L252 226 L223 245 L219 316 L216 315 L211 290 L200 266 L176 245 L139 237 L112 238 L96 245 L57 288 L35 333 L17 402 L14 472 L17 501 L34 544 L45 559 L68 573 L102 581 L123 579 L150 564 L177 529 L181 531 L159 561 L160 654 L165 669 L185 692 L230 713 L233 723 L258 722 L290 728 L344 727 L347 731 L340 740 L345 741 L357 728 L403 724 L411 717 L424 716 L446 706 L457 710 L465 700 L482 692 L500 672 L501 666 L509 661 L533 667 L553 666 L573 656 L603 616 L628 550 L644 464 L645 411 L644 386 L636 351 L627 333 L610 317 L563 309 L542 314 L519 332 L494 371 L446 330 L441 287 L443 249 L424 227 L403 225 L387 218 L387 189 L383 181 L375 178 L375 171 L370 167 L375 157 L376 99 L362 91 L346 90 L346 52 L340 32 L342 15 Z",ax:322,seat:540,tv:41}
+  };
+  function phImg(p,x,y,s){return '<image href="assets/m22/'+p.f+'" x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" width="'+(p.w*s).toFixed(2)+'" height="'+(p.h*s).toFixed(2)+'" preserveAspectRatio="none"/>';}
+  function phTrace(d,x,y,s,col,dash,w){return '<path d="'+d+'" transform="translate('+x.toFixed(2)+' '+y.toFixed(2)+') scale('+s+')" fill="none" stroke="'+(col||"#2EC4B6")+'" stroke-width="'+(w||1.3)+'" vector-effect="non-scaling-stroke" stroke-linejoin="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+' pointer-events="none"/>';}
+  function phPanel(x,y,w,h){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="10" fill="#6c7a89" stroke="#93a1af" stroke-width="1"/>';}
+  var HALO=' stroke="#0f1720" stroke-width="2.4" paint-order="stroke"';
+  var LV=[[5.5,"HW alarm 5.5","5.5"],[4.5,"HW warn 4.5","4.5"],[1.5,"Pump Off 1.5","1.5"],[0.75,"Pump On 0.75",".75"],[0.3,"Low warn 0.3",".3"],[0,"LWCO 0","0"]];
+  function colPhoto(id,L,ox,oy,s,o){
+    var c=PH.col,PX=function(p){return ox+p*s;},PY=function(p){return oy+p*s;},yl=c.y0-c.k*clamp(L,0,6.5),g='';
+    g+=phImg(c,ox,oy,s);
+    g+='<clipPath id="'+id+'cp"><path d="'+c.body+'" transform="translate('+ox+' '+oy+') scale('+s+')"/></clipPath>';
+    g+='<rect x="'+PX(180).toFixed(1)+'" y="'+PY(yl).toFixed(1)+'" width="'+((365-180)*s).toFixed(1)+'" height="'+((1005-yl)*s).toFixed(1)+'" fill="rgba(90,180,255,.40)" clip-path="url(#'+id+'cp)"/>';
+    var gt=Math.max(yl,c.gy0); if(gt<c.gy1) g+='<rect x="'+PX(c.gx).toFixed(1)+'" y="'+PY(gt).toFixed(1)+'" width="'+(c.gw*s).toFixed(1)+'" height="'+((c.gy1-gt)*s).toFixed(1)+'" fill="rgba(90,180,255,.62)"/>';
+    g+='<line x1="'+PX(150).toFixed(1)+'" y1="'+PY(yl).toFixed(1)+'" x2="'+PX(365).toFixed(1)+'" y2="'+PY(yl).toFixed(1)+'" stroke="#7fd6ff" stroke-width="1.2"/>';
+    g+=phTrace(c.sil,ox,oy,s,"#2EC4B6");
+    g+=phTrace(c.body,ox,oy,s,"#ffd23f","2 2",1);
+    g+='<line x1="'+PX(c.ax).toFixed(1)+'" y1="'+PY(225).toFixed(1)+'" x2="'+PX(c.ax).toFixed(1)+'" y2="'+PY(1000).toFixed(1)+'" stroke="#e5e8eb" stroke-width="1" stroke-dasharray="3 2"/>';
+    g+='<ellipse cx="'+PX(c.ax).toFixed(1)+'" cy="'+PY(yl).toFixed(1)+'" rx="'+(40*s).toFixed(1)+'" ry="'+(30*s).toFixed(1)+'" fill="#e5e8eb" stroke="#2EC4B6" stroke-width="1.6"/>';
+    if(o.floatLbl) g+='<text x="'+PX(c.ax).toFixed(1)+'" y="'+(PY(yl)+2).toFixed(1)+'" fill="#0f1720" font-size="'+o.floatLbl+'" text-anchor="middle">float</text>';
+    var ys=LV.map(function(m){return PY(c.y0-c.k*m[0]);}), ly=ys.slice();
+    for(var i=1;i<ly.length;i++) if(ly[i]<ly[i-1]+o.gap) ly[i]=ly[i-1]+o.gap;
+    LV.forEach(function(m,i){
+      g+='<line x1="'+PX(190).toFixed(1)+'" y1="'+ys[i].toFixed(1)+'" x2="'+PX(362).toFixed(1)+'" y2="'+ys[i].toFixed(1)+'" stroke="#ffd23f" stroke-width=".7" stroke-dasharray="2 2" opacity=".8"/>';
+      g+='<path d="M'+PX(362).toFixed(1)+' '+ys[i].toFixed(1)+' L'+(o.lx-3)+' '+ly[i].toFixed(1)+'" stroke="#ffd23f" stroke-width=".7" fill="none"/>';
+      g+='<text x="'+o.lx+'" y="'+(ly[i]+o.fs*0.35).toFixed(1)+'" fill="#ffd23f" font-size="'+o.fs+'"'+HALO+'>'+(o.short?m[2]:m[1])+'</text>';
+    });
     return g;
   }
+  function ledStates(L){var a=alarmOf(L),gc=a==="ok"?clamp(Math.ceil((L-T.loWrn)/((T.hiWrn-T.loWrn)/4)),1,4):0;
+    return [[a==="lwsd","#ff4d4d"],[a==="lwsd"||a==="lowwrn","#ff9f1c"],[gc>=1,"#3ecf6a"],[gc>=2,"#3ecf6a"],[gc>=3,"#3ecf6a"],[gc>=4,"#3ecf6a"],[a==="hiwrn"||a==="hialm","#ff9f1c"],[a==="hialm","#ff4d4d"]];}
+  function ctlPhoto(ox,oy,s,L,l1,l2){
+    var c=PH.ctl,PX=function(p){return ox+p*s;},PY=function(p){return oy+p*s;},g=phImg(c,ox,oy,s),lc=c.lcd,fs=clamp(lc[3]*s*0.38,5.6,8.2);
+    g+=phTrace(c.sil,ox,oy,s,"#2EC4B6");
+    g+='<rect x="'+PX(lc[0]).toFixed(1)+'" y="'+PY(lc[1]).toFixed(1)+'" width="'+(lc[2]*s).toFixed(1)+'" height="'+(lc[3]*s).toFixed(1)+'" rx="2" fill="#0b2a1e" fill-opacity=".95"/>';
+    g+=phTrace(c.lcdd,ox,oy,s,"#2EC4B6",null,1.1);
+    g+='<text x="'+(PX(lc[0])+3).toFixed(1)+'" y="'+(PY(lc[1])+lc[3]*s*0.43).toFixed(1)+'" fill="#9dffcf" font-size="'+fs.toFixed(1)+'" font-family="monospace">'+l1+'</text>';
+    g+='<text x="'+(PX(lc[0])+3).toFixed(1)+'" y="'+(PY(lc[1])+lc[3]*s*0.88).toFixed(1)+'" fill="#9dffcf" font-size="'+fs.toFixed(1)+'" font-family="monospace">'+l2+'</text>';
+    ledStates(L).forEach(function(l,i){g+='<circle cx="'+PX(c.ledx).toFixed(1)+'" cy="'+PY(c.ledy[i]).toFixed(1)+'" r="'+(12*s).toFixed(1)+'" fill="'+(l[0]?l[1]:"#1b2530")+'" fill-opacity="'+(l[0]?1:.62)+'" stroke="'+(l[0]?"#fff":"#2EC4B6")+'" stroke-width=".6"/>';});
+    g+='<circle cx="'+PX(c.pw[0]).toFixed(1)+'" cy="'+PY(c.pw[1]).toFixed(1)+'" r="'+(10*s).toFixed(1)+'" fill="'+(alarmOf(L)==="lwsd"?"#ff4d4d":"#3ecf6a")+'" stroke="#fff" stroke-width=".6"/>';
+    c.btn.forEach(function(b){g+='<rect x="'+PX(b[0]-31).toFixed(1)+'" y="'+PY(b[1]-21).toFixed(1)+'" width="'+(62*s).toFixed(1)+'" height="'+(42*s).toFixed(1)+'" rx="'+(8*s).toFixed(1)+'" fill="none" stroke="#2EC4B6" stroke-width=".9" stroke-dasharray="2 1.5"/>';});
+    return g;
+  }
+  function lcdLines(L,a,extra){return [L.toFixed(2)+'" &gt;LWCO',a==="lwsd"?"LW Shutdown":a==="lowwrn"?"Low Lvl Wrn":a==="hiwrn"?"High Lvl Wrn":a==="hialm"?"High Water Alarm":(extra||"Boiler Off")];}
   function alarmOf(L){return L<=T.lwco?"lwsd":L<T.loWrn?"lowwrn":L>T.hiAlm?"hialm":L>T.hiWrn?"hiwrn":"ok";}
   function bargraph(L,x,y0){ /* 8 LEDs, bottom to top: red, orange, 4 green, orange, red (illustrative) */
     var a=alarmOf(L), g='';
@@ -545,22 +586,24 @@
   /* ---- A6.1 water column cutaway ---- */
   var WC={L:1.29,inside:false};
   S("w-s14-2","Water column cutaway: float, probe, display",
-    '<div class="svgbox"><svg id="wcSvg" viewBox="0 0 300 180" role="img" aria-label="Water column with a magnetostrictive float on a probe, and the Level Master display"></svg></div>'+
+    '<div class="svgbox"><svg id="wcSvg" viewBox="0 0 300 500" role="img" aria-label="Water column with a magnetostrictive float on a probe, and the Level Master display"></svg></div>'+'<p class="photo-credit">Photos: Level Master water column and sensor, Cleaver-Brooks (brochure CB-7940); CBLME-M controller (623-00192-000), NJT Automation product photo. Teal outlines are traced from the photos; yellow dashes outline the column body. Level scale is approximate, taken from the 10-1/2 in gauge glass (LM Table 6-2).</p>'+
     '<label class="lbl" for="wcL" style="margin-top:8px">Water level: <b id="wcLv">1.29</b> in above the LWCO mark (example)</label><input type="range" id="wcL" min="0" max="6" step="0.01" value="1.29" aria-label="Water level">'+
     '<div class="row"><button type="button" class="secondary" id="wcIn" aria-pressed="false">What\'s inside? (24 VDC and RS-485)</button><button type="button" class="secondary" id="wcPt">Probe type</button></div>'+
     card("wcO","Slide the level: the float rides the probe and the display shows inches above the low water cut-off (LWCO) mark.")+
-    '<p class="wnote">Level numbers: Sensitivity Table 1 example, not a site setting. Display and bargraph are drawn after LM Fig 1-1 and Fig 4-10 (illustrative).</p>');
+    '<p class="wnote">Level numbers: Sensitivity Table 1 example, not a site setting. Display and bargraph are overlaid on the controller photo and follow LM Fig 1-1 and Fig 4-10 (illustrative).</p>');
   function wcDraw(){
-    var L=WC.L,a=alarmOf(L),g=column(L,6,false);
-    g+='<rect x="108" y="14" width="124" height="108" rx="8" fill="#141b24" stroke="#59616c" stroke-width="2"/>';
-    var l2=a==="lwsd"?"LW Shutdown":a==="lowwrn"?"Low Lvl Wrn":a==="hiwrn"?"High Lvl Wrn":a==="hialm"?"High Water Alarm":"Boiler Off";
-    g+='<rect x="116" y="22" width="84" height="30" rx="3" fill="#0b2a1e" stroke="#2EC4B6"/><text x="120" y="35" fill="#9dffcf" font-size="8" font-family="monospace">'+L.toFixed(2)+'" &gt;LWCO</text><text x="120" y="47" fill="#9dffcf" font-size="7.5" font-family="monospace">'+l2+'</text>';
-    g+=bargraph(L,216,106);
-    g+='<circle cx="124" cy="68" r="4" fill="#3ecf6a"/><text x="132" y="71" fill="#9AA0A6" font-size="6">POWER ON / ERROR</text>';
-    g+='<rect x="116" y="80" width="22" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="127" y="95" fill="#cfd8e3" font-size="7.5" text-anchor="middle">MODE</text><rect x="142" y="80" width="26" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="155" y="90" fill="#cfd8e3" font-size="7.5" text-anchor="middle">BLOW</text><text x="155" y="99" fill="#cfd8e3" font-size="7.5" text-anchor="middle">DOWN</text><rect x="172" y="80" width="28" height="24" rx="2" fill="#2a3340" stroke="#59616c"/><text x="186" y="90" fill="#cfd8e3" font-size="7.5" text-anchor="middle">MENU/</text><text x="186" y="99" fill="#cfd8e3" font-size="7.5" text-anchor="middle">RESET</text>';
-    g+='<text x="170" y="116" fill="#cfd8e3" font-size="7" text-anchor="middle">Level Master controller</text>';
-    var cy=a==="lwsd"?"#ff4d4d":a==="ok"?"#2EC4B6":"#ff9f1c";
-    if(WC.inside){g+='<path d="M64 100 H108" stroke="#ffb020" stroke-width="2" stroke-dasharray="4 3" fill="none"/><text x="86" y="95" fill="#ffb020" font-size="6" text-anchor="middle">24 VDC</text><path d="M64 112 H108" stroke="#2EC4B6" stroke-width="2" fill="none"/><text x="86" y="124" fill="#2EC4B6" font-size="6" text-anchor="middle">RS-485</text><text x="170" y="136" fill="#cfd8e3" font-size="6" text-anchor="middle">120 VAC in; controller makes 24 VDC for the sensor</text>';}
+    var L=WC.L,a=alarmOf(L),ln=lcdLines(L,a),g=phPanel(2,2,296,252)+phPanel(2,258,296,216);
+    g+=colPhoto("wc",L,10,8,0.22,{lx:106,gap:9,fs:7,floatLbl:5.2});
+    g+='<path d="M84 30 L156 22" stroke="#cfd8e3" stroke-width=".7" fill="none"/><text x="158" y="25" fill="#e5e8eb" font-size="7"'+HALO+'>Sensor head (NEMA 4X)</text>';
+    g+='<path d="M68 66 L156 66" stroke="#cfd8e3" stroke-width=".7" fill="none"/><text x="158" y="69" fill="#e5e8eb" font-size="7"'+HALO+'>Probe (magnetostrictive)</text>';
+    g+='<path d="M80 98 L156 98" stroke="#cfd8e3" stroke-width=".7" fill="none"/><text x="158" y="101" fill="#e5e8eb" font-size="7"'+HALO+'>Cast-iron water column</text>';
+    g+=ctlPhoto(45,262,0.30,L,ln[0],ln[1]);
+    g+='<text x="150" y="486" fill="#cfd8e3" font-size="7" text-anchor="middle">Level Master controller (CBLME)</text>';
+    if(WC.inside){
+      g+='<path d="M84 40 H238 V268" stroke="#ffb020" stroke-width="2" stroke-dasharray="4 3" fill="none"/><text x="170" y="37" fill="#ffb020" font-size="7"'+HALO+'>24 VDC</text>';
+      g+='<path d="M84 48 H248 V268" stroke="#2EC4B6" stroke-width="2" fill="none"/><text x="170" y="57" fill="#2EC4B6" font-size="7"'+HALO+'>RS-485</text>';
+      g+='<text x="150" y="497" fill="#cfd8e3" font-size="6.5" text-anchor="middle">120 VAC in; controller makes 24 VDC for the sensor</text>';
+    }
     $("wcSvg").innerHTML=g; $("wcLv").textContent=L.toFixed(2);
     $("wcSvg").setAttribute("data-l",L.toFixed(2));
   }
@@ -600,7 +643,7 @@
     var f=(s.ma-4)/16; X.target=X.dip1==="off"?f:1-f; if(s.tag)X.note="mA at this alarm: "+s.tag+".";
   }
   S("w-s14-4","See it run: level → mA → SKD62UA → valve (EXAMPLE numbers)",
-    '<div class="svgbox"><svg id="lmSvg" viewBox="0 0 300 360" role="img" aria-label="Water column, Level Master display, mA gauge, SKD62UA actuator and valve"></svg></div>'+
+    '<div class="svgbox"><svg id="lmSvg" viewBox="0 0 300 590" role="img" aria-label="Water column, Level Master display, mA gauge, SKD62UA actuator and valve"></svg></div>'+'<p class="photo-credit">Photos: Cleaver-Brooks (water column), NJT Automation (Level Master controller), Siemens (SKD62UA and Flowrite VF 599 valve, via SupplyHouse.com). The valve is a representative 2-1/2 in VF 599; the site valve model is not documented. Teal outlines are traced from the photos; the actuator and valve share one scale (SKD62UA 300 mm tall, TI Fig 14; stroke 20 mm).</p>'+
     '<label class="lbl" for="lmL" style="margin-top:8px">Level: <b id="lmLv">1.13</b> in above LWCO (0 to 6)</label><input type="range" id="lmL" min="0" max="6" step="0.01" value="1.125" aria-label="Level">'+
     '<div class="row"><button type="button" class="secondary" id="lmC1">0.75 in (Pump On)</button><button type="button" class="secondary" id="lmC2">1.125 in (midpoint)</button><button type="button" class="secondary" id="lmC3">1.5 in (Pump Off)</button><button type="button" class="secondary" id="lmC4">Low 0.2</button><button type="button" class="secondary" id="lmC5">LWCO 0</button><button type="button" class="secondary" id="lmC6">High 5.0</button></div>'+
     '<p class="lbl" style="margin:8px 0 0">Valve body</p>'+seg("lmBody",[["nc","Normally closed (NC)"],["no","Normally open (NO)"]])+
@@ -612,50 +655,52 @@
     '<p class="wnote">Signal locked on 4-20 mA (West Mechanical standard); other ranges may be available; check the manual. Level numbers: Sensitivity Table 1 example, not a site setting. Pump, bypass and piston motion: illustrative (Siemens names the parts but gives no oil-flow narrative). Full-stroke times are 30 s opening and 15 s closing; the animation runs ×10 faster. mA at alarm conditions: not documented unless noted.</p>');
   function lmDraw(){
     compute();
-    var L=X.L,a=alarmOf(L),p=pctOf(L),s=sig(),g=column(L,6,false);
-    var open=X.nc?X.cur:1-X.cur;
-    /* Level Master face */
-    g+='<rect x="100" y="14" width="106" height="100" rx="8" fill="#141b24" stroke="#59616c" stroke-width="2"/>';
-    var l2=a==="lwsd"?"LW Shutdown":a==="lowwrn"?"Low Lvl Wrn":a==="hiwrn"?"High Lvl Wrn":a==="hialm"?"High Water Alarm":(!X.burner?"Boiler Off":(X.fmt==="mod"?"Output "+p.toFixed(1)+"%":(X.pump?"Pump On":"Pump Off")));
-    g+='<rect x="106" y="20" width="78" height="30" rx="3" fill="#0b2a1e" stroke="#2EC4B6"/><text x="110" y="33" fill="#9dffcf" font-size="7.6" font-family="monospace">'+L.toFixed(2)+'" &gt;LWCO</text><text x="110" y="45" fill="#9dffcf" font-size="7" font-family="monospace">'+l2+'</text>';
-    g+=bargraph(L,194,100);
-    g+='<text x="108" y="62" fill="#cfd8e3" font-size="6">LWCO relay (19-21): '+(a==="lwsd"?'<tspan fill="#ff4d4d">OPEN</tspan>':'closed')+'</text>';
-    g+='<text x="108" y="72" fill="#cfd8e3" font-size="6">General alarm (23,24): '+(a==="ok"?'off':'<tspan fill="#ff9f1c">on</tspan>')+'</text>';
-    g+='<text x="108" y="82" fill="#cfd8e3" font-size="6">HW alarm (25,26): '+(a==="hialm"?'<tspan fill="#ff4d4d">on</tspan>':'off')+'</text>';
-    g+='<text x="108" y="94" fill="#ffb020" font-size="6.2">14(+) 15(−): '+(s.ma==null?'no feed signal':s.ma.toFixed(2)+' mA')+'</text>';
-    g+='<text x="108" y="108" fill="#9AA0A6" font-size="5.6">Level Master</text>';
-    /* mA gauge */
-    g+=gauge(254,52,32,s.ma==null?0:(s.ma-4)/16,"#ffb020",s.ma==null?"no signal":s.ma.toFixed(2)+" mA",s.ma==null);
-    g+='<text x="254" y="102" fill="#9AA0A6" font-size="6" text-anchor="middle">4-20 mA control out</text>';
-    if(X.fmt==="onoff") g+='<text x="254" y="116" fill="#cfd8e3" font-size="6.5" text-anchor="middle">27, 28: pump '+(X.pump?"ON":"OFF")+'</text>';
-    /* wire from LM to SKD */
-    g+='<path d="M150 114 V176 H80 V190" stroke="'+(s.ma==null||X.lost?"#59616c":"#ffb020")+'" stroke-width="2" fill="none" stroke-dasharray="'+(X.lost?"3 3":"0")+'"/><text x="154" y="146" fill="#9AA0A6" font-size="6">Y / M</text>';
-    if(X.lost) g+='<text x="86" y="186" fill="#ff4d4d" font-size="6.5">signal lost</text>';
-    /* SKD62UA cutaway */
-    var tr=24*X.cur;
-    g+='<rect x="38" y="192" width="84" height="76" rx="5" fill="#18222e" stroke="#9aa5b1" stroke-width="1.5"/>';
-    g+='<rect x="46" y="'+(200+tr).toFixed(1)+'" width="68" height="7" fill="#e8c07d" stroke="#fff" stroke-width=".6"/>';
-    var sy0=207+tr, sy1=266, n=7, zig='M60 '+sy0.toFixed(1); for(var i=1;i<=n;i++){zig+=' L'+(i%2?66:54)+' '+(sy0+(sy1-sy0)*i/(n+1)).toFixed(1);} zig+=' L60 '+sy1; g+='<path d="'+zig+'" stroke="#9aa5b1" stroke-width="1.4" fill="none"/><text x="92" y="262" fill="#9AA0A6" font-size="6.5">spring</text>';
-    g+='<rect x="12" y="206" width="12" height="20" rx="2" fill="#2a3340" stroke="#cfd8e3"/><text x="18" y="236" fill="#9AA0A6" font-size="6.5" text-anchor="middle">pump</text>';
-    var byp=X.cur>X.target+0.002; g+='<rect x="124" y="226" width="10" height="12" rx="2" fill="'+(byp||X.lost?"#3ecf6a":"#2a3340")+'" stroke="#cfd8e3"/><text x="124" y="250" fill="#9AA0A6" font-size="6.5">bypass</text>';
-    g+='<line x1="88" y1="'+(207+tr).toFixed(1)+'" x2="88" y2="'+(312+tr).toFixed(1)+'" stroke="#e5e8eb" stroke-width="4"/>';
-    g+='<text x="93" y="'+(228+tr).toFixed(0)+'" fill="#9AA0A6" font-size="6.5">stem</text>';
-    g+='<rect x="102" y="196" width="14" height="6" fill="#ff5a5f" fill-opacity="'+(X.cur>0.001?0.9:0.15)+'"/><text x="125" y="202" fill="#9AA0A6" font-size="5.5">pos. '+X.cur.toFixed(2)+'</text>';
-    /* valve body */
-    var seat=X.nc?312:342, ptop=X.nc?312+tr:312+tr; /* plug top follows the stem */
-    g+='<rect x="38" y="296" width="84" height="58" rx="5" fill="#2b2118" stroke="#d2a679" stroke-width="1.5"/>';
-    g+='<line x1="60" y1="'+seat+'" x2="116" y2="'+seat+'" stroke="#d2a679" stroke-width="3"/><text x="40" y="'+(seat+(X.nc?-3:12))+'" fill="#d2a679" font-size="5.5">seat</text>';
-    g+='<rect x="76" y="'+ptop.toFixed(1)+'" width="24" height="6" rx="1" fill="#ff5a5f" stroke="#fff" stroke-width=".8"/>';
-    g+='<path d="M16 326 H36" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/><path d="M124 326 H144" stroke="#2EC4B6" stroke-width="'+(1+open*5).toFixed(1)+'"/>';
-    g+='<text x="80" y="279" fill="#cfd8e3" font-size="7" text-anchor="middle" stroke="#0f1720" stroke-width="2.5" paint-order="stroke">SKD62UA (illustrative)</text>';
-    g+='<text x="80" y="292" fill="#cfd8e3" font-size="7" text-anchor="middle"'+' stroke="#0f1720" stroke-width="2.5" paint-order="stroke"'+'>'+(X.nc?"NC valve":"NO valve")+": "+Math.round(open*100)+'% open</text>';
-    /* right column: DIP bank and notes */
-    g+='<text x="214" y="200" fill="#cfd8e3" font-size="7">DIP switches</text>';
+    var L=X.L,a=alarmOf(L),p=pctOf(L),s=sig();
+    var g=phPanel(2,2,296,222)+phPanel(2,228,296,360);
+    var open=X.nc?X.cur:1-X.cur, ln=lcdLines(L,a,(!X.burner?"Boiler Off":(X.fmt==="mod"?"Output "+p.toFixed(1)+"%":(X.pump?"Pump On":"Pump Off"))));
+    g+=colPhoto("lm",L,6,10,0.17,{lx:66,gap:6.5,fs:5.6,short:1});
+    g+=ctlPhoto(82,6,0.30,L,ln[0],ln[1]);
+    var l2=ln[1];
+    /* readouts under the controller: relay states and the 14/15 signal */
+    g+='<text x="84" y="242" fill="#ffb020" font-size="7">14(+) 15(−): '+(s.ma==null?'no feed signal':s.ma.toFixed(2)+' mA')+'</text>';
+    g+='<text x="84" y="253" fill="#cfd8e3" font-size="6.2">LWCO relay (19-21): '+(a==="lwsd"?'<tspan fill="#ff4d4d">OPEN</tspan>':'closed')+'</text>';
+    g+='<text x="84" y="264" fill="#cfd8e3" font-size="6.2">General alarm (23,24): '+(a==="ok"?'off':'<tspan fill="#ff9f1c">on</tspan>')+'</text>';
+    g+='<text x="84" y="275" fill="#cfd8e3" font-size="6.2">HW alarm (25,26): '+(a==="hialm"?'<tspan fill="#ff4d4d">on</tspan>':'off')+'</text>';
+    g+='<text x="84" y="287" fill="#9AA0A6" font-size="6">4-20 mA control out</text>';
+    if(X.fmt==="onoff") g+='<text x="84" y="298" fill="#cfd8e3" font-size="6.5">27, 28: pump '+(X.pump?"ON":"OFF")+'</text>';
+    g+=gauge(42,262,26,s.ma==null?0:(s.ma-4)/16,"#ffb020",s.ma==null?"no signal":s.ma.toFixed(2)+" mA",s.ma==null);
+    /* actuator + valve assembly, drawn to a common physical scale (SKD62UA 300 mm tall; VF 599 2-1/2 in body) */
+    var sa=0.26, sv=sa*0.78, aox=150-PH.skd.ax*sa, aoy=312, vox=150-PH.vf.ax*sv, voy=aoy+PH.skd.ry*sa-5*sv;
+    var Xv=function(px){return vox+px*sv;}, Yv=function(py){return voy+py*sv;};
+    g+=phImg(PH.vf,vox,voy,sv)+phTrace(PH.vf.sil,vox,voy,sv,"#2EC4B6");
+    g+=phImg(PH.skd,aox,aoy,sa)+phTrace(PH.skd.sil,aox,aoy,sa,"#2EC4B6");
+    /* wire from the controller to the actuator terminals */
+    g+='<path d="M262 213 V364 H166" stroke="'+(s.ma==null||X.lost?"#59616c":"#ffb020")+'" stroke-width="2" fill="none" stroke-dasharray="'+(X.lost?"3 3":"0")+'"/><text x="266" y="300" fill="#cfd8e3" font-size="6.5"'+HALO+'>Y / M</text>';
+    if(X.lost) g+='<text x="170" y="358" fill="#ff4d4d" font-size="6.5"'+HALO+'>signal lost</text>';
+    var ry=aoy+(PH.skd.ry+PH.skd.tv*X.cur)*sa, seatPx=X.nc?PH.vf.seat:PH.vf.seat+PH.vf.tv, ptopPx=PH.vf.seat+PH.vf.tv*X.cur;
+    g+='<line x1="150" y1="'+ry.toFixed(1)+'" x2="150" y2="'+Yv(ptopPx).toFixed(1)+'" stroke="#e5e8eb" stroke-width="2.2"/>';
+    g+='<line x1="'+Xv(250).toFixed(1)+'" y1="'+Yv(seatPx).toFixed(1)+'" x2="'+Xv(394).toFixed(1)+'" y2="'+Yv(seatPx).toFixed(1)+'" stroke="#d2a679" stroke-width="1.6"/>';
+    g+='<rect x="'+Xv(274).toFixed(1)+'" y="'+Yv(ptopPx).toFixed(1)+'" width="'+(96*sv).toFixed(1)+'" height="'+(16*sv).toFixed(1)+'" rx="1" fill="#ff5a5f" stroke="#fff" stroke-width=".7"/>';
+    g+='<rect x="'+(150-30*sa).toFixed(1)+'" y="'+(ry-1.5).toFixed(1)+'" width="'+(60*sa).toFixed(1)+'" height="3.4" rx="1" fill="#ff5a5f" fill-opacity="'+(X.cur>0.001?0.95:0.35)+'" stroke="#fff" stroke-width=".6"/>';
+    g+='<text x="104" y="'+(ry+3).toFixed(1)+'" fill="#cfd8e3" font-size="6.5" text-anchor="end"'+HALO+'>pos '+X.cur.toFixed(2)+'</text>';
+    g+='<path d="M'+Xv(8).toFixed(1)+' '+Yv(440).toFixed(1)+' H'+Xv(100).toFixed(1)+'" stroke="#2EC4B6" stroke-width="'+(1+open*4).toFixed(1)+'"/><path d="M'+Xv(552).toFixed(1)+' '+Yv(480).toFixed(1)+' H'+Xv(648).toFixed(1)+'" stroke="#2EC4B6" stroke-width="'+(1+open*4).toFixed(1)+'"/>';
+    /* left-hand status column */
+    g+='<text x="6" y="326" fill="#e5e8eb" font-size="8">SKD62UA</text>';
+    g+='<text x="6" y="339" fill="#cfd8e3" font-size="6.2">Stroke 0-20 mm:</text><text x="6" y="349" fill="#cfd8e3" font-size="7">'+(X.cur*20).toFixed(1)+' mm</text>';
+    g+='<text x="6" y="361" fill="#9AA0A6" font-size="6">Open 30 s /</text><text x="6" y="370" fill="#9AA0A6" font-size="6">close 15 s</text>';
+    g+='<text x="6" y="384" fill="'+(X.lost?"#ff4d4d":X.mismatch?"#ffb020":"#9AA0A6")+'" font-size="6">'+(X.lost?"SPRING RETURN to 0%":X.mismatch?"TYPE MISMATCH (held)":(Math.abs(X.cur-X.target)>0.005?(X.cur<X.target?"opening…":"closing…"):"at position"))+'</text>';
+    var byp=X.cur>X.target+0.002; if(byp||X.lost) g+='<text x="6" y="396" fill="#3ecf6a" font-size="6.2">bypass open</text>'; else if(Math.abs(X.cur-X.target)>0.005) g+='<text x="6" y="396" fill="#ffb020" font-size="6.2">pump running</text>';
+    g+='<text x="6" y="440" fill="#e5e8eb" font-size="7.5">'+(X.nc?"NC valve":"NO valve")+'</text><text x="6" y="451" fill="#cfd8e3" font-size="7">'+Math.round(open*100)+'% open</text>';
+    g+='<text x="6" y="463" fill="#9AA0A6" font-size="5.8">VF 599 photo</text><text x="6" y="472" fill="#9AA0A6" font-size="5.8">(representative)</text>';
+    /* magnified plug and seat (illustrative geometry, true stroke ratio) */
+    var iy=X.nc?500:540; g+='<rect x="6" y="482" width="70" height="92" rx="5" fill="#18222e" stroke="#59616c"/>';
+    g+='<line x1="12" y1="'+iy+'" x2="70" y2="'+iy+'" stroke="#d2a679" stroke-width="2.2"/><line x1="41" y1="490" x2="41" y2="'+(500+40*X.cur).toFixed(1)+'" stroke="#e5e8eb" stroke-width="2.4"/><rect x="21" y="'+(500+40*X.cur).toFixed(1)+'" width="40" height="6" rx="1" fill="#ff5a5f" stroke="#fff" stroke-width=".7"/>';
+    g+='<text x="41" y="568" fill="#9AA0A6" font-size="6" text-anchor="middle">plug and seat, magnified</text>';
+    /* DIP bank */
+    g+='<text x="204" y="410" fill="#cfd8e3" font-size="7">DIP switches</text>';
     var dips=[["1",X.dip1==="on"],["2",false],["3",X.dip3==="on"],["4",false]];
-    dips.forEach(function(d,i){var x=160+i*30;g+='<rect x="'+x+'" y="206" width="22" height="32" rx="3" fill="#0d0f12" stroke="#59616c"/><rect x="'+(x+4)+'" y="'+(d[1]?210:224)+'" width="14" height="10" rx="2" fill="'+(d[1]?"#3ecf6a":"#59616c")+'"/><text x="'+(x+11)+'" y="248" fill="#9AA0A6" font-size="6" text-anchor="middle">'+d[0]+'</text>';});
-    g+='<text x="160" y="262" fill="#9AA0A6" font-size="5.8">1: OFF direct / ON reverse</text><text x="160" y="272" fill="#9AA0A6" font-size="5.8">3: ON = 4-20 mA, OFF = 0-10 Vdc</text>';
-    g+='<text x="160" y="290" fill="#cfd8e3" font-size="6.2">Stroke 0-20 mm: '+(X.cur*20).toFixed(1)+' mm</text><text x="160" y="302" fill="#cfd8e3" font-size="6.2">Open 30 s / close 15 s</text>';
-    g+='<text x="160" y="316" fill="'+(X.lost?"#ff4d4d":X.mismatch?"#ffb020":"#9AA0A6")+'" font-size="6">'+(X.lost?"SPRING RETURN to 0%":X.mismatch?"TYPE MISMATCH (held)":(Math.abs(X.cur-X.target)>0.005?(X.cur<X.target?"opening…":"closing…"):"at position"))+'</text>';
+    dips.forEach(function(d,i){var x=204+i*22;g+='<rect x="'+x+'" y="415" width="18" height="26" rx="3" fill="#0d0f12" stroke="#59616c"/><rect x="'+(x+3)+'" y="'+(d[1]?418:430)+'" width="12" height="9" rx="2" fill="'+(d[1]?"#3ecf6a":"#59616c")+'"/><text x="'+(x+9)+'" y="451" fill="#9AA0A6" font-size="6" text-anchor="middle">'+d[0]+'</text>';});
+    g+='<text x="200" y="463" fill="#9AA0A6" font-size="5.8">1: OFF direct / ON reverse</text><text x="200" y="472" fill="#9AA0A6" font-size="5.8">3: ON = 4-20 mA,</text><text x="200" y="481" fill="#9AA0A6" font-size="5.8">OFF = 0-10 Vdc</text>';
     var svg=$("lmSvg"); svg.innerHTML=g;
     svg.setAttribute("data-pct",p.toFixed(1)); svg.setAttribute("data-ma",s.ma==null?"none":s.ma.toFixed(2)); svg.setAttribute("data-target",X.target.toFixed(3)); svg.setAttribute("data-stroke",X.cur.toFixed(3)); svg.setAttribute("data-open",open.toFixed(3)); svg.setAttribute("data-state",a); svg.setAttribute("data-lost",X.lost?"1":"0"); svg.setAttribute("data-mismatch",X.mismatch?"1":"0");
     $("lmLv").textContent=L.toFixed(2);
@@ -697,13 +742,13 @@
   var SKP=[["1 Pressure cylinder","The cylinder the piston works in. (TI Fig 7 p.6)"],["2 Piston","Pushed out against the return spring; its stem is the valve stem. (TI Fig 7 p.6)"],["3 Oscillating pump","Drives the piston. Siemens gives the name but no oil-flow narrative, so the motion shown is illustrative. (TI Fig 7)"],["4 Return spring","On loss of signal or power it returns the actuator to 0% stroke, stem fully retracted, in about 15 s. It is under high compression: do not disassemble. (TI p.5, 7)"],["5 Bypass valve","Lets the spring push the piston back. Illustrative: inferred from the part names. (TI Fig 7)"],["6 Valve stem retainer","Holds the actuator stem to the valve stem. (TI Fig 7)"],["7 Manual override knob","Turn clockwise (red indicator shows): each 360° = 3/32 in (2.5 mm). The valve cannot be commanded to 0% in manual. Return fully counter-clockwise to go back to automatic. (TI p.11, 12)"],["8 Position indicator","Shows 0 to 1 (stroke 0 to 20 mm). (TI Fig 9 p.6)"]];
   var K={ma:12,d1:"off",d3:"on",turns:0,cal:null,cur:0.5};
   S("w-s14-5","The SKD62UA: parts, DIP switches, override, calibration",
-    '<div class="svgbox"><svg id="skdSvg" viewBox="0 0 300 200" role="img" aria-label="SKD62UA cutaway with the official part numbers"></svg></div>'+
+    '<div class="svgbox"><svg id="skdSvg" viewBox="0 0 300 232" role="img" aria-label="SKD62UA cutaway with the official part numbers"></svg></div>'+'<p class="photo-credit">Photo: Siemens SKD62UA (via SupplyHouse.com). The teal outline is traced from the photo; the internal parts are ghost overlays placed from TI Fig 7 (illustrative).</p>'+
     chips("skdC",SKP.map(function(p){return p[0];}))+card("skdO","Tap a part for its official name. Move the signal knob to move the piston and stem.")+
     '<label class="lbl" for="skdMa" style="margin-top:10px">Signal knob: <b id="skdMav">12.0</b> mA</label><input type="range" id="skdMa" min="4" max="20" step="0.1" value="12" aria-label="Signal">'+
     '<div class="row"><button type="button" class="secondary" id="skdD1" aria-pressed="false">DIP 1: OFF (direct)</button><button type="button" class="secondary" id="skdD3" aria-pressed="true">DIP 3: ON (4-20 mA)</button></div>'+
     '<div class="row"><button type="button" class="secondary" id="skdTurn">Turn override knob one turn (clockwise)</button><button type="button" class="secondary" id="skdBack">Return knob (counter-clockwise)</button><button type="button" class="secondary" id="skdCal">Stroke calibration sweep</button></div>'+
     '<div class="readouts" aria-live="polite"><div class="ro"><span class="k">Position indicator</span><span class="v" id="skdPos">–</span></div><div class="ro"><span class="k">Stem</span><span class="v" id="skdMm">–</span></div><div class="ro"><span class="k">LED</span><span class="v" id="skdLed" style="font-size:1rem">–</span></div></div>'+
-    '<p class="wnote" id="skdNote" aria-live="polite"></p><p class="wnote">Geometry follows TI Fig 7 (illustrative). Override and DIP behaviour from TI p.9, 10, 11, 12.</p>');
+    '<p class="wnote" id="skdNote" aria-live="polite"></p><p class="wnote">Internal parts follow TI Fig 7, placed over the photo (illustrative). Override and DIP behaviour from TI p.9, 10, 11, 12.</p>');
   var skSel=-1;
   function skdStroke(){
     var f=(K.ma-4)/16; var sg=K.d1==="off"?f:1-f;
@@ -712,20 +757,28 @@
     return {s:s,mis:false};
   }
   function skdDraw(){
-    var r=K.cal!=null?{s:K.cal,mis:false}:skdStroke(); K.cur=r.s; var tr=r.s*30, g='';
-    var parts=function(i,x,y,w,h,fill){var on=skSel===i;return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="3" fill="'+fill+'" fill-opacity="'+(on?.6:.2)+'" stroke="'+(on?"#fff":fill)+'" stroke-width="'+(on?2.5:1)+'"/>';};
-    g+=parts(0,70,14,100,106,"#4ea8ff");
-    g+=parts(1,76,(22+tr),88,10,"#e8c07d");
-    g+=parts(2,28,30,28,34,"#b07cff");
-    var sy0=32+tr+10,sy1=116,zig='M110 '+sy0; for(var i=1;i<=7;i++)zig+=' L'+(i%2?120:100)+' '+(sy0+(sy1-sy0)*i/8); zig+=' L110 '+sy1; g+='<path d="'+zig+'" stroke="'+(skSel===3?"#fff":"#9aa5b1")+'" stroke-width="'+(skSel===3?3:1.6)+'" fill="none"/>';
-    g+=parts(4,176,50,30,24,"#3ecf6a");
-    g+=parts(5,100,122,48,14,"#ff9a3c");
-    g+=parts(6,176,18,36,20,r.mis?"#ffb020":(K.turns>0?"#ff5a5f":"#9aa5b1"));
-    g+=parts(7,176,88,40,22,"#ff5a5f");
-    g+='<line x1="124" y1="'+(32+tr+10)+'" x2="124" y2="186" stroke="#e5e8eb" stroke-width="5"/><rect x="108" y="'+(176)+'" width="32" height="8" fill="#ff5a5f" transform="translate(0,'+(tr*0.2).toFixed(1)+')"/>';
-    var lab=[[120,"1"],[120,"2"],[42,"3"],[110,"4"],[191,"5"],[124,"6"],[194,"7"],[196,"8"]];
-    g+='<text x="82" y="30" fill="#fff" font-size="8">1</text><text x="82" y="'+(40+tr).toFixed(0)+'" fill="#fff" font-size="8">2</text><text x="38" y="26" fill="#fff" font-size="8">3</text><text x="126" y="90" fill="#fff" font-size="8">4</text><text x="188" y="48" fill="#fff" font-size="8">5</text><text x="150" y="133" fill="#fff" font-size="8">6</text><text x="188" y="32" fill="#fff" font-size="8">7</text><text x="188" y="102" fill="#fff" font-size="8">8</text>';
-    g+='<text x="150" y="196" fill="#9AA0A6" font-size="6.5" text-anchor="middle">position '+r.s.toFixed(2)+' (0 to 1)</text>';
+    var r=K.cal!=null?{s:K.cal,mis:false}:skdStroke(); K.cur=r.s; var tr=r.s*PH.skd.tv, g=phPanel(2,2,154,226);
+    var s=0.42, ox=6, oy=10, PX=function(p){return ox+p*s;}, PY=function(p){return oy+p*s;};
+    g+=phImg(PH.skd,ox,oy,s)+phTrace(PH.skd.sil,ox,oy,s,"#2EC4B6");
+    var part=function(i,x,y,w,h,fill){var on=skSel===i;return '<rect x="'+PX(x).toFixed(1)+'" y="'+PY(y).toFixed(1)+'" width="'+(w*s).toFixed(1)+'" height="'+(h*s).toFixed(1)+'" rx="3" fill="'+fill+'" fill-opacity="'+(on?.62:.28)+'" stroke="'+(on?"#fff":fill)+'" stroke-width="'+(on?2.4:1)+'"'+(i===0?' stroke-dasharray="3 2"':'')+'/>';};
+    g+=part(0,120,95,185,305,"#4ea8ff");
+    g+=part(1,136,300+tr,152,20,"#e8c07d");
+    g+=part(2,140,322+tr,44,32,"#b07cff");
+    var sy0=300+tr,sy1=118,zig='M'+PX(214).toFixed(1)+' '+PY(sy0).toFixed(1); for(var i=1;i<=9;i++)zig+=' L'+PX(i%2?262:166).toFixed(1)+' '+PY(sy0+(sy1-sy0)*i/10).toFixed(1); zig+=' L'+PX(214).toFixed(1)+' '+PY(sy1).toFixed(1);
+    g+='<path d="'+zig+'" stroke="'+(skSel===3?"#fff":"#e5e8eb")+'" stroke-width="'+(skSel===3?2.6:1.4)+'" fill="none"/>';
+    g+=part(4,254,322+tr,38,28,"#3ecf6a");
+    g+=part(5,184,PH.skd.ry+tr,60,14,"#ff9a3c");
+    var on6=skSel===6,kc=r.mis?"#ffb020":(K.turns>0?"#ff5a5f":"#9aa5b1");
+    g+='<ellipse cx="'+PX(210).toFixed(1)+'" cy="'+PY(42).toFixed(1)+'" rx="'+(96*s).toFixed(1)+'" ry="'+(28*s).toFixed(1)+'" fill="'+kc+'" fill-opacity="'+(on6?.62:.28)+'" stroke="'+(on6?"#fff":kc)+'" stroke-width="'+(on6?2.4:1)+'"/>';
+    var on7=skSel===7; g+='<rect x="'+PX(246).toFixed(1)+'" y="'+PY(436).toFixed(1)+'" width="'+(56*s).toFixed(1)+'" height="'+(52*s).toFixed(1)+'" rx="3" fill="#ff5a5f" fill-opacity="'+(on7?.62:.28)+'" stroke="'+(on7?"#fff":"#ff5a5f")+'" stroke-width="'+(on7?2.4:1)+'"/>';
+    g+='<line x1="'+PX(256).toFixed(1)+'" y1="'+PY(PH.skd.ry).toFixed(1)+'" x2="'+PX(256).toFixed(1)+'" y2="'+PY(PH.skd.ry+PH.skd.tv).toFixed(1)+'" stroke="#fff" stroke-width=".8"/><circle cx="'+PX(256).toFixed(1)+'" cy="'+PY(PH.skd.ry+tr).toFixed(1)+'" r="2.2" fill="#ff5a5f" stroke="#fff" stroke-width=".7"/>';
+    g+='<text x="'+PX(268).toFixed(1)+'" y="'+(PY(PH.skd.ry)+2).toFixed(1)+'" fill="#fff" font-size="6"'+HALO+'>0</text><text x="'+PX(268).toFixed(1)+'" y="'+(PY(PH.skd.ry+PH.skd.tv)+2).toFixed(1)+'" fill="#fff" font-size="6"'+HALO+'>1</text>';
+    g+='<line x1="'+PX(PH.skd.ax).toFixed(1)+'" y1="'+PY(PH.skd.ry+14+tr).toFixed(1)+'" x2="'+PX(PH.skd.ax).toFixed(1)+'" y2="'+PY(498).toFixed(1)+'" stroke="#e5e8eb" stroke-width="3"/>';
+    [[1,128,126],[2,142,292+tr],[3,150,338+tr],[4,268,200],[5,258,336+tr],[6,194,PH.skd.ry+11+tr],[7,206,44],[8,284,505]].forEach(function(n){g+='<text x="'+PX(n[1]).toFixed(1)+'" y="'+PY(n[2]).toFixed(1)+'" fill="#fff" font-size="8" font-weight="700"'+HALO+'>'+n[0]+'</text>';});
+    /* legend */
+    SKP.forEach(function(p,i){g+='<text x="162" y="'+(24+i*15)+'" fill="'+(skSel===i?"#fff":"#cfd8e3")+'" font-size="7.4"'+(skSel===i?' font-weight="700"':'')+'>'+p[0]+'</text>';});
+    g+='<text x="162" y="160" fill="#9AA0A6" font-size="6.5">position '+r.s.toFixed(2)+' (0 to 1)</text><text x="162" y="171" fill="#9AA0A6" font-size="6.5">stem '+(r.s*20).toFixed(1)+' mm of 20</text>';
+    g+='<text x="162" y="190" fill="#9AA0A6" font-size="6">Boxes and spring: ghost</text><text x="162" y="199" fill="#9AA0A6" font-size="6">parts from TI Fig 7.</text><text x="162" y="208" fill="#9AA0A6" font-size="6">Teal = traced from photo.</text>';
     $("skdSvg").innerHTML=g; $("skdSvg").setAttribute("data-stroke",r.s.toFixed(3)); $("skdSvg").setAttribute("data-turns",K.turns);
     $("skdMav").textContent=K.ma.toFixed(1); $("skdPos").textContent=r.s.toFixed(2); $("skdMm").textContent=(r.s*20).toFixed(1)+" mm";
     $("skdLed").textContent=K.cal!=null?"Green flashing (calibrating)":(r.mis?"Green on (signal type mismatch, inferred)":"Green on (normal)");
